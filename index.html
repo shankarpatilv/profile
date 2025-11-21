@@ -105,8 +105,7 @@
                                 class="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-75"></span>
                             <span class="relative inline-flex rounded-full h-3 w-3 bg-accent"></span>
                         </span>
-                        <span class="text-xs font-mono text-accent tracking-widest uppercase">Online / Open to
-                            Work</span>
+                        <span class="text-xs font-mono text-accent tracking-widest uppercase">Online</span>
                     </div>
                     <h1 class="text-3xl md:text-4xl font-bold tracking-tight mb-1">Vivek Patil</h1>
                     <h2 class="text-lg font-mono text-subtext">Software Engineer</h2>
@@ -157,12 +156,12 @@
                 </div>
             </div>
 
-            <div class="bento-card bg-card rounded-2xl p-6 col-span-1 md:col-span-2 h-full">
+            <div class="bento-card bg-card rounded-2xl p-6 col-span-1 md:col-span-2 h-full flex flex-col">
                 <h3 class="font-mono text-sm text-white mb-4 border-b border-white/10 pb-2 flex items-center shrink-0">
                     <i class="fa-solid fa-briefcase mr-2 text-accent"></i>Experience
                 </h3>
 
-                <div class="relative border-l border-white/10 ml-2 space-y-6">
+                <div class="relative border-l border-white/10 ml-2 space-y-6 flex-grow">
                     <div class="ml-6 relative group">
                         <span
                             class="absolute -left-[29px] top-1.5 h-3 w-3 rounded-full bg-card border-2 border-accent"></span>
@@ -174,7 +173,7 @@
                         <p class="text-xs font-mono text-accent/70 mb-1">SWE Intern</p>
                         <p class="text-xs text-subtext leading-relaxed">
                             Built content moderation pipeline (Lambda, DynamoDB, Bedrock) handling 10K+ TPS. Reduced DB
-                            latency by 33%.
+                            latency by 33% and reduced false tags by 20%.
                         </p>
                     </div>
 
@@ -196,29 +195,58 @@
             </div>
 
             <div
-                class="bento-card bg-card rounded-2xl p-6 col-span-1 md:col-span-2 flex flex-col h-full justify-center items-start relative overflow-hidden">
+                class="bento-card bg-card rounded-2xl p-6 col-span-1 md:col-span-2 flex flex-col h-full relative overflow-hidden">
                 <div class="absolute top-0 right-0 p-4 opacity-10">
                     <i class="fa-solid fa-graduation-cap text-8xl text-white"></i>
                 </div>
-                <h3 class="font-mono text-sm text-white mb-4 border-b border-white/10 pb-2 w-full">
+                <h3 class="font-mono text-sm text-white mb-4 border-b border-white/10 pb-2 w-full shrink-0">
                     <i class="fa-solid fa-user-graduate mr-2 text-accent"></i>Education
                 </h3>
 
-                <div class="mt-2">
-                    <h4 class="text-xl font-bold text-white">Northeastern University</h4>
-                    <p class="text-accent font-mono text-sm mt-1">MS, Software Engineering</p>
+                <div class="flex flex-col flex-grow w-full">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h4 class="text-xl font-bold text-white">Northeastern University</h4>
+                            <p class="text-accent font-mono text-sm mt-1">MS, Software Engineering</p>
+                        </div>
+                    </div>
 
                     <div
-                        class="mt-6 flex items-center gap-3 bg-white/5 p-3 rounded-lg border border-white/5 w-full relative z-10">
-                        <div class="flex flex-col">
-                            <span class="text-[10px] text-subtext uppercase tracking-widest">Graduated With</span>
-                            <span class="text-2xl font-bold text-white font-mono">3.8<span
-                                    class="text-subtext text-base">/4.0</span></span>
+                        class="mt-4 flex flex-col bg-white/5 p-4 rounded-lg border border-white/5 w-full relative z-10 flex-grow">
+                        <div class="flex items-center mb-3 border-b border-white/5 pb-3">
+                            <div class="flex flex-col">
+                                <span class="text-[10px] text-subtext uppercase tracking-widest">GPA</span>
+                                <span class="text-2xl font-bold text-white font-mono">3.8<span
+                                        class="text-subtext text-base">/4.0</span></span>
+                            </div>
                         </div>
-                        <div class="h-8 w-px bg-white/10 mx-2"></div>
-                        <p class="text-[10px] text-subtext leading-tight">
-                            Coursework in Cloud Computing, OOD, <br>Database Design, & Algorithms.
-                        </p>
+
+                        <div class="flex-grow flex flex-col justify-center">
+                            <span class="text-[10px] text-subtext uppercase tracking-widest block mb-2">Relevant
+                                Coursework</span>
+                            <div class="flex flex-wrap gap-2">
+                                <span
+                                    class="px-2 py-1 bg-black/20 rounded text-[10px] text-subtext border border-white/5">Object
+                                    Oriented Design</span>
+                                <span
+                                    class="px-2 py-1 bg-black/20 rounded text-[10px] text-subtext border border-white/5">Design
+                                    Patterns</span>
+                                <span
+                                    class="px-2 py-1 bg-black/20 rounded text-[10px] text-subtext border border-white/5">Web
+                                    Design & UX</span>
+                                <span
+                                    class="px-2 py-1 bg-black/20 rounded text-[10px] text-subtext border border-white/5">Cloud
+                                    Computing</span>
+                                <span
+                                    class="px-2 py-1 bg-black/20 rounded text-[10px] text-subtext border border-white/5">Database
+                                    Design</span>
+                                <span
+                                    class="px-2 py-1 bg-black/20 rounded text-[10px] text-subtext border border-white/5">Algorithms</span>
+                                <span
+                                    class="px-2 py-1 bg-black/20 rounded text-[10px] text-subtext border border-white/5">Network
+                                    Structures</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -239,7 +267,7 @@
                                 <i class="fa-brands fa-node text-green-500"></i>
                             </div>
                         </div>
-                        <p class="text-[10px] font-mono text-accent mb-2">React, Node.js, MongoDB, Redux</p>
+                        <p class="text-[10px] font-mono text-accent mb-2">React, Node.js, MongoDB</p>
                         <p class="text-xs text-subtext leading-relaxed">
                             Built a modular backend improving CRUD efficiency by 30%. Engineered a UI with Redux Toolkit
                             and optimized MongoDB queries.
@@ -297,56 +325,96 @@
                 </div>
             </div>
 
-            <div class="bento-card bg-card rounded-2xl p-6 col-span-1 md:col-span-3">
+            <div class="bento-card bg-card rounded-2xl p-4 col-span-1 md:col-span-3">
                 <h3 class="font-mono text-sm text-subtext mb-4">Tech Stack</h3>
-                <div class="grid grid-cols-5 gap-4">
+                <div class="grid grid-cols-6 md:grid-cols-8 gap-2">
                     <div class="flex flex-col items-center gap-1 group"><i
-                            class="fa-brands fa-java text-xl text-red-400 group-hover:scale-110 transition-transform"></i><span
-                            class="text-[9px] font-mono text-subtext">Java</span></div>
+                            class="fa-brands fa-java text-lg text-red-400 group-hover:scale-110 transition-transform"></i><span
+                            class="text-[8px] font-mono text-subtext">Java</span></div>
                     <div class="flex flex-col items-center gap-1 group"><i
-                            class="fa-brands fa-python text-xl text-blue-400 group-hover:scale-110 transition-transform"></i><span
-                            class="text-[9px] font-mono text-subtext">Python</span></div>
+                            class="fa-brands fa-python text-lg text-blue-400 group-hover:scale-110 transition-transform"></i><span
+                            class="text-[8px] font-mono text-subtext">Python</span></div>
                     <div class="flex flex-col items-center gap-1 group"><i
-                            class="fa-brands fa-js text-xl text-yellow-300 group-hover:scale-110 transition-transform"></i><span
-                            class="text-[9px] font-mono text-subtext">JS/TS</span></div>
+                            class="fa-brands fa-js text-lg text-yellow-300 group-hover:scale-110 transition-transform"></i><span
+                            class="text-[8px] font-mono text-subtext">JS/TS</span></div>
                     <div class="flex flex-col items-center gap-1 group"><i
-                            class="fa-brands fa-react text-xl text-cyan-400 group-hover:scale-110 transition-transform"></i><span
-                            class="text-[9px] font-mono text-subtext">React</span></div>
+                            class="fa-brands fa-react text-lg text-cyan-400 group-hover:scale-110 transition-transform"></i><span
+                            class="text-[8px] font-mono text-subtext">React</span></div>
                     <div class="flex flex-col items-center gap-1 group"><i
-                            class="fa-brands fa-node text-xl text-green-500 group-hover:scale-110 transition-transform"></i><span
-                            class="text-[9px] font-mono text-subtext">Node</span></div>
+                            class="fa-brands fa-node text-lg text-green-500 group-hover:scale-110 transition-transform"></i><span
+                            class="text-[8px] font-mono text-subtext">Node</span></div>
+                    <div class="flex flex-col items-center gap-1 group"><i
+                            class="fa-brands fa-aws text-lg text-orange-400 group-hover:scale-110 transition-transform"></i><span
+                            class="text-[8px] font-mono text-subtext">AWS</span></div>
+                    <div class="flex flex-col items-center gap-1 group"><i
+                            class="fa-solid fa-leaf text-lg text-green-400 group-hover:scale-110 transition-transform"></i><span
+                            class="text-[8px] font-mono text-subtext">Spring</span></div>
+                    <div class="flex flex-col items-center gap-1 group"><i
+                            class="fa-solid fa-database text-lg text-blue-300 group-hover:scale-110 transition-transform"></i><span
+                            class="text-[8px] font-mono text-subtext">SQL</span></div>
 
                     <div class="flex flex-col items-center gap-1 group"><i
-                            class="fa-brands fa-aws text-xl text-orange-400 group-hover:scale-110 transition-transform"></i><span
-                            class="text-[9px] font-mono text-subtext">AWS</span></div>
+                            class="fa-solid fa-server text-lg text-green-600 group-hover:scale-110 transition-transform"></i><span
+                            class="text-[8px] font-mono text-subtext">Mongo</span></div>
                     <div class="flex flex-col items-center gap-1 group"><i
-                            class="fa-solid fa-leaf text-xl text-green-400 group-hover:scale-110 transition-transform"></i><span
-                            class="text-[9px] font-mono text-subtext">Spring</span></div>
+                            class="fa-solid fa-database text-lg text-blue-400 group-hover:scale-110 transition-transform"></i><span
+                            class="text-[8px] font-mono text-subtext">Postgres</span></div>
                     <div class="flex flex-col items-center gap-1 group"><i
-                            class="fa-solid fa-database text-xl text-blue-300 group-hover:scale-110 transition-transform"></i><span
-                            class="text-[9px] font-mono text-subtext">SQL</span></div>
+                            class="fa-solid fa-bolt text-lg text-yellow-400 group-hover:scale-110 transition-transform"></i><span
+                            class="text-[8px] font-mono text-subtext">DynamoDB</span></div>
                     <div class="flex flex-col items-center gap-1 group"><i
-                            class="fa-solid fa-server text-xl text-green-600 group-hover:scale-110 transition-transform"></i><span
-                            class="text-[9px] font-mono text-subtext">Mongo</span></div>
+                            class="fa-solid fa-cloud text-lg text-purple-400 group-hover:scale-110 transition-transform"></i><span
+                            class="text-[8px] font-mono text-subtext">Terraform</span></div>
                     <div class="flex flex-col items-center gap-1 group"><i
-                            class="fa-solid fa-cloud text-xl text-purple-400 group-hover:scale-110 transition-transform"></i><span
-                            class="text-[9px] font-mono text-subtext">Terraform</span></div>
+                            class="fa-brands fa-docker text-lg text-blue-500 group-hover:scale-110 transition-transform"></i><span
+                            class="text-[8px] font-mono text-subtext">Docker</span></div>
+                    <div class="flex flex-col items-center gap-1 group"><i
+                            class="fa-solid fa-bolt text-lg text-red-500 group-hover:scale-110 transition-transform"></i><span
+                            class="text-[8px] font-mono text-subtext">Redis</span></div>
+                    <div class="flex flex-col items-center gap-1 group"><i
+                            class="fa-solid fa-magnifying-glass text-lg text-yellow-500 group-hover:scale-110 transition-transform"></i><span
+                            class="text-[8px] font-mono text-subtext">Elastic</span></div>
+                    <div class="flex flex-col items-center gap-1 group"><i
+                            class="fa-brands fa-git-alt text-lg text-orange-600 group-hover:scale-110 transition-transform"></i><span
+                            class="text-[8px] font-mono text-subtext">Git</span></div>
 
                     <div class="flex flex-col items-center gap-1 group"><i
-                            class="fa-brands fa-docker text-xl text-blue-500 group-hover:scale-110 transition-transform"></i><span
-                            class="text-[9px] font-mono text-subtext">Docker</span></div>
+                            class="fa-brands fa-linux text-lg text-white group-hover:scale-110 transition-transform"></i><span
+                            class="text-[8px] font-mono text-subtext">Linux</span></div>
+
+                    <div class="flex flex-col items-center justify-center gap-1 group">
+                        <svg class="w-5 h-5 fill-current text-green-300 group-hover:scale-110 transition-transform"
+                            viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M60.8 78c-3.9-3.6-3.9-9.4 0-12.9 3.5-3.3 8.9-3.2 12.2.2 3.4 3.5 3.4 9.3-.1 12.8-3.4 3.3-8.7 3.2-12.1-.1zm33.9-33.6c-3.8-4-10.3-3.9-14 .1l-2.1 2.2v-5.9h-16v12.5c0 1.1-.5 1.6-1.2 1.6-1.1 0-1.6-.6-1.6-1.8V32.5h-16v29.1c0 11 7.4 17.2 18.5 17.2 7.7 0 13.6-3.5 16.5-8.4 2.9 4.2 8.2 7.8 14.8 7.8 11 0 18.3-7.5 18.3-18.6.1-11.3-7.1-18.8-17.2-18.2z" />
+                        </svg>
+                        <span class="text-[8px] font-mono text-subtext">Django</span>
+                    </div>
+
                     <div class="flex flex-col items-center gap-1 group"><i
-                            class="fa-solid fa-bolt text-xl text-red-500 group-hover:scale-110 transition-transform"></i><span
-                            class="text-[9px] font-mono text-subtext">Redis</span></div>
+                            class="fa-solid fa-terminal text-lg text-blue-400 group-hover:scale-110 transition-transform"></i><span
+                            class="text-[8px] font-mono text-subtext">PowerShell</span></div>
                     <div class="flex flex-col items-center gap-1 group"><i
-                            class="fa-solid fa-magnifying-glass text-xl text-yellow-500 group-hover:scale-110 transition-transform"></i><span
-                            class="text-[9px] font-mono text-subtext">Elastic</span></div>
+                            class="fa-solid fa-code text-lg text-orange-500 group-hover:scale-110 transition-transform"></i><span
+                            class="text-[8px] font-mono text-subtext">HTML/CSS</span></div>
                     <div class="flex flex-col items-center gap-1 group"><i
-                            class="fa-brands fa-git-alt text-xl text-orange-600 group-hover:scale-110 transition-transform"></i><span
-                            class="text-[9px] font-mono text-subtext">Git</span></div>
+                            class="fa-solid fa-vial text-lg text-green-400 group-hover:scale-110 transition-transform"></i><span
+                            class="text-[8px] font-mono text-subtext">JUnit</span></div>
                     <div class="flex flex-col items-center gap-1 group"><i
-                            class="fa-brands fa-linux text-xl text-white group-hover:scale-110 transition-transform"></i><span
-                            class="text-[9px] font-mono text-subtext">Linux</span></div>
+                            class="fa-solid fa-network-wired text-lg text-blue-300 group-hover:scale-110 transition-transform"></i><span
+                            class="text-[8px] font-mono text-subtext">REST</span></div>
+
+                    <div class="flex flex-col items-center justify-center gap-1 group">
+                        <svg class="w-5 h-5 fill-current text-purple-500 group-hover:scale-110 transition-transform"
+                            viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M1.3 24l11.3-11.5L24 24zM0 0h12L0 12.5zM13.4 0L0 14v10l12-12L24 0z" />
+                        </svg>
+                        <span class="text-[8px] font-mono text-subtext">Kotlin</span>
+                    </div>
+
+                    <div class="flex flex-col items-center gap-1 group"><i
+                            class="fa-solid fa-play text-lg text-white group-hover:scale-110 transition-transform"></i><span
+                            class="text-[8px] font-mono text-subtext">Actions</span></div>
                 </div>
             </div>
 
