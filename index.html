@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Vivek Shankar Patil | Software Engineer</title>
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=JetBrains+Mono:wght@400;700&display=swap"
+            rel="stylesheet">
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+        <script src="https://cdn.tailwindcss.com"></script>
+
+        <script>
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        colors: {
+                            page: '#0a0a0a',
+                            card: '#171717',
+                            text: '#ededed',
+                            subtext: '#a1a1aa',
+                            accent: '#10b981', // Emerald 500
+                        },
+                        fontFamily: {
+                            mono: ['"JetBrains Mono"', 'monospace'],
+                            sans: ['"Inter"', 'sans-serif'],
+                        }
+                    }
+                }
+            }
+        </script>
+
+        <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+        <style>
+            /* Custom Scrollbar */
+            ::-webkit-scrollbar {
+                width: 8px;
+            }
+
+            ::-webkit-scrollbar-track {
+                background: #0a0a0a;
+            }
+
+            ::-webkit-scrollbar-thumb {
+                background: #333;
+                border-radius: 4px;
+            }
+
+            ::-webkit-scrollbar-thumb:hover {
+                background: #444;
+            }
+
+            /* Micro-interaction: Card Glow */
+            .bento-card {
+                transition: all 0.3s ease;
+                border: 1px solid rgba(255, 255, 255, 0.05);
+            }
+
+            .bento-card:hover {
+                transform: translateY(-2px);
+                border-color: rgba(16, 185, 129, 0.3);
+                /* Green border glow */
+                box-shadow: 0 0 20px rgba(16, 185, 129, 0.05);
+            }
+
+            /* Blinking Cursor */
+            .cursor {
+                display: inline-block;
+                width: 8px;
+                height: 1em;
+                background-color: #10b981;
+                animation: blink 1s step-end infinite;
+            }
+
+            @keyframes blink {
+                50% {
+                    opacity: 0;
+                }
+            }
+        </style>
+    </head>
+
+    <body
+        class="bg-page text-text font-sans antialiased selection:bg-accent selection:text-black p-4 md:p-8 py-10 min-h-screen flex justify-center">
+
+        <div class="max-w-6xl w-full grid grid-cols-1 md:grid-cols-4 gap-4 h-full">
+
+            <div
+                class="bento-card bg-card rounded-2xl p-6 col-span-1 md:col-span-2 flex flex-col justify-between relative overflow-hidden group h-48">
+                <div class="absolute top-0 right-0 p-4 opacity-50 group-hover:opacity-100 transition-opacity">
+                    <i class="fa-solid fa-code text-6xl text-white/5 rotate-12 transform"></i>
+                </div>
+
+                <div>
+                    <div class="flex items-center gap-3 mb-2">
+                        <span class="relative flex h-3 w-3">
+                            <span
+                                class="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-3 w-3 bg-accent"></span>
+                        </span>
+                        <span class="text-xs font-mono text-accent tracking-widest uppercase">Online</span>
+                    </div>
+                    <h1 class="text-3xl md:text-4xl font-bold tracking-tight mb-1">Vivek Patil</h1>
+                    <h2 class="text-lg font-mono text-subtext">Software Engineer</h2>
+                </div>
+
+                <div class="mt-auto flex gap-3">
+                    <a href="https://github.com/shankarpatilv" target="_blank"
+                        class="bg-white/5 hover:bg-white/10 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors border border-white/5">
+                        <i class="fa-brands fa-github mr-2"></i>GitHub
+                    </a>
+                    <a href="https://www.linkedin.com/in/vivek-shankar-patil13" target="_blank"
+                        class="bg-[#0077b5]/10 hover:bg-[#0077b5]/20 text-[#0077b5] border border-[#0077b5]/20 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors">
+                        <i class="fa-brands fa-linkedin mr-2"></i>LinkedIn
+                    </a>
+                </div>
+            </div>
+
+            <div class="bento-card bg-card rounded-2xl p-6 col-span-1 md:col-span-2 font-mono text-xs relative h-48"
+                x-data="{ 
+                text: '', 
+                textArray: ['> initializing session...', '> load bio.txt', '> SWE building web apps, backend services, and cloud-native pipelines on AWS.', '> Skilled in REST APIs, performance optimization, and scalable systems.'], 
+                typeSpeed: 20, 
+                lineIndex: 0, 
+                charIndex: 0,
+                init() { this.typeText(); },
+                typeText() {
+                    if (this.lineIndex < this.textArray.length) {
+                        if (this.charIndex < this.textArray[this.lineIndex].length) {
+                            this.text += this.textArray[this.lineIndex].charAt(this.charIndex);
+                            this.charIndex++;
+                            setTimeout(() => this.typeText(), this.typeSpeed);
+                        } else {
+                            this.text += '<br><br>';
+                            this.lineIndex++;
+                            this.charIndex = 0;
+                            setTimeout(() => this.typeText(), 300);
+                        }
+                    }
+                }
+             }">
+                <div class="flex gap-1.5 mb-3">
+                    <div class="w-2.5 h-2.5 rounded-full bg-red-500/50"></div>
+                    <div class="w-2.5 h-2.5 rounded-full bg-yellow-500/50"></div>
+                    <div class="w-2.5 h-2.5 rounded-full bg-green-500/50"></div>
+                </div>
+                <div class="text-subtext leading-relaxed h-full overflow-y-auto pb-4">
+                    <span x-html="text" class="text-accent"></span><span class="cursor"></span>
+                </div>
+            </div>
+
+            <div class="bento-card bg-card rounded-2xl p-6 col-span-1 md:col-span-2 h-full">
+                <h3 class="font-mono text-sm text-white mb-4 border-b border-white/10 pb-2 flex items-center shrink-0">
+                    <i class="fa-solid fa-briefcase mr-2 text-accent"></i>Experience
+                </h3>
+
+                <div class="relative border-l border-white/10 ml-2 space-y-6">
+                    <div class="ml-6 relative group">
+                        <span
+                            class="absolute -left-[29px] top-1.5 h-3 w-3 rounded-full bg-card border-2 border-accent"></span>
+                        <div class="flex justify-between items-baseline mb-1">
+                            <h4 class="text-sm font-bold text-white group-hover:text-accent transition-colors">Amazon
+                            </h4>
+                            <span class="text-[10px] font-mono text-subtext">2025</span>
+                        </div>
+                        <p class="text-xs font-mono text-accent/70 mb-1">SWE Intern</p>
+                        <p class="text-xs text-subtext leading-relaxed">
+                            Built content moderation pipeline (Lambda, DynamoDB, Bedrock) handling 10K+ TPS. Reduced DB
+                            latency by 33%.
+                        </p>
+                    </div>
+
+                    <div class="ml-6 relative group">
+                        <span
+                            class="absolute -left-[29px] top-1.5 h-3 w-3 rounded-full bg-card border-2 border-gray-600 group-hover:border-accent transition-colors"></span>
+                        <div class="flex justify-between items-baseline mb-1">
+                            <h4 class="text-sm font-bold text-white group-hover:text-accent transition-colors">Collabera
+                                Digital</h4>
+                            <span class="text-[10px] font-mono text-subtext">2021-23</span>
+                        </div>
+                        <p class="text-xs font-mono text-accent/70 mb-1">Data Engineer</p>
+                        <p class="text-xs text-subtext leading-relaxed">
+                            Reduced retrieval latency by 50% via Python pipelines. Developed sentiment analysis APIs
+                            with 98% accuracy.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div
+                class="bento-card bg-card rounded-2xl p-6 col-span-1 md:col-span-2 flex flex-col h-full justify-center items-start relative overflow-hidden">
+                <div class="absolute top-0 right-0 p-4 opacity-10">
+                    <i class="fa-solid fa-graduation-cap text-8xl text-white"></i>
+                </div>
+                <h3 class="font-mono text-sm text-white mb-4 border-b border-white/10 pb-2 w-full">
+                    <i class="fa-solid fa-user-graduate mr-2 text-accent"></i>Education
+                </h3>
+
+                <div class="mt-2">
+                    <h4 class="text-xl font-bold text-white">Northeastern University</h4>
+                    <p class="text-accent font-mono text-sm mt-1">MS, Software Engineering</p>
+
+                    <div
+                        class="mt-6 flex items-center gap-3 bg-white/5 p-3 rounded-lg border border-white/5 w-full relative z-10">
+                        <div class="flex flex-col">
+                            <span class="text-[10px] text-subtext uppercase tracking-widest">Graduated With</span>
+                            <span class="text-2xl font-bold text-white font-mono">3.8<span
+                                    class="text-subtext text-base">/4.0</span></span>
+                        </div>
+                        <div class="h-8 w-px bg-white/10 mx-2"></div>
+                        <p class="text-[10px] text-subtext leading-tight">
+                            Coursework in Cloud Computing, OOD, <br>Database Design, & Algorithms.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bento-card bg-card rounded-2xl p-6 col-span-1 md:col-span-4 flex flex-col">
+                <h3 class="font-mono text-sm text-white mb-4 border-b border-white/10 pb-2 flex items-center shrink-0">
+                    <i class="fa-solid fa-code-branch mr-2 text-accent"></i>Featured Projects
+                </h3>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                    <div
+                        class="group p-4 rounded-xl bg-white/5 hover:bg-white/10 transition-colors border border-white/5">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="font-bold text-white text-sm">Childguard</h4>
+                            <div class="flex gap-2">
+                                <i class="fa-brands fa-react text-cyan-400"></i>
+                                <i class="fa-brands fa-node text-green-500"></i>
+                            </div>
+                        </div>
+                        <p class="text-[10px] font-mono text-accent mb-2">React, Node.js, MongoDB, Redux</p>
+                        <p class="text-xs text-subtext leading-relaxed">
+                            Built a modular backend improving CRUD efficiency by 30%. Engineered a UI with Redux Toolkit
+                            and optimized MongoDB queries.
+                        </p>
+                    </div>
+
+                    <div
+                        class="group p-4 rounded-xl bg-white/5 hover:bg-white/10 transition-colors border border-white/5">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="font-bold text-white text-sm">Cloud-Native Web App</h4>
+                            <div class="flex gap-2">
+                                <i class="fa-brands fa-aws text-orange-400"></i>
+                                <i class="fa-brands fa-python text-blue-400"></i>
+                            </div>
+                        </div>
+                        <p class="text-[10px] font-mono text-accent mb-2">AWS, Terraform, Python</p>
+                        <p class="text-xs text-subtext leading-relaxed">
+                            Deployed Django APIs with custom AMIs. Automated infra with Terraform cutting deployment
+                            cycles by 40% and achieved 35% performance gains.
+                        </p>
+                    </div>
+
+                    <div
+                        class="group p-4 rounded-xl bg-white/5 hover:bg-white/10 transition-colors border border-white/5">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="font-bold text-white text-sm">School Daycare System</h4>
+                            <div class="flex gap-2">
+                                <i class="fa-brands fa-java text-red-400"></i>
+                                <i class="fa-solid fa-database text-blue-300"></i>
+                            </div>
+                        </div>
+                        <p class="text-[10px] font-mono text-accent mb-2">Java, Spring Boot, MySQL</p>
+                        <p class="text-xs text-subtext leading-relaxed">
+                            Built a scalable system improving task efficiency by 30%. Implemented OOP principles for
+                            role-based permissions and managed MySQL relations.
+                        </p>
+                    </div>
+
+                    <div
+                        class="group p-4 rounded-xl bg-white/5 hover:bg-white/10 transition-colors border border-white/5">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="font-bold text-white text-sm">HealthPlan Service</h4>
+                            <div class="flex gap-2">
+                                <i class="fa-solid fa-bolt text-red-500"></i>
+                                <i class="fa-solid fa-magnifying-glass text-yellow-500"></i>
+                            </div>
+                        </div>
+                        <p class="text-[10px] font-mono text-accent mb-2">FastAPI, Redis, Elasticsearch</p>
+                        <p class="text-xs text-subtext leading-relaxed">
+                            Architected RESTful API with OAuth 2.0. Reduced latency by 60% using async message queues
+                            for Elasticsearch indexing.
+                        </p>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="bento-card bg-card rounded-2xl p-6 col-span-1 md:col-span-3">
+                <h3 class="font-mono text-sm text-subtext mb-4">Tech Stack</h3>
+                <div class="grid grid-cols-5 gap-4">
+                    <div class="flex flex-col items-center gap-1 group"><i
+                            class="fa-brands fa-java text-xl text-red-400 group-hover:scale-110 transition-transform"></i><span
+                            class="text-[9px] font-mono text-subtext">Java</span></div>
+                    <div class="flex flex-col items-center gap-1 group"><i
+                            class="fa-brands fa-python text-xl text-blue-400 group-hover:scale-110 transition-transform"></i><span
+                            class="text-[9px] font-mono text-subtext">Python</span></div>
+                    <div class="flex flex-col items-center gap-1 group"><i
+                            class="fa-brands fa-js text-xl text-yellow-300 group-hover:scale-110 transition-transform"></i><span
+                            class="text-[9px] font-mono text-subtext">JS/TS</span></div>
+                    <div class="flex flex-col items-center gap-1 group"><i
+                            class="fa-brands fa-react text-xl text-cyan-400 group-hover:scale-110 transition-transform"></i><span
+                            class="text-[9px] font-mono text-subtext">React</span></div>
+                    <div class="flex flex-col items-center gap-1 group"><i
+                            class="fa-brands fa-node text-xl text-green-500 group-hover:scale-110 transition-transform"></i><span
+                            class="text-[9px] font-mono text-subtext">Node</span></div>
+
+                    <div class="flex flex-col items-center gap-1 group"><i
+                            class="fa-brands fa-aws text-xl text-orange-400 group-hover:scale-110 transition-transform"></i><span
+                            class="text-[9px] font-mono text-subtext">AWS</span></div>
+                    <div class="flex flex-col items-center gap-1 group"><i
+                            class="fa-solid fa-leaf text-xl text-green-400 group-hover:scale-110 transition-transform"></i><span
+                            class="text-[9px] font-mono text-subtext">Spring</span></div>
+                    <div class="flex flex-col items-center gap-1 group"><i
+                            class="fa-solid fa-database text-xl text-blue-300 group-hover:scale-110 transition-transform"></i><span
+                            class="text-[9px] font-mono text-subtext">SQL</span></div>
+                    <div class="flex flex-col items-center gap-1 group"><i
+                            class="fa-solid fa-server text-xl text-green-600 group-hover:scale-110 transition-transform"></i><span
+                            class="text-[9px] font-mono text-subtext">Mongo</span></div>
+                    <div class="flex flex-col items-center gap-1 group"><i
+                            class="fa-solid fa-cloud text-xl text-purple-400 group-hover:scale-110 transition-transform"></i><span
+                            class="text-[9px] font-mono text-subtext">Terraform</span></div>
+
+                    <div class="flex flex-col items-center gap-1 group"><i
+                            class="fa-brands fa-docker text-xl text-blue-500 group-hover:scale-110 transition-transform"></i><span
+                            class="text-[9px] font-mono text-subtext">Docker</span></div>
+                    <div class="flex flex-col items-center gap-1 group"><i
+                            class="fa-solid fa-bolt text-xl text-red-500 group-hover:scale-110 transition-transform"></i><span
+                            class="text-[9px] font-mono text-subtext">Redis</span></div>
+                    <div class="flex flex-col items-center gap-1 group"><i
+                            class="fa-solid fa-magnifying-glass text-xl text-yellow-500 group-hover:scale-110 transition-transform"></i><span
+                            class="text-[9px] font-mono text-subtext">Elastic</span></div>
+                    <div class="flex flex-col items-center gap-1 group"><i
+                            class="fa-brands fa-git-alt text-xl text-orange-600 group-hover:scale-110 transition-transform"></i><span
+                            class="text-[9px] font-mono text-subtext">Git</span></div>
+                    <div class="flex flex-col items-center gap-1 group"><i
+                            class="fa-brands fa-linux text-xl text-white group-hover:scale-110 transition-transform"></i><span
+                            class="text-[9px] font-mono text-subtext">Linux</span></div>
+                </div>
+            </div>
+
+            <div class="bento-card bg-card rounded-2xl p-0 relative overflow-hidden flex flex-col justify-center items-center cursor-pointer group col-span-1"
+                x-data="{ copied: false }" @click="
+                navigator.clipboard.writeText('patilshankarvivek@gmail.com'); 
+                copied = true; 
+                setTimeout(() => copied = false, 2000)
+             ">
+
+                <div class="absolute inset-0 bg-accent/90 z-10 flex flex-col items-center justify-center transition-opacity duration-300"
+                    x-show="copied" x-transition:enter="ease-out duration-200"
+                    x-transition:enter-start="opacity-0 scale-90" x-transition:enter-end="opacity-100 scale-100"
+                    x-transition:leave="ease-in duration-200" x-transition:leave-start="opacity-100 scale-100"
+                    x-transition:leave-end="opacity-0 scale-90" style="display: none;">
+                    <i class="fa-solid fa-check text-black text-2xl mb-2"></i>
+                    <span class="font-mono font-bold text-black text-sm">Copied!</span>
+                </div>
+
+                <div
+                    class="p-6 w-full h-full flex flex-col items-center justify-center text-center group-hover:bg-white/5 transition-colors">
+                    <i
+                        class="fa-regular fa-envelope text-2xl text-white mb-2 group-hover:scale-110 transition-transform"></i>
+                    <h3 class="font-bold text-white text-sm">Contact Me</h3>
+                    <p class="text-[9px] text-subtext font-mono mt-1 truncate w-full">patilshankarvivek@gmail.com</p>
+                </div>
+            </div>
+
+        </div>
+
+    </body>
+
+</html>
