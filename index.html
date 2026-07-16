@@ -116,6 +116,16 @@ a{color:inherit}
 .hp-panel.w1{width:min(80vw,380px)}.hp-panel.w2{width:min(86vw,560px)}.hp-panel.w3{width:min(90vw,760px)}
 .hp-panel.tall{height:min(84vh,680px)}.hp-panel.short{height:min(52vh,400px)}
 .track .par{position:absolute;pointer-events:none;font-family:"Dela Gothic One",sans-serif;color:var(--red);-webkit-text-stroke:2px #000;paint-order:stroke fill;z-index:4;white-space:nowrap}
+.montage{gap:14px}
+.mgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;flex:1;min-height:0}
+.mf{border:4px solid #000;padding:12px;display:flex;flex-direction:column;justify-content:flex-end;font-weight:900;font-size:clamp(15px,1.8vw,20px);position:relative}
+.mf b{font-family:"Bangers",cursive;font-size:clamp(28px,3.4vw,42px);letter-spacing:.05em;font-weight:400;line-height:1}
+.hunt .bubble{border-style:dashed}
+.bigstamp{align-self:flex-end;border:5px solid var(--red);color:var(--red);font-family:"Dela Gothic One",sans-serif;font-size:clamp(22px,2.6vw,32px);padding:8px 16px;transform:rotate(-8deg);position:relative;z-index:2;background:rgba(255,253,246,.8)}
+.depart{justify-content:flex-end}
+.sunset{position:absolute;width:70%;aspect-ratio:1;border-radius:50%;background:var(--red);left:15%;top:8%;z-index:0}
+.depart::after{content:"";position:absolute;left:0;right:0;top:45%;bottom:0;background:#000;z-index:1}
+.nextstop{position:relative;z-index:2;font-family:"Dela Gothic One",sans-serif;font-size:clamp(40px,6vw,80px);color:var(--hi);line-height:1}
 .h-progress{position:absolute;left:8vw;right:8vw;bottom:24px;height:8px;border:3px solid var(--ink);z-index:5}
 .h-progress i{display:block;height:100%;background:var(--red);width:calc(var(--hp,0)*100%)}
 
@@ -218,6 +228,9 @@ a{color:inherit}
   .fpage{grid-template-columns:1fr!important;grid-template-rows:none!important;grid-auto-rows:1fr}
   .fpage .fp{grid-column:auto!important;grid-row:auto!important;padding:14px}
   .bubble{font-size:16px;padding:16px 20px}
+  .fpage .move{font-size:13px;padding-top:8px}.fpage .move b{font-size:20px}
+  .fpage .bubble{font-size:14px;padding:12px 16px}.fpage .narr{font-size:14px;padding:8px 10px}
+  .fpage .sfx{font-size:34px!important}
 }
 @media (prefers-reduced-motion:reduce){
   .cv-lines,.ct::before,.lines-bg::before,.menace,.cv-open,.cv-title{animation:none!important}
@@ -259,43 +272,78 @@ a{color:inherit}
   <div class="pin" id="hpin">
     <div class="stage h-stage">
       <div class="track" id="track">
+
         <div class="hp-panel w2 wht tone" style="--rest:-1deg">
-          <div class="narr">2021. Collabera Digital. Day one. Nobody tells you the real training is production.</div>
-          <div class="bubble think"><span class="who">Vivek</span>Java, Python, React, SQL... fine. I'll learn whichever one breaks first.</div>
+          <div class="narr">Bangalore, July 2021. Day one at Collabera Digital. A badge, a laptop, and a ticket queue longer than monsoon season.</div>
+          <div class="bubble think"><span class="who">Vivek</span>Rule one: don't break production in week one.</div>
           <span class="sfx" style="right:20px;bottom:16px;font-size:60px">カタカタ</span>
         </div>
+
+        <div class="hp-panel w3 wht montage" style="--rest:1deg">
+          <div class="mgrid">
+            <div class="mf blk"><b>Mon</b>Java API</div>
+            <div class="mf yel"><b>Tue</b>Python pipeline</div>
+            <div class="mf redp"><b>Wed</b>React screen</div>
+            <div class="mf wht tone"><b>Thu</b>A prototype due Friday</div>
+          </div>
+          <div class="narr">Whatever the client needed, he built it.</div>
+          <span class="sfx lat" style="right:18px;top:10px;font-size:46px">ZIP!</span>
+        </div>
+
+        <div class="hp-panel w2 yel lines-bg" style="--rest:-1.5deg">
+          <div class="bubble"><span class="who">Product lead</span>The client wants a sentiment analysis POC. Our current queries crawl, and users are leaving.</div>
+          <div style="text-align:right"><div class="bubble"><span class="who">Vivek</span>Give me one week.</div></div>
+          <div class="narr">Queries 2x faster. Engagement up 25%. The POC shipped to production.</div>
+        </div>
+
         <div class="hp-panel w3 blk tall lines-bg">
-          <div class="bubble shout"><span class="who">Senior dev</span>The banking migration's dying again! Every peak hour, same crash!</div>
-          <div class="narr">Millions of transactions. One mystery. Everyone blaming the network.</div>
+          <div class="narr">Then came the big one. A core-banking migration.</div>
+          <div class="bubble shout"><span class="who">Senior dev</span>It crashes every peak hour and nobody knows why!</div>
           <span class="sfx menace" style="right:26px;top:20px;font-size:70px">ゴゴゴ</span>
         </div>
-        <div class="hp-panel w2 yel lines-bg" style="--rest:1.5deg">
+
+        <div class="hp-panel w2 wht tone hunt" style="--rest:1deg">
+          <div class="narr">Night after night: logs, load replays, memory graphs.</div>
+          <div class="bubble think"><span class="who">Vivek</span>It's not random. It only dies when traffic peaks...</div>
+          <span class="sfx" style="left:18px;bottom:14px;font-size:44px">ジー...</span>
+        </div>
+
+        <div class="hp-panel w2 yel lines-bg" style="--rest:-1deg">
           <span class="sfx" style="left:18px;top:14px;font-size:58px;transform:rotate(-8deg)">ピキーン!</span>
-          <div style="margin-top:50px"><div class="bubble"><span class="who">Vivek</span>It's not the network. It's hitting a memory ceiling.</div></div>
-          <div class="narr">Found it. Then rigged logs, alerts and runbooks so it could never sneak back in.</div>
+          <div style="margin-top:50px"><div class="bubble"><span class="who">Vivek</span>It's hitting the memory ceiling.</div></div>
+          <div class="narr">Found it. Fixed it. Then made sure nobody would ever hunt it blind again: structured logs, on-call alerts, runbooks.</div>
         </div>
-        <div class="hp-panel w1 redp short lines-bg" style="--rest:-2deg">
+
+        <div class="hp-panel w2 redp lines-bg" style="--rest:1.5deg">
+          <div class="narr">The data modules were crawling. He split the work across cores and profiled every hot path.</div>
           <div class="num" style="font-size:clamp(70px,9vw,120px)">+40%</div>
-          <div style="font-weight:900;font-size:19px;position:relative;z-index:2">Throughput. The data modules got split across cores and profiled until they behaved.</div>
+          <div style="font-family:Bangers,cursive;font-size:30px;letter-spacing:.05em;position:relative;z-index:2">throughput</div>
         </div>
-        <div class="hp-panel w2 wht">
-          <div class="bubble"><span class="who">Product lead</span>Users wait forever for sentiment results.</div>
-          <div style="text-align:right"><div class="bubble"><span class="who">Vivek</span>Give me a sprint.</div></div>
-          <div class="narr">Query time cut in half. Engagement up a quarter. People talk more when the app listens faster.</div>
+
+        <div class="hp-panel w2 wht tone" style="--rest:-1deg">
+          <div class="narr">CloudWatch watching EC2, Lambda and S3. Least-privilege IAM. Every deploy through CI/CD.</div>
+          <div class="bubble"><span class="who">Vivek</span>Nobody touches prod without a pipeline.</div>
+          <div class="bigstamp">90% test coverage</div>
         </div>
-        <div class="hp-panel w1 tone wht tall" style="--rest:1deg">
-          <div class="num" style="font-size:clamp(80px,10vw,130px)">90%</div>
-          <div style="font-weight:900;font-size:19px">Test coverage. The bugs ran out of places to hide.</div>
-          <span class="sfx lat" style="right:16px;bottom:16px;font-size:44px">SNAP!</span>
-        </div>
-        <div class="hp-panel w2 yel lines-bg" style="--rest:-1.5deg">
+
+        <div class="hp-panel w2 yel lines-bg" style="--rest:1deg">
           <span class="sfx lat" style="right:18px;top:12px;font-size:56px">WIN!!</span>
           <div class="num" style="font-size:clamp(52px,7vw,92px)">Best Talent</div>
-          <div class="narr">2021 to 2022. The guild took notice. But the rookie was already looking at the next horizon.</div>
+          <div class="narr">2021 to 2022.</div>
+          <div class="bubble"><span class="who">Senior dev</span>Kid... you've outgrown this place.</div>
         </div>
+
+        <div class="hp-panel w3 blk tall depart">
+          <div class="sunset"></div>
+          <div class="narr">June 2023. Two years. One award. A lot of production scars. He packs a bag.</div>
+          <div class="nextstop">Next stop: Boston.</div>
+          <span class="sfx" style="right:24px;top:18px;font-size:64px">シュッ</span>
+        </div>
+
         <div class="par" data-speed="0.35" style="top:8%;left:900px;font-size:120px">ズバッ</div>
-        <div class="par" data-speed="0.6" style="bottom:10%;left:2200px;font-size:100px">ドン!</div>
-        <div class="par" data-speed="0.25" style="top:12%;left:3300px;font-size:90px">シュッ</div>
+        <div class="par" data-speed="0.6" style="bottom:10%;left:2400px;font-size:100px">ドン!</div>
+        <div class="par" data-speed="0.25" style="top:12%;left:3600px;font-size:90px">ゴゴ</div>
+        <div class="par" data-speed="0.45" style="bottom:12%;left:4900px;font-size:100px">バーン</div>
       </div>
       <div class="h-progress"><i></i></div>
     </div>
@@ -354,74 +402,83 @@ a{color:inherit}
     <div class="stage f-stage">
       <div class="f-book" id="book">
 
-        <div class="fpage" style="grid-template-rows:1.4fr 1fr">
-          <div class="fp blk lines-bg" id="eyesPanel" style="text-align:center">
-            <div class="eyes" aria-hidden="true">
-              <svg class="eye" viewBox="0 0 200 80"><path d="M4 50 Q70 -8 196 30 Q150 76 60 70 Q24 66 4 50Z" fill="#fff"/><g class="iris"><circle cx="104" cy="42" r="26" fill="#000"/><circle cx="104" cy="42" r="26" fill="none" stroke="#e3001b" stroke-width="3"/><circle cx="114" cy="32" r="7" fill="#fff"/></g><path d="M0 46 Q80 -16 200 26" stroke="#fff" stroke-width="6" fill="none"/></svg>
-              <svg class="eye" viewBox="0 0 200 80" style="transform:scaleX(-1)"><path d="M4 50 Q70 -8 196 30 Q150 76 60 70 Q24 66 4 50Z" fill="#fff"/><g class="iris"><circle cx="104" cy="42" r="26" fill="#000"/><circle cx="104" cy="42" r="26" fill="none" stroke="#e3001b" stroke-width="3"/><circle cx="114" cy="32" r="7" fill="#fff"/></g><path d="M0 46 Q80 -16 200 26" stroke="#fff" stroke-width="6" fill="none"/></svg>
-            </div>
+        <div class="fpage" style="grid-template-columns:1fr 1fr;grid-template-rows:1.5fr 1fr">
+          <div class="fp blk lines-bg" id="eyesPanel" style="grid-column:span 2;text-align:center">
+            <div class="eyes" aria-hidden="true"><svg class="eye" viewBox="0 0 200 80"><path d="M4 50 Q70 -8 196 30 Q150 76 60 70 Q24 66 4 50Z" fill="#fff"/><g class="iris"><circle cx="104" cy="42" r="26" fill="#000"/><circle cx="104" cy="42" r="26" fill="none" stroke="#e3001b" stroke-width="3"/><circle cx="114" cy="32" r="7" fill="#fff"/></g><path d="M0 46 Q80 -16 200 26" stroke="#fff" stroke-width="6" fill="none"/></svg><svg class="eye" viewBox="0 0 200 80" style="transform:scaleX(-1)"><path d="M4 50 Q70 -8 196 30 Q150 76 60 70 Q24 66 4 50Z" fill="#fff"/><g class="iris"><circle cx="104" cy="42" r="26" fill="#000"/><circle cx="104" cy="42" r="26" fill="none" stroke="#e3001b" stroke-width="3"/><circle cx="114" cy="32" r="7" fill="#fff"/></g><path d="M0 46 Q80 -16 200 26" stroke="#fff" stroke-width="6" fill="none"/></svg></div>
             <span class="sfx menace" style="left:18px;top:12px;font-size:56px">ゴゴゴ</span>
             <span class="sfx menace" style="right:18px;bottom:12px;font-size:56px;animation-delay:.4s">ゴゴゴ</span>
           </div>
-          <div class="fp wht tone">
-            <div class="bubble shout"><span class="who">The system</span>Ten thousand requests a second. And not one cent on idle servers. Good luck, intern.</div>
-          </div>
+          <div class="fp wht tone"><div class="narr">Summer 2025. Arlington, Virginia. Amazon. The intern from Boston walks in.</div></div>
+          <div class="fp wht"><div class="bubble think"><span class="who">Vivek</span>Big company. Bigger systems. Let's see what they've got.</div></div>
           <span class="pageno">p.1</span>
         </div>
 
-        <div class="fpage" style="grid-template-columns:1.3fr 1fr">
-          <div class="fp redp lines-bg">
+        <div class="fpage" style="grid-template-columns:1fr 1.15fr;grid-template-rows:1fr 1fr">
+          <div class="fp wht tone"><div class="bubble"><span class="who">Manager</span>We need a new system. Event-driven, serverless, and no money burned on idle servers.</div></div>
+          <div class="fp blk lines-bg" style="grid-column:1;grid-row:2"><div class="bubble shout"><span class="who">The system</span>Ten thousand requests a second. Good luck, intern.</div></div>
+          <div class="fp redp lines-bg" style="grid-column:2;grid-row:1 / span 2">
             <div style="font-weight:900;font-size:18px;position:relative;z-index:2">Incoming traffic</div>
             <div class="num" style="font-size:clamp(56px,8vw,110px)"><span data-count="10000">0</span></div>
             <div style="font-family:Bangers,cursive;font-size:30px;letter-spacing:.05em;position:relative;z-index:2">requests per second</div>
             <div class="hpbar"><i></i></div>
             <span class="sfx lat" style="right:14px;top:10px;font-size:54px;color:var(--hi)">DOOM</span>
           </div>
-          <div class="fp wht">
-            <div class="bubble"><span class="who">Vivek</span>Then nothing waits around. Events wake the system up.</div>
-            <div class="move"><b>Serverless Awakening</b>Decoupled pieces on DynamoDB. They sleep until there's work. Idle cost: gone.</div>
-          </div>
           <span class="pageno">p.2</span>
         </div>
 
-        <div class="fpage" style="grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr">
-          <div class="fp blk lines-bg" style="grid-row:span 2">
-            <div class="move"><b>Queue Shield</b>Not one message dies on my watch. Failures retry, the stubborn ones park in a dead-letter queue.</div>
-            <div class="move"><b>Watchtower Eye</b>Alarms see the crash before users ever do.</div>
-            <div class="move"><b>Flood Gate</b>Concurrency capped. The storm stays outside the walls.</div>
+        <div class="fpage" style="grid-template-rows:1fr 1.2fr">
+          <div class="fp wht tone lines-bg">
+            <div class="bubble"><span class="who">Vivek</span>Then nothing waits around. Events wake the system up.</div>
+            <span class="sfx" style="right:22px;top:12px;font-size:64px;transform:rotate(8deg)">ズバッ</span>
           </div>
-          <div class="fp yel lines-bg">
-            <span class="sfx" style="right:12px;top:6px;font-size:46px">ガキン!</span>
-            <div class="bubble"><span class="who">The system</span>...it's holding?!</div>
-          </div>
-          <div class="fp wht tone">
-            <div class="narr">Three techniques, chained. The spike hit the wall and bounced.</div>
+          <div class="fp blk lines-bg">
+            <div class="move"><b>Serverless Awakening</b>Decoupled pieces on DynamoDB. They sleep until there's work. Idle cost: gone.</div>
           </div>
           <span class="pageno">p.3</span>
         </div>
 
-        <div class="fpage" style="grid-template-columns:1fr 1.2fr">
-          <div class="fp wht tone">
-            <div class="bubble think"><span class="who">Vivek</span>One more thing. What if the tools could think?</div>
+        <div class="fpage" style="grid-template-columns:1fr 1.3fr;grid-template-rows:1fr 1fr">
+          <div class="fp blk lines-bg"><div class="bubble shout"><span class="who">The system</span>Messages are failing! Traffic's flooding in!</div></div>
+          <div class="fp redp" style="grid-column:2;grid-row:1 / span 2">
+            <div class="move"><b>Queue Shield</b>Not one message dies on my watch. Failures retry, the stubborn ones wait in a dead-letter queue.</div>
+            <div class="move"><b>Watchtower Eye</b>Alarms see the crash before users do.</div>
+            <div class="move"><b>Flood Gate</b>Concurrency capped. The storm stays outside.</div>
           </div>
-          <div class="fp blk lines-bg">
-            <div class="move"><b>Agent Summon</b>An AI agent that chains internal tools on its own. Context trimmed lean, so every thought costs less.</div>
-            <div class="move"><b>Tool Forge</b>New MCP tools with strict schemas. The agent never fumbles a call.</div>
-            <span class="sfx lat" style="right:14px;bottom:10px;font-size:48px;color:var(--hi)">FWOOM</span>
+          <div class="fp yel lines-bg" style="grid-column:1;grid-row:2">
+            <span class="sfx" style="right:12px;top:6px;font-size:46px">ガキン!</span>
+            <div class="bubble"><span class="who">The system</span>...it's holding?!</div>
           </div>
           <span class="pageno">p.4</span>
         </div>
 
-        <div class="fpage" style="grid-template-rows:1.6fr 1fr">
-          <div class="fp yel lines-bg" style="text-align:center;align-items:center">
+        <div class="fpage" style="grid-template-columns:1.3fr 1fr">
+          <div class="fp blk lines-bg">
+            <div class="narr">Just when it looked over, a new enemy appeared: an AI agent burning money on every thought.</div>
+            <span class="sfx menace" style="right:18px;bottom:14px;font-size:58px">ドクン</span>
+          </div>
+          <div class="fp wht tone"><div class="bubble think"><span class="who">Vivek</span>Too much context. Loose schemas. It's thinking too hard about the wrong things.</div></div>
+          <span class="pageno">p.5</span>
+        </div>
+
+        <div class="fpage" style="grid-template-rows:1fr auto">
+          <div class="fp blk lines-bg">
+            <div class="move"><b>Agent Summon</b>An agent that chains internal tools on its own. Context pruned lean, schemas tightened. Every thought costs less.</div>
+            <div class="move"><b>Tool Forge</b>New MCP tools with strict schemas. The agent never fumbles a call.</div>
+            <span class="sfx lat" style="right:14px;bottom:10px;font-size:52px;color:var(--hi)">FWOOM</span>
+          </div>
+          <div class="fp yel" style="padding:12px 20px"><div style="font-weight:900;position:relative;z-index:2">Shipped in Agile sprints: Python, Kotlin, CI/CD, every stage of the build.</div></div>
+          <span class="pageno">p.6</span>
+        </div>
+
+        <div class="fpage" style="grid-template-columns:1fr 1fr;grid-template-rows:1.5fr 1fr">
+          <div class="fp yel lines-bg" style="grid-column:span 2;text-align:center;align-items:center">
             <span class="sfx" style="left:4%;top:8%;font-size:clamp(46px,7vw,90px);transform:rotate(-10deg)">ドドン!!</span>
             <div class="num" style="font-size:clamp(84px,15vw,200px)"><span data-count="99.9" data-dec="1">0</span>%</div>
-            <div style="font-family:Bangers,cursive;font-size:32px;letter-spacing:.05em;position:relative;z-index:2">uptime. boss down.</div>
+            <div style="font-family:Bangers,cursive;font-size:32px;letter-spacing:.05em;position:relative;z-index:2">reliability. boss down.</div>
           </div>
-          <div class="fp blk" style="text-align:right;align-items:flex-end">
-            <div class="bubble"><span class="who">The system</span>...Tch. Not bad, intern.</div>
-          </div>
-          <span class="pageno">p.5</span>
+          <div class="fp blk"><div class="bubble"><span class="who">The system</span>...Tch. Not bad, intern.</div></div>
+          <div class="fp wht tone"><div class="narr">August 2025. The internship ended. The system kept running.</div></div>
+          <span class="pageno">p.7</span>
         </div>
 
       </div>
@@ -607,6 +664,8 @@ a{color:inherit}
   var W=['BAM!','ドン','KRAK!','ZOOM!','ゴゴゴ','SHIP IT!','ズバッ','POW!','バーン','DEPLOY!'];
   function pop(x,y,big){if(RM&&!big)return;var s=document.createElement('span');s.className='pop'+(big?' big':'');s.textContent=big||W[Math.random()*W.length|0];
     s.style.left=x+'px';s.style.top=y+'px';s.style.setProperty('--r',(Math.random()*36-18).toFixed(1)+'deg');$('#fx').appendChild(s);setTimeout(function(){s.remove()},850)}
+
+  addEventListener('pointerdown',function(e){if(!opened||e.target.closest('a,button,.card'))return;pop(e.clientX,e.clientY)});
 
   /* counters */
   function count(el){if(el.dataset.done)return;el.dataset.done=1;var to=parseFloat(el.dataset.count),dec=parseInt(el.dataset.dec||'0',10),t0=null,dur=1500;
