@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>VIVEK: The Distributed Arc</title>
+<title>VIVEK: The Engineer Arc</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Dela+Gothic+One&family=Zen+Kaku+Gothic+New:wght@500;700;900&display=swap" rel="stylesheet">
@@ -133,7 +133,7 @@ a{color:inherit}
 /* ch3: page flip */
 .f-stage{background:#1a1a1a;perspective:2200px;display:grid;place-items:center}
 .f-book{position:relative;width:min(92vw,980px);height:min(86vh,700px);transform-style:preserve-3d}
-.fpage{position:absolute;inset:0;transform-origin:right center;transform-style:preserve-3d;backface-visibility:hidden;-webkit-backface-visibility:hidden;background:#fffdf6;color:#000;border:5px solid #000;box-shadow:0 20px 50px rgba(0,0,0,.45);display:grid;gap:10px;padding:10px;overflow:hidden;will-change:transform}
+.fpage{position:absolute;inset:0;transform-origin:right center;backface-visibility:hidden;-webkit-backface-visibility:hidden;background:#fffdf6;color:#000;border:5px solid #000;box-shadow:0 20px 50px rgba(0,0,0,.45);display:grid;gap:10px;padding:10px;overflow:hidden;will-change:transform}
 .fpage .shade{position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,0),rgba(0,0,0,.6));opacity:0;pointer-events:none;z-index:9}
 .fp{border:4px solid #000;position:relative;overflow:hidden;padding:20px;display:flex;flex-direction:column;justify-content:center;gap:14px}
 .fpage .fp{opacity:0;transform:scale(.6) rotate(-6deg);transition:transform .6s cubic-bezier(.2,1.6,.4,1),opacity .3s}
@@ -235,9 +235,9 @@ a{color:inherit}
         <div class="cv-mag">週刊エンジニア <b>VOL.01</b></div>
         <h1 class="cv-title">VIVEK</h1>
         <div class="cv-jp">ヴィヴェク・パティル</div>
-        <p class="cv-sub">The distributed arc. One engineer, five chapters, zero dropped messages.</p>
+        <p class="cv-sub">The engineer arc. One man, many chapters...</p>
         <div><button class="cv-open" type="button">Open volume 1</button></div>
-        <div class="cv-foot">Tap anywhere, scroll, or press Enter</div>
+        <div class="cv-foot">Scroll or press Enter to open</div>
       </div>
     </div>
   </template>
@@ -563,12 +563,11 @@ a{color:inherit}
   <div class="end-panel lines-bg" id="endp">
     <span class="tsuzuku">つづく</span>
     <p class="tbc">To be<br>continued...</p>
-    <p class="end-say">The next arc needs a team. If you're hiring a new-grad engineer who ships, this is where you come in.</p>
+    <p class="end-say">The next arc needs a team. If you're hiring an early career engineer who ships, this is where you come in.</p>
     <div class="cta-row">
       <a class="cta main" href="mailto:patilshankarvivek@gmail.com">Send a message</a>
       <a class="cta" href="https://github.com/shankarpatilv" target="_blank" rel="noopener">GitHub</a>
     </div>
-    <p class="fine">Tap anywhere for sound effects. Some panels follow your cursor.</p>
   </div>
 </section>
 
@@ -608,7 +607,6 @@ a{color:inherit}
   var W=['BAM!','ドン','KRAK!','ZOOM!','ゴゴゴ','SHIP IT!','ズバッ','POW!','バーン','DEPLOY!'];
   function pop(x,y,big){if(RM&&!big)return;var s=document.createElement('span');s.className='pop'+(big?' big':'');s.textContent=big||W[Math.random()*W.length|0];
     s.style.left=x+'px';s.style.top=y+'px';s.style.setProperty('--r',(Math.random()*36-18).toFixed(1)+'deg');$('#fx').appendChild(s);setTimeout(function(){s.remove()},850)}
-  addEventListener('pointerdown',function(e){if(!opened||e.target.closest('a,button,.card'))return;pop(e.clientX,e.clientY)});
 
   /* counters */
   function count(el){if(el.dataset.done)return;el.dataset.done=1;var to=parseFloat(el.dataset.count),dec=parseInt(el.dataset.dec||'0',10),t0=null,dur=1500;
@@ -683,8 +681,10 @@ a{color:inherit}
       pg.style.transform='rotateY('+(e*-170)+'deg)';
       pg.querySelector('.shade').style.opacity=(Math.sin(Math.PI*e)*.8).toFixed(3);
     });
-    for(var i=0;i<M;i++){if((i<M-1?clamp(u-i,0,1):0)<.5){cur=i;break}}
-    pages.forEach(function(pg,i){var on=i===cur;if(on&&!pg.classList.contains('live')){pg.classList.add('live');$$('[data-count]',pg).forEach(count);if(i===M-1)shake()}if(!on)pg.classList.remove('live')});
+    function loc(i){return i<M-1?clamp(u-i,0,1):0}
+    for(var i=0;i<M;i++){if(loc(i)<.5){cur=i;break}}
+    var lc=loc(cur);
+    pages.forEach(function(pg,i){var on=i===cur||(i===cur+1&&lc>.02);if(on&&!pg.classList.contains('live')){pg.classList.add('live');$$('[data-count]',pg).forEach(count);if(i===M-1)shake()}if(!on)pg.classList.remove('live')});
     fhint.textContent='Page '+(cur+1)+' of '+M;
   }
 
