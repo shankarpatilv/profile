@@ -143,7 +143,7 @@ a{color:inherit}
 
 /* ch3: page flip */
 .f-stage{background:#1a1a1a;perspective:2200px;display:grid;place-items:center}
-.f-book{position:relative;width:min(92vw,980px);height:min(86vh,700px);transform-style:preserve-3d}
+.f-book{position:relative;width:min(92vw,980px);height:min(86vh,700px)}
 .fpage{position:absolute;inset:0;transform-origin:right center;backface-visibility:hidden;-webkit-backface-visibility:hidden;background:#fffdf6;color:#000;border:5px solid #000;box-shadow:0 20px 50px rgba(0,0,0,.45);display:grid;gap:10px;padding:10px;overflow:hidden;will-change:transform}
 .fpage .shade{position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,0),rgba(0,0,0,.6));opacity:0;pointer-events:none;z-index:9}
 .fp{border:4px solid #000;position:relative;overflow:hidden;padding:20px;display:flex;flex-direction:column;justify-content:center;gap:14px}
@@ -152,6 +152,23 @@ a{color:inherit}
 .fpage.live .fp:nth-child(3){transition-delay:.12s}.fpage.live .fp:nth-child(4){transition-delay:.24s}.fpage.live .fp:nth-child(5){transition-delay:.36s}
 .pageno{position:absolute;bottom:6px;left:12px;font-size:12px;font-weight:900;z-index:8}
 .f-hint{position:absolute;left:50%;bottom:16px;transform:translateX(-50%);font-family:"Bangers",cursive;font-size:20px;letter-spacing:.06em;color:var(--hi);z-index:10;white-space:nowrap}
+.ai-call{align-items:center;justify-content:center;text-align:center;gap:26px}
+.typer{font-family:"Dela Gothic One",sans-serif;font-size:clamp(40px,7vw,96px);color:#fff;position:relative;z-index:2;min-height:1.1em;letter-spacing:-.02em}
+.typer::after{content:"";display:inline-block;width:.08em;height:.9em;background:var(--hi);margin-left:.08em;vertical-align:-.08em;animation:caret .6s steps(1) infinite}
+@keyframes caret{50%{opacity:0}}
+.ai-call.hit .typer::after{display:none}
+.slam{position:relative;z-index:4;font-family:"Dela Gothic One",sans-serif;font-size:clamp(34px,6vw,84px);line-height:1;background:var(--red);color:var(--hi);-webkit-text-stroke:2px #000;paint-order:stroke fill;padding:.25em .5em;border:5px solid #fff;transform:rotate(-4deg) scale(0);opacity:0}
+.ai-call.hit .slam{animation:slamIn .55s cubic-bezier(.2,1.8,.4,1) forwards}
+@keyframes slamIn{0%{opacity:0;transform:rotate(-14deg) scale(3.5)}100%{opacity:1;transform:rotate(-4deg) scale(1)}}
+.slam-mcp{display:block;font-size:1.6em;margin-top:.05em}
+.ban{right:6%;top:8%;font-size:clamp(50px,8vw,110px);color:var(--hi);opacity:0;transform:scale(0) rotate(12deg)}
+.ai-call.hit .ban{animation:banIn .5s .1s cubic-bezier(.2,1.8,.4,1) forwards}
+@keyframes banIn{to{opacity:1;transform:scale(1) rotate(12deg)}}
+.ring{left:5%;bottom:8%;font-size:clamp(34px,5vw,64px);color:#fff;animation:ringing .12s linear infinite}
+.ai-call.hit .ring{animation:none;opacity:.25}
+@keyframes ringing{0%,100%{transform:translate(0,0) rotate(-6deg)}50%{transform:translate(3px,-2px) rotate(-2deg)}}
+.aiflash{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none;z-index:6}
+.ai-call.hit .aiflash{animation:flash .45s ease-out}
 .move{border-top:3px solid currentColor;padding:12px 0 0;position:relative;z-index:2}
 .move:first-child{border-top:0;padding-top:0}
 .move b{display:block;font-family:"Bangers",cursive;font-size:clamp(24px,3vw,32px);letter-spacing:.05em;color:var(--red);line-height:1}
@@ -199,6 +216,7 @@ a{color:inherit}
 .ap.w3{grid-column:span 3}
 .ap h3{font-family:"Dela Gothic One",sans-serif;font-weight:400;font-size:24px;margin:0 0 4px}
 .ap .say{font-size:14px;font-weight:700;margin:0 0 12px;color:var(--muted)}
+.ap.blk{background:#000;color:#fff;border-color:#000}
 .ap.blk .say{color:#ccc}
 .stamps{display:flex;flex-wrap:wrap;gap:12px}
 .stamp{border:3px solid var(--red);color:var(--red);font-weight:900;padding:6px 12px;font-size:15px;transform:rotate(var(--sr,0deg)) scale(2.4);opacity:0;transition:transform .45s cubic-bezier(.2,1.8,.4,1),opacity .2s}
@@ -400,8 +418,8 @@ a{color:inherit}
         </div>
         <div class="dp redp lines-bg" data-i="7" style="align-items:center;text-align:center">
           <div class="bubble shout">Arlington calls. Amazon needs an SDE intern. Your next fight starts here.</div>
-          <span class="sfx menace" style="left:24px;bottom:16px;font-size:64px">ドクン</span>
-          <span class="sfx menace" style="right:24px;top:16px;font-size:64px;animation-delay:.5s">ドクン</span>
+          <span class="sfx menace" style="left:24px;bottom:16px;font-size:64px;color:var(--hi)">ドクン</span>
+          <span class="sfx menace" style="right:24px;top:16px;font-size:64px;animation-delay:.5s;color:var(--hi)">ドクン</span>
         </div>
       </div>
       <div class="d-lines"></div><div class="d-vignette"></div>
@@ -469,34 +487,30 @@ a{color:inherit}
           <span class="pageno">p.4</span>
         </div>
 
-        <div class="fpage" style="grid-template-columns:1.3fr 1fr">
-          <div class="fp blk lines-bg">
-            <div class="narr">Just when it looked over, a new enemy appeared: an AI agent burning money on every thought.</div>
-            <span class="sfx menace" style="right:18px;bottom:14px;font-size:58px">ドクン</span>
+        <div class="fpage" style="grid-template-rows:1fr">
+          <div class="fp blk lines-bg ai-call">
+            <div class="typer" data-text="AI calling......" aria-label="AI calling"></div>
+            <div class="slam">Agentic workflows<br><span class="slam-mcp">+ MCP</span></div>
+            <span class="sfx ban">バーン!!</span>
+            <span class="sfx ring">プルルル</span>
+            <div class="aiflash"></div>
           </div>
-          <div class="fp wht tone"><div class="bubble think"><span class="who">Vivek</span>Too much context. Loose schemas. It's thinking too hard about the wrong things.</div></div>
           <span class="pageno">p.5</span>
         </div>
 
-        <div class="fpage" style="grid-template-rows:1fr auto">
-          <div class="fp blk lines-bg">
-            <div class="move"><b>Agent Summon</b>An agent that chains internal tools on its own. Context pruned lean, schemas tightened. Every thought costs less.</div>
-            <div class="move"><b>Tool Forge</b>New MCP tools with strict schemas. The agent never fumbles a call.</div>
-            <span class="sfx lat" style="right:14px;bottom:10px;font-size:52px;color:var(--hi)">FWOOM</span>
+        <div class="fpage" data-shake="1" style="grid-template-columns:1fr 1fr;grid-template-rows:1fr 1.4fr auto">
+          <div class="fp blk lines-bg"><div class="bubble"><span class="who">The system</span>...Fine. I'll run. You teach the AI.</div></div>
+          <div class="fp wht tone" style="align-items:flex-end;text-align:right">
+            <div class="bubble"><span class="who">Vivek</span>Deal.</div>
+            <span class="sfx" style="left:16px;top:10px;font-size:52px;transform:rotate(-8deg)">ガシッ</span>
           </div>
-          <div class="fp yel" style="padding:12px 20px"><div style="font-weight:900;position:relative;z-index:2">Shipped in Agile sprints: Python, Kotlin, CI/CD, every stage of the build.</div></div>
-          <span class="pageno">p.6</span>
-        </div>
-
-        <div class="fpage" style="grid-template-columns:1fr 1fr;grid-template-rows:1.5fr 1fr">
           <div class="fp yel lines-bg" style="grid-column:span 2;text-align:center;align-items:center">
             <span class="sfx" style="left:4%;top:8%;font-size:clamp(46px,7vw,90px);transform:rotate(-10deg)">ドドン!!</span>
-            <div class="num" style="font-size:clamp(84px,15vw,200px)"><span data-count="99.9" data-dec="1">0</span>%</div>
-            <div style="font-family:Bangers,cursive;font-size:32px;letter-spacing:.05em;position:relative;z-index:2">reliability. boss down.</div>
+            <div class="num" style="font-size:clamp(76px,13vw,170px)"><span data-count="99.9" data-dec="1">0</span>%</div>
+            <div style="font-family:Bangers,cursive;font-size:30px;letter-spacing:.05em;position:relative;z-index:2">reliability. boss down.</div>
           </div>
-          <div class="fp blk"><div class="bubble"><span class="who">The system</span>...Tch. Not bad, intern.</div></div>
-          <div class="fp wht tone"><div class="narr">August 2025. The internship ended. The system kept running.</div></div>
-          <span class="pageno">p.7</span>
+          <div class="fp blk" style="grid-column:span 2;padding:12px 20px"><div style="font-weight:900;position:relative;z-index:2">August 2025. The internship ended. The system and the agent kept going.</div></div>
+          <span class="pageno">p.6</span>
         </div>
 
       </div>
@@ -704,7 +718,7 @@ a{color:inherit}
   var hpin=$('#hpin'),track=$('#track'),pars=$$('.par',track),hw=0;
   /* ---------- CH2 dive ---------- */
   var dpin=$('#dpin'),world=$('#world'),dps=$$('.dp',world),dcap=$('#dcap'),dstage=$('.d-stage');
-  var L_WIDE=[[40,40,640,430],[720,40,560,430],[1320,40,420,430],[40,510,460,450],[540,510,460,450],[1040,510,300,450],[1380,510,360,450],[40,1000,1700,400]];
+  var L_WIDE=[[40,40,640,430],[720,40,560,430],[1320,40,420,430],[40,510,460,450],[540,510,460,450],[1040,510,300,450],[1380,510,360,450],[400,1000,940,430]];
   var L_TALL=[[20,20,360,420],[20,470,360,420],[20,920,360,440],[20,1390,360,400],[20,1820,360,420],[20,2270,360,320],[20,2620,360,380],[20,3030,360,420]];
   var lay,WW,WH;
   /* ---------- CH3 flip ---------- */
@@ -751,17 +765,25 @@ a{color:inherit}
     dcap.textContent=focus<0?'The full page':'Panel '+(focus+1)+' of '+dps.length;
   }
 
+  var typeTimers=[];
+  function resetType(pg){var t=$('.typer',pg);if(!t)return;typeTimers.forEach(clearTimeout);typeTimers=[];t.textContent='';$('.ai-call',pg).classList.remove('hit')}
+  function typeIt(pg){var t=$('.typer',pg);if(!t)return;resetType(pg);var txt=t.dataset.text,box=$('.ai-call',pg);
+    if(RM){t.textContent=txt;box.classList.add('hit');return}
+    for(var k=1;k<=txt.length;k++){(function(k){typeTimers.push(setTimeout(function(){t.textContent=txt.slice(0,k)},300+k*(k>10?170:85)))})(k)}
+    typeTimers.push(setTimeout(function(){box.classList.add('hit');shake()},300+txt.length*170+250));
+  }
+
   function renderFlip(){
     var p=prog(fpin),M=pages.length,u=p*(M-.6),cur=M-1;
     pages.forEach(function(pg,i){
       var l=i<M-1?clamp(u-i,0,1):0,e=smooth(l);
-      pg.style.transform='rotateY('+(e*-170)+'deg)';
+      pg.style.transform='perspective(2400px) rotateY('+(e*-170).toFixed(2)+'deg)';pg.style.visibility=e>.55?'hidden':'visible';
       pg.querySelector('.shade').style.opacity=(Math.sin(Math.PI*e)*.8).toFixed(3);
     });
     function loc(i){return i<M-1?clamp(u-i,0,1):0}
     for(var i=0;i<M;i++){if(loc(i)<.5){cur=i;break}}
     var lc=loc(cur);
-    pages.forEach(function(pg,i){var on=i===cur||(i===cur+1&&lc>.02);if(on&&!pg.classList.contains('live')){pg.classList.add('live');$$('[data-count]',pg).forEach(count);if(i===M-1)shake()}if(!on)pg.classList.remove('live')});
+    pages.forEach(function(pg,i){var on=i===cur||(i===cur+1&&lc>.02);if(on&&!pg.classList.contains('live')){pg.classList.add('live');$$('[data-count]',pg).forEach(count);if(pg.dataset.shake)shake();typeIt(pg)}if(!on&&pg.classList.contains('live')){pg.classList.remove('live');resetType(pg)}});
     fhint.textContent='Page '+(cur+1)+' of '+M;
   }
 
