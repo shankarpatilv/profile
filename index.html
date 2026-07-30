@@ -241,12 +241,62 @@ a{color:inherit}
 .cta:hover{transform:translate(-3px,-3px);box-shadow:9px 9px 0 var(--red)}
 .fine{margin-top:40px;font-size:14px;color:var(--muted);font-weight:700;position:relative;z-index:2}
 
+/* ---------- intro: profile sheet ---------- */
+.intro{max-width:1140px;margin:0 auto;padding:clamp(40px,7vw,80px) clamp(14px,3vw,28px) clamp(40px,6vw,70px);position:relative}
+.i-head{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:18px;align-items:stretch}
+.i-id{position:relative;overflow:hidden;border:5px solid var(--ink);box-shadow:9px 9px 0 var(--red);background:var(--paper);padding:clamp(22px,4vw,44px) clamp(22px,4vw,44px) clamp(22px,4vw,44px) clamp(70px,8vw,104px)}
+.i-tag{position:absolute;left:clamp(14px,2vw,26px);top:clamp(22px,4vw,44px);writing-mode:vertical-rl;font-family:"Dela Gothic One",sans-serif;font-size:clamp(22px,3vw,34px);background:var(--red);color:#fff;padding:12px 6px;z-index:2}
+.i-idbody{position:relative;z-index:2}
+.i-name{font-family:"Dela Gothic One",sans-serif;font-weight:400;font-size:clamp(36px,5vw,68px);line-height:.95;letter-spacing:-.03em;margin:16px 0 0;text-shadow:.04em .04em 0 var(--red)}
+.i-role{display:inline-block;margin-top:0;background:var(--ink);color:var(--paper);font-weight:900;font-size:clamp(16px,2vw,22px);padding:6px 14px;letter-spacing:.04em}
+.i-hook{display:block;margin-top:20px;max-width:46ch;font-size:clamp(16px,1.8vw,19px);border-width:4px}
+.i-data{margin:0;border:5px solid var(--ink);box-shadow:9px 9px 0 var(--ink);background:var(--paper);display:flex;flex-direction:column}
+.i-data>div{display:grid;grid-template-columns:minmax(100px,34%) 1fr;border-top:3px solid var(--ink)}
+.i-data>div:first-child{border-top:0}
+.i-data dt{background:var(--ink);color:var(--paper);font-weight:900;font-size:12px;letter-spacing:.08em;text-transform:uppercase;padding:10px 12px;display:flex;align-items:center}
+.i-data dd{margin:0;padding:10px 14px;font-weight:700;font-size:15px;display:flex;align-items:center}
+.i-data .i-catch{flex:1}
+.i-data>.i-catch{grid-template-columns:1fr}
+.i-catch dd{justify-content:center;text-align:center}
+.i-catch dd{background:var(--hi);color:#000;font-family:"Bangers",cursive;font-weight:400;font-size:clamp(20px,2.2vw,26px);letter-spacing:.04em;line-height:1.1}
+.i-h,.i-gl{font-family:"Bangers",cursive;font-weight:400;letter-spacing:.06em;display:inline-block;background:var(--ink);color:var(--paper);padding:2px 14px;transform:rotate(-1.5deg)}
+.i-h{font-size:clamp(28px,3.4vw,40px);margin:48px 0 18px}
+.i-gl{font-size:clamp(22px,2.4vw,28px)}
+.wd-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.wd{border:4px solid #000;box-shadow:6px 6px 0 var(--ink);padding:18px 18px 16px;min-height:124px;display:flex;flex-direction:column;justify-content:space-between;gap:10px;font-family:"Dela Gothic One",sans-serif;font-size:clamp(19px,2.1vw,26px);line-height:1.05;transform:rotate(var(--sr,0deg)) scale(1.8);opacity:0;transition:transform .45s cubic-bezier(.2,1.8,.4,1),opacity .2s}
+.wd b{font-family:"Bangers",cursive;font-weight:400;font-size:clamp(26px,2.6vw,34px);letter-spacing:.04em;line-height:1}
+.wd.blk b,.wd.redp b{color:var(--hi)}.wd.yel b,.wd.wht b{color:var(--red)}
+.wd-grid.in .wd{transform:rotate(var(--sr,0deg));opacity:1}
+.wd:nth-child(2){transition-delay:.09s}.wd:nth-child(3){transition-delay:.18s}.wd:nth-child(4){transition-delay:.27s}.wd:nth-child(5){transition-delay:.36s}.wd:nth-child(6){transition-delay:.45s}
+.i-good{margin-top:34px;background:#000;color:#fff;border:4px solid var(--ink);box-shadow:7px 7px 0 var(--red);padding:18px 22px;display:flex;align-items:center;gap:16px 24px;flex-wrap:wrap}
+.i-good .i-gl{background:var(--hi);color:#000;transform:rotate(-2deg)}
+.i-good ul{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:10px 28px;flex:1}
+.i-good li{font-weight:900;font-size:clamp(15px,1.6vw,18px);display:flex;gap:8px;align-items:baseline}
+.i-good li::before{content:"\2605";color:var(--hi)}
+.i-facts{margin-top:24px;border-top:3px solid var(--ink);border-bottom:3px solid var(--ink);padding:10px 4px;display:flex;flex-wrap:wrap;justify-content:center;gap:4px 0;font-weight:900;font-size:clamp(13px,1.5vw,16px);letter-spacing:.03em;text-align:center}
+.i-facts span+span::before{content:"\00b7";color:var(--red);margin:0 12px}
+.i-stack{margin-top:32px}
+.i-stack .i-gl{margin:0 0 16px}
+.i-stack.in .stamp{transform:rotate(var(--sr,0deg));opacity:1}
+.i-cta{margin-top:36px;justify-content:center}
+.i-next{display:block;width:max-content;margin:28px auto 0;font-family:"Bangers",cursive;font-size:clamp(24px,2.8vw,32px);letter-spacing:.06em;color:var(--red);text-decoration:none;animation:bob 1.4s ease-in-out infinite}
+
 /* memory: offscreen decorations drop their GPU layers; big movers only promoted near their section */
 .idle::before{display:none!important}
 .menace.idle,.ring.idle{animation:none!important}
 .pin.near .track,.pin.near .world,.pin.near .fpage{will-change:transform}
 
 @media (max-width:760px){
+  .i-head{grid-template-columns:minmax(0,1fr)}
+  .i-id{padding:22px}
+  .i-tag{position:relative;left:auto;top:auto;display:inline-block;margin-bottom:12px}
+  .i-data>div{grid-template-columns:112px 1fr}
+  .wd-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+  .wd{min-height:104px;padding:14px}
+  .i-good{padding:16px;flex-direction:column;align-items:flex-start}
+  .i-data dt{font-size:11px;padding:10px 8px;letter-spacing:.06em}
+  .i-facts{flex-direction:column;gap:4px}
+  .i-facts span+span::before{display:none}
   .kanji{position:relative;left:auto;top:auto;transform:none;display:inline-block;margin-bottom:14px}
   .cv-sun{right:-30vw;top:30%}.cv-jp{display:none}.hud-ch{display:none}
   .cv-title{font-size:clamp(56px,20vw,96px)}
@@ -267,14 +317,14 @@ a{color:inherit}
   .fpage .sfx{font-size:34px!important}
 }
 @media (prefers-reduced-motion:reduce){
-  .cv-lines,.ct::before,.lines-bg::before,.menace,.cv-open,.cv-title{animation:none!important}
+  .cv-lines,.ct::before,.lines-bg::before,.menace,.cv-open,.cv-title,.i-next{animation:none!important}
   .speed{display:none}
 }
 </style>
 </head>
 <body>
 
-<div id="cover" role="dialog" aria-label="Cover: open volume 1">
+<div id="cover" role="dialog" aria-label="Cover: meet the engineer">
   <template id="cover-art">
     <div class="cv">
       <div class="cv-lines"></div><div class="cv-sun"></div><div class="cv-tonecorner tone"></div>
@@ -283,7 +333,7 @@ a{color:inherit}
         <h1 class="cv-title">VIVEK</h1>
         <div class="cv-jp">ヴィヴェク・パティル</div>
         <p class="cv-sub">The engineer arc. One man, many chapters...</p>
-        <div><button class="cv-open" type="button">Open volume 1</button></div>
+        <div><button class="cv-open" type="button">Meet the engineer</button></div>
         <div class="cv-foot">Scroll or press Enter to open</div>
       </div>
     </div>
@@ -297,8 +347,57 @@ a{color:inherit}
 
 <main id="story">
 
+<!-- ================= INTRO: PROFILE ================= -->
+<section class="intro" data-label="人物紹介 Profile">
+  <div class="i-head">
+    <div class="i-id lines-bg">
+      <span class="i-tag">人物紹介</span>
+      <div class="i-idbody">
+        <div class="i-role">Character profile</div>
+        <h2 class="i-name">SOFTWARE<br>ENGINEER</h2>
+        <p class="narr i-hook">I build APIs, backend systems, and integrations that hold up in production, plus the front ends and AI features on top of them.</p>
+      </div>
+    </div>
+    <dl class="i-data">
+      <div><dt>Special move</dt><dd>Learns any stack overnight</dd></div>
+      <div><dt>Weakness</dt><dd>&ldquo;Just reading the intro&rdquo;&hellip; finishes the docs</dd></div>
+      <div><dt>Likes</dt><dd>Clean logs, green pipelines, cooking</dd></div>
+      <div><dt>Dislikes</dt><dd>AI slop, systems that fail silently</dd></div>
+      <div><dt>Fuel</dt><dd>Coffee</dd></div>
+      <div class="i-catch"><dd>"Ship it. Then make it unbreakable."</dd></div>
+    </dl>
+  </div>
+
+  <h3 class="i-h">What I do</h3>
+  <div class="wd-grid rv">
+    <div class="wd blk" style="--sr:-2deg"><b>01</b>Build APIs</div>
+    <div class="wd yel" style="--sr:1.5deg"><b>02</b>Design backend systems</div>
+    <div class="wd redp" style="--sr:-1deg"><b>03</b>Connect services together</div>
+    <div class="wd wht tone" style="--sr:2deg"><b>04</b>Run things in the cloud</div>
+    <div class="wd blk" style="--sr:-1.5deg"><b>05</b>Craft the front end</div>
+    <div class="wd yel" style="--sr:1deg"><b>06</b>Wire in AI</div>
+  </div>
+
+  <div class="i-good">
+    <span class="i-gl">Good at</span>
+    <ul><li>Building systems that stay reliable under real traffic</li><li>Debugging hard production problems</li><li>Picking up any stack and shipping fast</li></ul>
+  </div>
+
+  <div class="i-facts"><span>2 yrs industry</span><span>Amazon SDE intern</span><span>MS Software Engineering, Northeastern</span></div>
+
+  <div class="i-stack rv">
+    <span class="i-gl">Stack</span>
+    <div class="stamps"><span class="stamp">Python</span><span class="stamp">Java</span><span class="stamp">Go</span><span class="stamp">TypeScript</span><span class="stamp">C#</span><span class="stamp">React</span><span class="stamp">Node.js</span><span class="stamp">Spring Boot</span><span class="stamp">FastAPI</span><span class="stamp">PostgreSQL</span><span class="stamp">MongoDB</span><span class="stamp">Redis</span><span class="stamp">Kafka</span><span class="stamp">AWS</span><span class="stamp">Azure</span><span class="stamp">Docker</span><span class="stamp">Kubernetes</span><span class="stamp">Terraform</span><span class="stamp">LangGraph</span><span class="stamp">MCP</span><span class="stamp">Claude Code</span></div>
+  </div>
+
+  <div class="cta-row i-cta">
+    <a class="cta main" href="mailto:patilshankarvivek@gmail.com">Get in touch</a>
+  </div>
+  <a class="i-next" href="#origin">Read the story &darr;</a>
+</section>
+
 <!-- ================= CH1: SIDEWAYS ================= -->
-<section data-label="第一話 Origin">
+<section id="origin" data-label="第一話 Origin">
   <div class="ct"><span class="kanji">第一話</span>
     <div class="slash s1"></div><div class="slash s2"></div><div class="slash s3"></div>
     <div class="ct-body"><h2>Origin</h2><p>A rookie with a laptop and something to prove.</p><span class="hint">Keep scrolling, the panels slide &gt;&gt;</span></div>
@@ -735,13 +834,14 @@ a{color:inherit}
     if(t.classList.contains('ct'))setTimeout(shake,520);
     if(t.id==='cards')deal();
     io.unobserve(t)})},{threshold:.2});
-  $$('.ct,.ap,#cards,#endp').forEach(function(el){io.observe(el)});
+  $$('.ct,.ap,#cards,#endp,.rv').forEach(function(el){io.observe(el)});
   /* free GPU memory: offscreen bursts/wobbles switch off, pinned sections promote only when near */
   var deco=new IntersectionObserver(function(es){es.forEach(function(e){e.target.classList.toggle('idle',!e.isIntersecting)})},{rootMargin:'25%'});
   $$('.lines-bg,.ct,.menace,.ring').forEach(function(el){el.classList.add('idle');deco.observe(el)});
   var near=new IntersectionObserver(function(es){es.forEach(function(e){e.target.classList.toggle('near',e.isIntersecting)})},{rootMargin:'100% 0px'});
   $$('.pin').forEach(function(el){near.observe(el)});
-  $$('.stamp').forEach(function(s,i){s.style.setProperty('--sr',((i*37%13)-6)+'deg');s.style.transitionDelay=(150+(i%6)*90)+'ms'});
+  $$('.i-stack .stamp').forEach(function(s,i){s.style.setProperty('--sr',((i*37%13)-6)+'deg');s.style.transitionDelay=(60+(i%9)*55)+'ms'});
+  $$('.ars .stamp').forEach(function(s,i){s.style.setProperty('--sr',((i*37%13)-6)+'deg');s.style.transitionDelay=(150+(i%6)*90)+'ms'});
 
   /* stage size: measured from the sticky stage itself (100svh), so mobile address-bar show/hide doesn't move anything */
   var stageEl=$('.stage'),SW=0,SH=0;
