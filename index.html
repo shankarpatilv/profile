@@ -407,6 +407,38 @@ html.super.shake main{animation:shake2 .38s cubic-bezier(.36,.07,.19,.97)}
 .final .fe{margin-top:10px;font-weight:700;font-size:15px;color:#ddd}
 .final .fe b{color:var(--hi)}
 
+/* score hints: tutorial bubble, quest log, in-story stamps */
+.score{cursor:pointer;font-family:"Bangers",cursive;color:#fff;font-size:inherit}
+.score:focus-visible{outline:3px solid var(--hi);outline-offset:3px}
+.tut{position:fixed;right:14px;top:calc(66px + env(safe-area-inset-top,0px));z-index:48;max-width:min(270px,80vw);background:#fff;color:#000;border:3px solid #000;border-radius:50%/42%;padding:16px 22px 17px;font-weight:900;font-size:15px;line-height:1.3;text-align:center;pointer-events:none;opacity:0;transform:scale(.4) rotate(-6deg);transform-origin:85% 0;transition:opacity .2s,transform .35s cubic-bezier(.2,1.7,.4,1)}
+.tut.on{opacity:1;transform:scale(1) rotate(-2deg)}
+.tut::after{content:"";position:absolute;top:-17px;right:42px;border:9px solid transparent;border-bottom:16px solid #000}
+.tut .who{display:block;font-size:10px;letter-spacing:.08em;color:var(--red);margin-bottom:2px}
+.tut b{color:var(--red)}
+.tut small{display:block;margin-top:4px;font-size:12px;color:#444}
+.qlog{position:fixed;right:14px;top:calc(62px + env(safe-area-inset-top,0px));z-index:49;width:min(330px,92vw);background:#fffdf6;color:#000;border:4px solid #000;box-shadow:8px 8px 0 var(--red);padding:16px 16px 12px;transform-origin:100% 0;transform:scaleY(0);opacity:0;pointer-events:none;transition:transform .32s cubic-bezier(.2,1.4,.4,1),opacity .15s}
+.qlog.open{transform:scaleY(1);opacity:1;pointer-events:auto}
+.qlog h3{margin:0 0 10px;display:flex;align-items:center;gap:10px;font-family:"Bangers",cursive;font-weight:400;font-size:26px;letter-spacing:.06em}
+.qlog h3 span{font-family:"Dela Gothic One",sans-serif;font-size:16px;background:#000;color:var(--hi);padding:2px 8px}
+.qlog .qx{margin-left:auto;font:inherit;font-family:"Bangers",cursive;font-size:18px;background:#000;color:#fff;border:0;padding:2px 9px;cursor:pointer}
+.qlog ul{list-style:none;margin:0;padding:0}
+.qlog li{display:grid;grid-template-columns:24px 1fr auto;gap:10px;align-items:center;padding:8px 0;border-top:2px dashed #000;font-weight:800;font-size:14px}
+.qlog li:first-child{border-top:0}
+.qlog .qb{width:20px;height:20px;border:3px solid #000;position:relative;background:#fff}
+.qlog li.done .qb{background:var(--hi)}
+.qlog li.done .qb::after{content:"";position:absolute;left:4px;top:-2px;width:6px;height:12px;border:solid var(--red);border-width:0 4px 4px 0;transform:rotate(40deg)}
+.qlog li.done .qt{text-decoration:line-through;text-decoration-thickness:2px;text-decoration-color:var(--red)}
+.qlog .qp{font-family:"Bangers",cursive;font-weight:400;font-size:17px;letter-spacing:.04em;color:var(--red);white-space:nowrap;text-align:right}
+.qlog .qp small{display:block;font-family:"Zen Kaku Gothic New",sans-serif;font-weight:900;font-size:11px;color:#000;letter-spacing:0}
+.qlog li.egg .qt{font-family:"Bangers",cursive;font-weight:400;font-size:18px;letter-spacing:.06em}
+.qlog .qfoot{margin-top:8px;font-size:12px;font-weight:700;color:#444}
+.pstamp{position:absolute;left:10px;top:54px;z-index:6;border:3px solid var(--red);background:#fffdf6;color:var(--red);font-family:"Bangers",cursive;font-size:20px;letter-spacing:.04em;padding:0 8px;transform:rotate(10deg);transition:opacity .35s,transform .45s cubic-bezier(.2,1.6,.4,1)}
+.card.claimed .pstamp{opacity:0;transform:rotate(40deg) scale(1.8) translate(20px,-20px)}
+.ctstamp{display:inline-block;margin-top:16px;border:4px solid var(--red);color:var(--red);background:#000;font-family:"Bangers",cursive;font-size:clamp(20px,2.4vw,28px);letter-spacing:.06em;padding:2px 14px;transform:rotate(-6deg) scale(2.4);opacity:0}
+.ct.in .ctstamp{animation:ctStamp .4s 1.45s cubic-bezier(.2,1.8,.4,1) forwards}
+@keyframes ctStamp{to{opacity:1;transform:rotate(-6deg) scale(1)}}
+.i-next small{display:block;font-family:"Zen Kaku Gothic New",sans-serif;font-weight:900;font-size:13px;letter-spacing:.02em;color:var(--ink);text-align:center;margin-top:2px}
+
 /* memory: offscreen decorations drop their GPU layers; big movers only promoted near their section */
 .idle::before{display:none!important}
 .menace.idle,.ring.idle{animation:none!important}
@@ -477,7 +509,9 @@ html.super.shake main{animation:shake2 .38s cubic-bezier(.36,.07,.19,.97)}
 <div class="flash" id="flash"></div>
 <div id="impactf" aria-hidden="true"></div>
 <div id="nextslash" aria-hidden="true"><div class="ns-band"><span class="ns-l">次回</span><span class="ns-t">NEXT: <b id="nsName">Training arc!!</b></span></div></div>
-<div class="score" id="score" aria-live="polite"><span class="sc-l">SCORE</span><b id="scN">0</b><span class="sc-r" id="scR">Rookie</span></div>
+<button class="score" id="score" type="button" aria-expanded="false" aria-controls="qlog"><span class="sc-l">SCORE</span><b id="scN">0</b><span class="sc-r" id="scR">Rookie</span></button>
+<div class="tut" id="tut" aria-hidden="true"><span class="who">Narrator</span>Tap anywhere for BOOMS! <b>+5</b> each. Finish the manga for way more.<small>Tap SCORE for your quest log.</small></div>
+<div class="qlog" id="qlog" role="dialog" aria-label="Quest log"><h3><span>任務</span>Quest log<button class="qx" type="button" aria-label="Close quest log">&times;</button></h3><ul id="qlist"></ul><div class="qfoot" id="qfoot"></div></div>
 <div class="super-badge" aria-hidden="true">&#9889; SUPER MODE</div>
 <!-- psst, dev: type "ship it" anywhere on this page -->
 <div id="fx" aria-hidden="true"></div>
@@ -546,7 +580,7 @@ html.super.shake main{animation:shake2 .38s cubic-bezier(.36,.07,.19,.97)}
   <div class="cta-row i-cta">
     <a class="cta main" href="mailto:patilshankarvivek@gmail.com">Get in touch</a>
   </div>
-  <a class="i-next" href="#origin">Read the story &darr;</a>
+  <a class="i-next" href="#origin">Read the story &darr;<small>+500 if you finish the manga</small></a>
 </section>
 
 <!-- ================= CH1: SIDEWAYS ================= -->
@@ -689,7 +723,7 @@ html.super.shake main{animation:shake2 .38s cubic-bezier(.36,.07,.19,.97)}
 <section id="amazon" data-label="第三話 Amazon arc">
   <div class="ct"><span class="kanji">第三話</span>
     <div class="slash s1"></div><div class="slash s2"></div><div class="slash s3"></div>
-    <div class="ct-body"><h2>Amazon arc</h2><p>Arlington, summer 2025. The boss fight.</p><span class="hint">Scroll to turn the pages</span></div>
+    <div class="ct-body"><h2>Amazon arc</h2><p>Arlington, summer 2025. The boss fight.</p><span class="hint">Scroll to turn the pages</span><span class="ctstamp">BOSS &middot; +300</span></div>
   </div>
   <div class="pin" id="fpin">
     <div class="stage f-stage">
@@ -796,6 +830,7 @@ html.super.shake main{animation:shake2 .38s cubic-bezier(.36,.07,.19,.97)}
             <div class="atk"><b>Zero Lag</b><span>0</span></div>
             <div class="rar"><span>★★★★★ Legendary</span><span>01/05</span></div>
             <div class="holo"></div>
+            <span class="pstamp" aria-hidden="true">+50</span>
           </div>
           <div class="face back">
             <h4>gitStream</h4>
@@ -816,6 +851,7 @@ html.super.shake main{animation:shake2 .38s cubic-bezier(.36,.07,.19,.97)}
             <div class="atk"><b>Source Seal</b><span>STAR</span></div>
             <div class="rar"><span>★★★★ Epic</span><span>02/05</span></div>
             <div class="holo"></div>
+            <span class="pstamp" aria-hidden="true">+50</span>
           </div>
           <div class="face back">
             <h4>InterviewKit</h4>
@@ -836,6 +872,7 @@ html.super.shake main{animation:shake2 .38s cubic-bezier(.36,.07,.19,.97)}
             <div class="atk"><b>RS256 Seal</b><span>LOCK</span></div>
             <div class="rar"><span>★★★ Rare</span><span>03/05</span></div>
             <div class="holo"></div>
+            <span class="pstamp" aria-hidden="true">+50</span>
           </div>
           <div class="face back">
             <h4>ChildGuard</h4>
@@ -856,6 +893,7 @@ html.super.shake main{animation:shake2 .38s cubic-bezier(.36,.07,.19,.97)}
             <div class="atk"><b>Silent Deploy</b><span>0s</span></div>
             <div class="rar"><span>★★★ Rare</span><span>04/05</span></div>
             <div class="holo"></div>
+            <span class="pstamp" aria-hidden="true">+50</span>
           </div>
           <div class="face back">
             <h4>Cloud-Native</h4>
@@ -876,6 +914,7 @@ html.super.shake main{animation:shake2 .38s cubic-bezier(.36,.07,.19,.97)}
             <div class="atk"><b>ETag Recall</b><span>HIT</span></div>
             <div class="rar"><span>★★★ Rare</span><span>05/05</span></div>
             <div class="holo"></div>
+            <span class="pstamp" aria-hidden="true">+50</span>
           </div>
           <div class="face back">
             <h4>HealthCare</h4>
@@ -946,7 +985,7 @@ html.super.shake main{animation:shake2 .38s cubic-bezier(.36,.07,.19,.97)}
   var opened=false;
   function shake(){if(RM)return;root.classList.remove('shake');void root.offsetWidth;root.classList.add('shake');setTimeout(function(){root.classList.remove('shake')},400)}
   function openCover(){if(opened)return;opened=true;$('#flash').classList.add('go');cover.classList.add('break');pop(innerWidth/2,innerHeight/2,'ドン!!');shake();
-    setTimeout(function(){root.classList.remove('locked');cover.remove();scrollTo(0,0);layout();scoreEl.classList.add('on')},RM?0:1100)}
+    setTimeout(function(){root.classList.remove('locked');cover.remove();scrollTo(0,0);layout();scoreEl.classList.add('on');setTimeout(showTut,700)},RM?0:1100)}
   cover.addEventListener('click',openCover);
   addEventListener('wheel',function(){if(!opened)openCover()},{passive:true});
   addEventListener('touchmove',function(){if(!opened)openCover()},{passive:true});
@@ -960,7 +999,7 @@ html.super.shake main{animation:shake2 .38s cubic-bezier(.36,.07,.19,.97)}
 
   /* click pops: mouse pops on press as before; touch pops only on a real tap, not on every scroll swipe */
   var tapStart=null;
-  addEventListener('pointerdown',function(e){if(!opened||e.target.closest('a,button,.card'))return;
+  addEventListener('pointerdown',function(e){if(!opened||e.target.closest('a,button,.card,#qlog'))return;
     if(e.pointerType==='mouse'){pop(e.clientX,e.clientY);boomScore(e.clientX,e.clientY-40);return}
     tapStart={x:e.clientX,y:e.clientY,t:Date.now()}},{passive:true});
   addEventListener('pointerup',function(e){if(!tapStart)return;var s=tapStart;tapStart=null;
@@ -999,10 +1038,33 @@ html.super.shake main{animation:shake2 .38s cubic-bezier(.36,.07,.19,.97)}
     e.style.left=(x==null?innerWidth-90:x)+'px';e.style.top=(y==null?70:y)+'px';$('#fx').appendChild(e);setTimeout(function(){e.remove()},1000)}
   function addScore(n,key,x,y,label){if(key){if(got[key])return;got[key]=1}score+=n;scN.textContent=fmtN(score);scR.textContent=rankOf(score);
     if(scN.animate&&!RM)scN.animate([{transform:'scale(1.6) rotate(-6deg)'},{transform:'scale(1)'}],{duration:220,easing:'cubic-bezier(.2,1.6,.4,1)'});
-    ptsPop(n,x,y,label);syncFinal()}
+    ptsPop(n,x,y,label);syncFinal();if(qlog&&qlog.classList.contains('open'))renderQuests()}
   function syncFinal(){if(!endReached)return;$('#fScore').textContent=fmtN(score);$('#fRank').textContent=rankOf(score)+' rank unlocked. Now send a message.';
     $('#fEgg').innerHTML=eggFound?'Secret: easter egg found! <b>+9000</b> banked.':'Secret: there&rsquo;s an easter egg hidden on this page. Find it for <b>+9000</b>.'}
-  function boomScore(x,y){if(boomPts>=200)return;boomPts+=5;addScore(5,null,x,y)}
+  function boomScore(x,y){if(typeof hideTut==='function'&&tutEl&&tutEl.classList.contains('on'))hideTut();if(boomPts>=200)return;boomPts+=5;addScore(5,null,x,y)}
+
+  /* ===== SCORE HINTS ===== */
+  var tutEl=$('#tut'),qlog=$('#qlog'),qlist=$('#qlist'),qfoot=$('#qfoot'),tutT=0,tutDone=false;
+  function showTut(){if(tutDone)return;tutEl.classList.add('on');tutT=setTimeout(hideTut,4500)}
+  function hideTut(){tutDone=true;clearTimeout(tutT);tutEl.classList.remove('on')}
+  var CH=['origin','training','amazon','sidequests','arsenal'];
+  function cnt(pre,n){var c=0;for(var i=0;i<n;i++)if(got[pre+i])c++;return c}
+  function quests(){var ch=CH.filter(function(id){return got['ch-'+id]}).length,cd=cnt('card-',cards.length);
+    return [
+      ['Read every chapter',ch+'/5','+100 each',ch===5,''],
+      ['Defeat the boss','','+300',!!got.boss,''],
+      ['Flip every project card',cd+'/'+cards.length,'+50 each',cd===cards.length,''],
+      ['Booms',boomPts+'/200','+5 each',boomPts>=200,''],
+      ['Finish the manga','','+500',!!got.end,''],
+      [eggFound?'Secret found!':'??? Secret','','+9000',eggFound,'egg']]}
+  function renderQuests(){qlist.innerHTML=quests().map(function(q){return '<li class="'+(q[3]?'done ':'')+q[4]+'"><span class="qb"></span><span class="qt">'+q[0]+'</span><span class="qp">'+q[2]+(q[1]?'<small>'+q[1]+'</small>':'')+'</span></li>'}).join('');
+    qfoot.textContent='Score '+fmtN(score)+' \u00b7 Rank: '+rankOf(score)}
+  function setQ(open){qlog.classList.toggle('open',open);scoreEl.setAttribute('aria-expanded',open?'true':'false');if(open){hideTut();renderQuests()}}
+  scoreEl.addEventListener('click',function(e){e.stopPropagation();setQ(!qlog.classList.contains('open'))});
+  $('.qx',qlog).addEventListener('click',function(){setQ(false)});
+  addEventListener('keydown',function(e){if(e.key==='Escape')setQ(false)});
+  addEventListener('pointerdown',function(e){if(qlog.classList.contains('open')&&!e.target.closest('#qlog,#score'))setQ(false)},{passive:true});
+
   /* ===== CHAPTER SLASH BANNER ===== */
   var nsEl=$('#nextslash'),nsName=$('#nsName'),nsT=0;
   var chapters=[['training','Training arc'],['amazon','Amazon arc'],['sidequests','Side quests'],['arsenal','Arsenal']].map(function(c){var sec=document.getElementById(c[0]);return {ct:sec?$('.ct',sec):null,name:c[1],prev:1e9,done:false}}).filter(function(c){return c.ct});
@@ -1037,14 +1099,14 @@ html.super.shake main{animation:shake2 .38s cubic-bezier(.36,.07,.19,.97)}
   /* shonen aura: tap to flare */
   var figEl=$('.i-fig'),idPanel=$('.i-id.iC'),taps=[];
   function flare(){figEl.classList.add('flare');var r=figEl.getBoundingClientRect();pop(r.left+r.width*.5,r.top+r.height*.18,null);setTimeout(function(){figEl.classList.remove('flare')},1300)}
-  if(idPanel)idPanel.addEventListener('click',function(){flare();var now=Date.now();taps=taps.filter(function(t){return now-t<3000});taps.push(now);if(taps.length>=5){taps=[];superMode()}});
+  if(idPanel)idPanel.addEventListener('click',function(){flare();var now=Date.now();taps=taps.filter(function(t){return now-t<3000});taps.push(now);if(taps.length>=5){taps=[];superMode(false)}});
   /* easter egg: type "ship it" (or tap the hero 5 times) */
   var superOn=false,superT=0,keyBuf='';
-  function superMode(){if(!eggFound){eggFound=true;setTimeout(function(){addScore(9000,'egg',innerWidth/2,innerHeight/2+110,'SECRET')},500)}superOn=true;root.classList.add('super');clearTimeout(superT);impact();shake();
-    var s=document.createElement('span');s.className='pop big gold';s.textContent='POWER LEVEL OVER 9000!!';s.style.left=innerWidth/2+'px';s.style.top=innerHeight/2+'px';s.style.setProperty('--r','-6deg');s.style.fontSize='clamp(24px,4.6vw,62px)';s.style.padding='80px 110px';
+  function superMode(egg){if(egg&&!eggFound){eggFound=true;setTimeout(function(){addScore(9000,'egg',innerWidth/2,innerHeight/2+110,'SECRET')},500)}superOn=true;root.classList.add('super');clearTimeout(superT);impact();shake();
+    var s=document.createElement('span');s.className='pop big gold';s.textContent=egg?'POWER LEVEL OVER 9000!!':'SUPER MODE!!';s.style.left=innerWidth/2+'px';s.style.top=innerHeight/2+'px';s.style.setProperty('--r','-6deg');s.style.fontSize='clamp(24px,4.6vw,62px)';s.style.padding='80px 110px';
     $('#fx').appendChild(s);setTimeout(function(){s.remove()},850);
     superT=setTimeout(function(){superOn=false;root.classList.remove('super')},12000)}
-  addEventListener('keydown',function(e){if(!e.key||e.key.length!==1)return;keyBuf=(keyBuf+e.key.toLowerCase()).replace(/[^a-z]/g,'').slice(-8);if(/shipit$/.test(keyBuf)){keyBuf='';superMode()}});
+  addEventListener('keydown',function(e){if(!e.key||e.key.length!==1)return;keyBuf=(keyBuf+e.key.toLowerCase()).replace(/[^a-z]/g,'').slice(-8);if(/shipit$/.test(keyBuf)){keyBuf='';superMode(true)}});
   try{console.log('%c\u4e3b\u4eba\u516c VIVEK %c Fellow dev? Type "ship it" on the page.','background:#ffe500;color:#000;font-weight:900;padding:4px 8px;border:2px solid #000','color:#e3001b;font-weight:700')}catch(e){}
 
   /* stage size: measured from the sticky stage itself (100svh), so mobile address-bar show/hide doesn't move anything */
@@ -1183,7 +1245,7 @@ html.super.shake main{animation:shake2 .38s cubic-bezier(.36,.07,.19,.97)}
   var cards=$$('.card');
   function deal(){cards.forEach(function(c,i){setTimeout(function(){c.classList.add('dealt');if(!RM)pop(c.getBoundingClientRect().left+130,c.getBoundingClientRect().top+120,null)},i*160)})}
   cards.forEach(function(c){
-    function flip(){c.classList.toggle('flip');if(c.classList.contains('flip')){var r=c.getBoundingClientRect();addScore(50,'card-'+cards.indexOf(c),r.left+r.width/2,r.top+40)}c.setAttribute('aria-label',c.getAttribute('aria-label').replace(/flip for details|flip back/,c.classList.contains('flip')?'flip back':'flip for details'))}
+    function flip(){c.classList.toggle('flip');if(c.classList.contains('flip')){c.classList.add('claimed');var r=c.getBoundingClientRect();addScore(50,'card-'+cards.indexOf(c),r.left+r.width/2,r.top+40)}c.setAttribute('aria-label',c.getAttribute('aria-label').replace(/flip for details|flip back/,c.classList.contains('flip')?'flip back':'flip for details'))}
     c.addEventListener('click',function(e){if(e.target.closest('a'))return;flip()});
     c.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();flip()}});
     c.addEventListener('pointermove',function(e){var r=c.getBoundingClientRect();c.style.setProperty('--mx',((e.clientX-r.left)/r.width).toFixed(2));c.style.setProperty('--my',((e.clientY-r.top)/r.height).toFixed(2))},{passive:true});
