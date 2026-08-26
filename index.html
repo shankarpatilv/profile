@@ -61,10 +61,10 @@ a{color:inherit}
 
 /* ---------- cover: weekly manga magazine ---------- */
 .cv.cvm{display:grid;grid-template-columns:minmax(0,1fr) min(40vw,520px);grid-template-rows:auto minmax(0,1fr) auto;grid-template-areas:"mast mast" "main side" "bar side";padding:0;justify-content:stretch;color:#000;background-color:var(--hi);background-image:radial-gradient(rgba(0,0,0,.22) 1.4px,transparent 1.8px);background-size:9px 9px}
-.cvm-mast{grid-area:mast;height:clamp(74px,12vh,116px);background:#000;color:#fff;display:flex;align-items:center;gap:14px;padding:0 3vw;border-bottom:6px solid var(--red)}
+.cvm-mast{grid-area:mast;min-height:clamp(74px,12vh,116px);padding-top:10px!important;padding-bottom:12px!important;background:#000;color:#fff;display:flex;align-items:center;gap:14px;padding:0 3vw;border-bottom:6px solid var(--red)}
 .cvm-wk{font-family:"Dela Gothic One",sans-serif;background:var(--red);color:#fff;font-size:clamp(20px,2.8vw,38px);padding:4px 8px;writing-mode:vertical-rl}
-.cvm-t{font-family:"Dela Gothic One",sans-serif;font-size:clamp(40px,6.6vw,92px);line-height:1;letter-spacing:-.02em}
-.cvm-t small{display:block;font-family:"Zen Kaku Gothic New",sans-serif;font-weight:900;font-size:clamp(10px,1.1vw,14px);letter-spacing:.3em;color:var(--hi);margin-top:2px}
+.cvm-t{font-family:"Dela Gothic One",sans-serif;font-size:clamp(34px,4.8vw,70px);line-height:.95;letter-spacing:-.02em}
+.cvm-t small{display:block;font-family:"Zen Kaku Gothic New",sans-serif;font-weight:900;font-size:clamp(11px,1.25vw,16px);letter-spacing:.3em;color:var(--hi);margin-top:6px}
 .cvm-iss{margin-left:auto;text-align:right;font-weight:900;font-size:clamp(11px,1.2vw,15px)}
 .cvm-iss b{display:block;font-family:"Bangers",cursive;font-weight:400;font-size:clamp(20px,2.6vw,34px);color:var(--hi);letter-spacing:.05em}
 .cvm-main{grid-area:main;padding:clamp(20px,5vh,56px) 4vw 0;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:clamp(18px,4vh,34px);min-width:0}
@@ -73,7 +73,7 @@ a{color:inherit}
 .cvm-new{position:absolute;right:-14%;top:-30%;background:var(--red);color:#fff;font-family:"Bangers",cursive;font-size:clamp(18px,2.4vw,32px);letter-spacing:.04em;line-height:.95;text-align:center;padding:clamp(26px,3vw,40px) clamp(30px,3.4vw,46px);transform:rotate(-12deg);clip-path:polygon(50% 0%,61% 20%,82% 8%,78% 31%,100% 35%,83% 50%,100% 65%,78% 69%,82% 92%,61% 80%,50% 100%,39% 80%,18% 92%,22% 69%,0% 65%,17% 50%,0% 35%,22% 31%,18% 8%,39% 20%)}
 .cvm-lead{margin:0;background:#fff;border:4px solid #000;box-shadow:6px 6px 0 #000;padding:10px 16px;font-weight:900;font-size:clamp(16px,1.9vw,23px);line-height:1.3;max-width:min(32ch,100%)}
 .cvm-lead span{color:var(--red)}
-.cvm-vt{position:absolute;right:calc(min(40vw,520px) + 2.5vw);top:calc(clamp(74px,12vh,116px) + 4vh);writing-mode:vertical-rl;background:#000;color:#fff;font-family:"Dela Gothic One",sans-serif;font-size:clamp(15px,1.8vw,24px);padding:12px 7px}
+.cvm-vt{position:absolute;right:calc(min(40vw,520px) + 2.5vw);top:calc(clamp(74px,12vh,116px) + 7vh);writing-mode:vertical-rl;background:#000;color:#fff;font-family:"Dela Gothic One",sans-serif;font-size:clamp(15px,1.8vw,24px);padding:12px 7px}
 .cvm-side{grid-area:side;display:grid;grid-template-rows:1fr 1.15fr .95fr;gap:16px;padding:3.5vh 3vw 4.5vh 0;min-height:0}
 .cvm-pn{border:5px solid #000;box-shadow:8px 8px 0 #000;overflow:hidden;position:relative;min-height:0}
 .cvm-p1{display:flex;align-items:center;gap:16px;padding:10px 20px;transform:rotate(1.5deg);background-color:#fffdf6;background-image:radial-gradient(rgba(0,0,0,.18) 1.3px,transparent 1.7px);background-size:8px 8px}
@@ -1190,7 +1190,7 @@ html.super.shake main{animation:shake2 .38s cubic-bezier(.36,.07,.19,.97)}
   var hpin=$('#hpin'),track=$('#track'),pars=$$('.par',track),hpanels=$$('.hp-panel',track),hw=0,hbar=hpin;
   /* ---------- CH2 dive ---------- */
   var dpin=$('#dpin'),world=$('#world'),dps=$$('.dp',world),dcap=$('#dcap'),dstage=$('.d-stage');
-  var L_WIDE=[[40,40,640,430],[720,40,560,430],[1320,40,420,430],[40,510,460,450],[540,510,460,450],[1040,510,300,450],[1380,510,360,450],[400,1000,940,430]];
+  var L_WIDE=[[40,40,640,430],[720,40,560,430],[1320,40,500,430],[40,510,460,450],[540,510,460,450],[1040,510,300,450],[1380,510,360,450],[400,1000,940,430]];
   var L_TALL=[[20,20,360,420],[20,470,360,420],[20,920,360,440],[20,1390,360,400],[20,1820,360,420],[20,2270,360,320],[20,2620,360,380],[20,3030,360,420]];
   var lay,WW,WH,camK=[];
   /* ---------- CH3 flip ---------- */
@@ -1208,7 +1208,9 @@ html.super.shake main{animation:shake2 .38s cubic-bezier(.36,.07,.19,.97)}
       /* phone column: each panel grows to fit its text instead of clipping it */
       var y=20;
       lay=dps.map(function(d,i){d.style.width='360px';d.style.height='auto';var h=Math.max(L_TALL[i][3],Math.ceil(d.offsetHeight));var r=[20,y,360,h];y+=h+30;return r});
-    }else lay=L_WIDE;
+    }else{
+      lay=L_WIDE.map(function(r,i){var d=dps[i];d.style.width=r[2]+'px';d.style.height='auto';var h=Math.max(r[3],Math.ceil(d.offsetHeight)+8);return [r[0],r[1],r[2],h]});
+    }
     dps.forEach(function(d,i){var r=lay[i];d.style.left=r[0]+'px';d.style.top=r[1]+'px';d.style.width=r[2]+'px';d.style.height=r[3]+'px';WW=Math.max(WW,r[0]+r[2]);WH=Math.max(WH,r[1]+r[3])});
     world.style.width=WW+'px';world.style.height=WH+'px';
     dpin.style.height=((dps.length+1)*90+20)+'vh';
