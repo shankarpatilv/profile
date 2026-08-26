@@ -439,6 +439,16 @@ html.super.shake main{animation:shake2 .38s cubic-bezier(.36,.07,.19,.97)}
 @keyframes ctStamp{to{opacity:1;transform:rotate(-6deg) scale(1)}}
 .i-next small{display:block;font-family:"Zen Kaku Gothic New",sans-serif;font-weight:900;font-size:13px;letter-spacing:.02em;color:var(--ink);text-align:center;margin-top:2px}
 
+/* phone-only secret: hold the catchphrase to charge "ship it" */
+.i-data .i-catch{position:relative;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+.chg{position:absolute;left:12px;right:12px;bottom:7px;height:8px;border:2px solid #000;background:#fffdf6;opacity:0;transition:opacity .15s;pointer-events:none}
+.chg i{display:block;height:100%;background:#000;transform:scaleX(0);transform-origin:left;transition:transform .25s ease-out}
+.i-catch.charging .chg{opacity:1}
+.i-catch.charging .chg i{transform:scaleX(1);transition:transform 2s linear}
+.i-catch.charging dd{animation:chgShake .12s linear infinite}
+@keyframes chgShake{0%,100%{translate:0 0}50%{translate:1px -1px}}
+@media (hover:none){.i-data .i-catch dd{padding-bottom:22px}}
+
 /* memory: offscreen decorations drop their GPU layers; big movers only promoted near their section */
 .idle::before{display:none!important}
 .menace.idle,.ring.idle{animation:none!important}
@@ -551,7 +561,7 @@ html.super.shake main{animation:shake2 .38s cubic-bezier(.36,.07,.19,.97)}
       <div><dt>Likes</dt><dd>Clean logs, green pipelines, cooking</dd></div>
       <div><dt>Dislikes</dt><dd>AI slop, systems that fail silently</dd></div>
       <div><dt>Fuel</dt><dd>Coffee</dd></div>
-      <div class="i-catch"><dd>"Ship it. Then make it unbreakable."</dd></div>
+      <div class="i-catch"><dd>"Ship it. Then make it unbreakable."</dd><span class="chg" aria-hidden="true"><i></i></span></div>
     </dl>
   </div>
 
@@ -1064,6 +1074,19 @@ html.super.shake main{animation:shake2 .38s cubic-bezier(.36,.07,.19,.97)}
   $('.qx',qlog).addEventListener('click',function(){setQ(false)});
   addEventListener('keydown',function(e){if(e.key==='Escape')setQ(false)});
   addEventListener('pointerdown',function(e){if(qlog.classList.contains('open')&&!e.target.closest('#qlog,#score'))setQ(false)},{passive:true});
+
+
+  /* phone-only route to the +9000 egg: press and hold the catchphrase */
+  var catchEl=$('.i-data .i-catch'),chgT=0;
+  if(catchEl){
+    var chgStop=function(){clearTimeout(chgT);catchEl.classList.remove('charging')};
+    catchEl.addEventListener('pointerdown',function(e){if(e.pointerType==='mouse')return;chgStop();catchEl.classList.add('charging');
+      chgT=setTimeout(function(){catchEl.classList.remove('charging');var r=catchEl.getBoundingClientRect();
+        var t=document.createElement('span');t.className='pop big gold';t.textContent='SHIP IT!!';t.style.left=(r.left+r.width/2)+'px';t.style.top=(r.top+r.height/2)+'px';t.style.setProperty('--r','-8deg');$('#fx').appendChild(t);setTimeout(function(){t.remove()},850);
+        impact();shake();setTimeout(function(){superMode(true)},420)},2000)});
+    ['pointerup','pointercancel','pointerleave'].forEach(function(ev){catchEl.addEventListener(ev,chgStop)});
+    catchEl.addEventListener('contextmenu',function(e){e.preventDefault()});
+  }
 
   /* ===== CHAPTER SLASH BANNER ===== */
   var nsEl=$('#nextslash'),nsName=$('#nsName'),nsT=0;
