@@ -632,14 +632,14 @@ html.super.shake main{animation:shake2 .38s cubic-bezier(.36,.07,.19,.97)}
 .kt{justify-self:start;background:#000;color:var(--hi);font-family:"Bangers",cursive;font-size:18px;letter-spacing:.08em;padding:2px 10px}
 .kp{position:relative;overflow:hidden;border:4px solid #000;background:#fffdf6;box-shadow:5px 5px 0 #000;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 14px;font-weight:900;font-size:14px;color:#000;opacity:0;translate:0 14px;transition:opacity .25s,translate .35s cubic-bezier(.2,1.5,.4,1)}
 .landed2 .koma.in .kp{opacity:1;translate:0 0}
-.landed2 .koma.in .kp1{transition-delay:.1s}.landed2 .koma.in .kp2{transition-delay:1.5s}.landed2 .koma.in .kp3{transition-delay:2.7s}.landed2 .koma.in .kp4{transition-delay:3.5s}
+.landed2 .koma.in .kp1{transition-delay:.1s}.landed2 .koma.in .kp2{transition-delay:3.5s}.landed2 .koma.in .kp3{transition-delay:4.7s}.landed2 .koma.in .kp4{transition-delay:5.5s}
 .ks{font-family:"Dela Gothic One",sans-serif;font-size:22px;color:#fff;-webkit-text-stroke:1px #000;paint-order:stroke fill;text-shadow:2px 2px 0 #000;white-space:nowrap}
 .ks.kred{color:var(--red)}
 /* panel 1: alarm — red strobe border + shaking beep + glitchy ERROR 500 */
 .k500{font-family:"Bangers",cursive;font-size:13px;letter-spacing:.1em;background:#000;color:var(--red);padding:1px 6px;margin-left:auto}
-.landed2 .koma.in .kp1{animation:kAlarm .32s steps(1) .2s 6}
-.landed2 .koma.in .kp1 .kred{animation:kShake .09s linear .2s 18}
-.landed2 .koma.in .k500{animation:kGlitch .18s steps(2) .3s 10}
+.landed2 .koma.in .kp1{animation:kAlarm .32s steps(1) .2s 12}
+.landed2 .koma.in .kp1 .kred{animation:kShake .09s linear .2s 40}
+.landed2 .koma.in .k500{animation:kGlitch .18s steps(2) .3s 20}
 @keyframes kAlarm{0%{border-color:var(--red);background:#ffe1e1}50%{border-color:#000;background:#fffdf6}}
 @keyframes kShake{0%,100%{translate:0 0}25%{translate:-2px 1px}50%{translate:2px -1px}75%{translate:-1px -2px}}
 @keyframes kGlitch{0%{translate:0 0;opacity:1}50%{translate:3px 0;opacity:.4}}
@@ -647,16 +647,16 @@ html.super.shake main{animation:shake2 .38s cubic-bezier(.36,.07,.19,.97)}
 .kp2{background:#111;color:#fff;border-color:#000}
 .kb{font-size:30px;line-height:1;color:#fff}
 .kcur{width:10px;height:18px;background:var(--hi);margin-right:auto;animation:caret .6s steps(1) infinite}
-.landed2 .koma.in .kp2 .ks{opacity:0;animation:kFadeIn .8s ease-out 2.1s forwards}
+.landed2 .koma.in .kp2 .ks{opacity:0;animation:kFadeIn .8s ease-out 4.1s forwards}
 @keyframes kFadeIn{to{opacity:1}}
 /* panel 3: realization — white flash + focus burst + pop */
 .kp3{justify-content:center;background-color:var(--hi);background-image:radial-gradient(rgba(0,0,0,.2) 1.3px,transparent 1.7px);background-size:8px 8px}
 .kp3::before{content:"";position:absolute;inset:-80%;background:repeating-conic-gradient(from 0deg at 50% 50%,#000 0 1.2deg,transparent 1.2deg 7deg);-webkit-mask:radial-gradient(circle,transparent 18%,#000 46%);mask:radial-gradient(circle,transparent 18%,#000 46%);opacity:0}
 .kp3::after{content:"";position:absolute;inset:0;background:#fff;opacity:0}
-.landed2 .koma.in .kp3::before{animation:kBurst .9s ease-out 2.75s forwards}
-.landed2 .koma.in .kp3::after{animation:kFlash .35s ease-out 2.7s}
+.landed2 .koma.in .kp3::before{animation:kBurst .9s ease-out 4.75s forwards}
+.landed2 .koma.in .kp3::after{animation:kFlash .35s ease-out 4.7s}
 .ks.big{position:relative;z-index:2;font-size:34px;color:var(--red);-webkit-text-stroke:2px #000;scale:0}
-.landed2 .koma.in .ks.big{animation:kPop .45s cubic-bezier(.2,1.8,.4,1) 2.8s forwards}
+.landed2 .koma.in .ks.big{animation:kPop .45s cubic-bezier(.2,1.8,.4,1) 4.8s forwards}
 @keyframes kBurst{0%{opacity:0;scale:1.4}30%{opacity:.35}100%{opacity:.18;scale:1}}
 @keyframes kFlash{0%{opacity:1}100%{opacity:0}}
 @keyframes kPop{to{scale:1}}
@@ -1277,7 +1277,7 @@ html.super.shake main{animation:shake2 .38s cubic-bezier(.36,.07,.19,.97)}
   function openCover(){if(opened)return;opened=true;$('#flash').classList.add('go');cover.classList.add('break');pop(innerWidth/2,innerHeight/2,'ドン!!');
     /* heavy main-thread work runs while the shards fly (their animation is compositor-driven), not when the profile appears */
     setTimeout(function(){root.classList.remove('locked');scrollTo(0,0);layout()},RM?0:90);
-    setTimeout(function(){cover.style.display='none';var ie=$('.intro');requestAnimationFrame(function(){requestAnimationFrame(function(){setTimeout(function(){if(!ie)return;ie.classList.add('landed');setTimeout(function(){ie.classList.add('landed2')},RM?0:520);setTimeout(function(){ie.classList.add('settled')},RM?0:1000)},RM?0:120)})});scoreEl.classList.add('on');setTimeout(showTut,900);setTimeout(function(){cover.remove()},1200)},RM?0:1100)}
+    setTimeout(function(){cover.style.display='none';var ie=$('.intro');requestAnimationFrame(function(){requestAnimationFrame(function(){setTimeout(function(){if(!ie)return;ie.classList.add('landed');setTimeout(function(){ie.classList.add('landed2');afterLanded2()},RM?0:520);setTimeout(function(){ie.classList.add('settled')},RM?0:1000)},RM?0:120)})});setTimeout(function(){cover.remove()},1200)},RM?0:1100)}
   cover.addEventListener('click',openCover);
   addEventListener('wheel',function(){if(!opened)openCover()},{passive:true});
   addEventListener('touchmove',function(){if(!opened)openCover()},{passive:true});
@@ -1336,6 +1336,12 @@ html.super.shake main{animation:shake2 .38s cubic-bezier(.36,.07,.19,.97)}
     $('#fEgg').innerHTML=eggFound?'Secret: easter egg found! <b>+9000</b> banked.':'Secret: there&rsquo;s an easter egg hidden on this page. Find it for <b>+9000</b>.'}
   function boomScore(x,y){if(typeof hideTut==='function'&&tutEl&&tutEl.classList.contains('on'))hideTut();if(boomPts>=200)return;boomPts+=5;addScore(5,null,x,y)}
 
+  /* score badge appears only after the ON-CALL comic has played (or right away if the comic is offscreen, e.g. phones) */
+  var scoreShown=false;
+  function revealScore(){if(scoreShown)return;scoreShown=true;scoreEl.classList.add('on');setTimeout(showTut,RM?0:600)}
+  function afterLanded2(){var k=$('.koma');if(RM){revealScore();return}
+    if(k&&k.classList.contains('in')&&k.getBoundingClientRect().top<innerHeight)setTimeout(revealScore,6400);
+    else setTimeout(revealScore,1800)}
   /* ===== SCORE HINTS ===== */
   var tutEl=$('#tut'),qlog=$('#qlog'),qlist=$('#qlist'),qfoot=$('#qfoot'),tutT=0,tutDone=false;
   function showTut(){if(tutDone)return;tutEl.classList.add('on');tutT=setTimeout(hideTut,4500)}
