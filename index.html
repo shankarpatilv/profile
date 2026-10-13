@@ -1392,7 +1392,7 @@ html.super.shake main{animation:shake2 .38s cubic-bezier(.36,.07,.19,.97)}
 
       <div class="lab-pk" id="labPk" aria-hidden="true"></div>
     </div>
-    <p class="lab-note">Animated simulations of how each system is designed to behave. Break one and watch it recover for <b>+100</b> each.</p>
+    <p class="lab-note">Animated simulations of how each system is designed to behave. Break each one for <b>+100</b>, then watch it recover.</p>
   </div>
 </section>
 
@@ -1561,7 +1561,7 @@ html.super.shake main{animation:shake2 .38s cubic-bezier(.36,.07,.19,.97)}
     function say(t){narr.textContent='Narrator: '+t;narr.classList.remove('bump');void narr.offsetWidth;narr.classList.add('bump')}
     function sfx(n,t){var c=center(n);if(!c)return;var e=document.createElement('span');e.className='lab-sfx';e.textContent=t;e.style.left=c[0]+'px';e.style.top=c[1]+'px';stage.appendChild(e);setTimeout(function(){e.remove()},950)}
     function recent(arr,now,ms){while(arr.length&&now-arr[0]>ms)arr.shift();return arr.length}
-    function win(key,label){var r=stage.getBoundingClientRect();addScore(100,key,r.left+r.width/2,r.top+60,label||'SURVIVED');if(!RM)sfx('src','ドン!!')}
+    function win(key,label){if(got[key])return;var r=stage.getBoundingClientRect();addScore(100,key,r.left+r.width/2,r.top+90,label||'BROKE IT');if(!RM)sfx('src','ドン!!')}
 
     /* ---- gitStream: Kafka partitions -> Go workers -> two sinks ---- */
     var G={reset:function(){this.rate=3;this.spike=0;this.poison=0;this.q=[[],[],[]];this.asg=[0,1,2];this.alive=[1,1,1];this.busy=[0,0,0];this.reb=0;this.done=[];this.dlq=0;this.broke=0;this.acc=0;
@@ -1583,10 +1583,10 @@ html.super.shake main{animation:shake2 .38s cubic-bezier(.36,.07,.19,.97)}
         var lag=0;for(var p=0;p<3;p++){lag+=this.q[p].length;out('lag'+p,'');var li=$('[data-lag="'+p+'"]',sysEl());if(li){var t='lag '+this.q[p].length*40;if(li.textContent!==t)li.textContent=t}}
         out('eps',(recent(this.done,now,2000)/2*3000|0).toLocaleString('en-US'));
         out('status',this.reb?'REBALANCING':lag>8?'CATCHING UP':'HEALTHY');
-        if(this.broke&&!this.reb&&lag<5&&now>this.spike&&now-this.broke>2600){this.broke=0;win('sys-git');say('It held. Workers died, traffic spiked, poison came in. Zero events lost.')}},
+        if(this.broke&&!this.reb&&lag<5&&now>this.spike&&now-this.broke>2600){this.broke=0;say('It held. Workers died, traffic spiked, poison came in. Zero events lost.')}},
       act:function(a,now){if(a==='kill'){var al=[];for(var w=0;w<3;w++)if(this.alive[w])al.push(w);if(al.length<2){say('Only one worker left. Even chaos needs a survivor. Hit RESET.');return}
           var w=al[Math.random()*al.length|0];this.alive[w]=0;var e=nd('w'+w);e.classList.add('dead');$('i',e).textContent='DOWN';sfx('w'+w,'バキッ!');shake();
-          for(var p=0;p<3;p++)if(this.asg[p]===w){this.asg[p]=-1;nd('p'+p).classList.add('reb')}this.reb=now+1600;this.broke=now;say('worker-'+(w+1)+' is down! Kafka is rebalancing its partitions...')}
+          for(var p=0;p<3;p++)if(this.asg[p]===w){this.asg[p]=-1;nd('p'+p).classList.add('reb')}this.reb=now+1600;this.broke=now;win('sys-git','BROKE IT');say('worker-'+(w+1)+' is down! Kafka is rebalancing its partitions...')}
         else if(a==='spike'){this.spike=now+5000;this.broke=now;sfx('src','ドドド!');say('Traffic ×3! Watch the lag climb, then drain.')}
         else if(a==='poison'){this.poison++;this.broke=now;say('A malformed event is coming through...')}
         else if(a==='reset'){this.reset();clearPk();say('Fresh pipeline. Everything is healthy. For now.')}}};
@@ -1611,9 +1611,9 @@ html.super.shake main{animation:shake2 .38s cubic-bezier(.36,.07,.19,.97)}
         var ql=this.q.length,qb=$('[data-o="qbar"]',sysEl());if(qb)qb.style.width=Math.min(100,ql*3)+'%';out('qn',ql+' waiting');this.slots();
         out('eps',(recent(this.done,now,2000)/2*1400|0).toLocaleString('en-US'));
         out('status',this.alarm?'DEGRADED':ql>12?'BUFFERING':'HEALTHY');
-        if(this.broke&&!this.alarm&&ql<3&&now>this.fail&&now>this.flood&&now-this.broke>3000){this.broke=0;win('sys-ev');say('Flooded, failed, retried and recovered. The queue absorbed it all.')}},
+        if(this.broke&&!this.alarm&&ql<3&&now>this.fail&&now>this.flood&&now-this.broke>3000){this.broke=0;say('Flooded, failed, retried and recovered. The queue absorbed it all.')}},
       act:function(a,now){if(a==='flood'){this.flood=now+5000;this.broke=now;sfx('src','ドドド!');say(this.gate?'10K requests a second! The queue soaks it up while the cap protects the database.':'Flood with the cap OFF... the database is about to get hammered.')}
-        else if(a==='fail'){this.fail=now+5000;this.broke=now;sfx('fn','バキッ!');shake();say('Downstream is failing! Failed messages retry, the stubborn ones go to the dead-letter queue.')}
+        else if(a==='fail'){this.fail=now+5000;this.broke=now;sfx('fn','バキッ!');shake();win('sys-ev','BROKE IT');say('Downstream is failing! Failed messages retry, the stubborn ones go to the dead-letter queue.')}
         else if(a==='gate'){this.gate=!this.gate;var b=$('[data-act="gate"]',sysEl());b.textContent='CONCURRENCY CAP: '+(this.gate?'ON':'OFF');say(this.gate?'Cap back on. The storm stays outside.':'Cap OFF. Try a flood now and watch DynamoDB throttle.');if(!this.gate)this.broke=now}
         else if(a==='reset'){this.reset();clearPk();say('Fresh system. Everything is healthy. For now.')}}};
 
@@ -1632,9 +1632,9 @@ html.super.shake main{animation:shake2 .38s cubic-bezier(.36,.07,.19,.97)}
         out('eps',(recent(this.done,now,2000)/2*1300|0).toLocaleString('en-US'));
         var down=!this.az.a.up||!this.az.b.up||!this.az.c.up;
         out('status',this.scaleAt?'REROUTING':now<this.surge?'SCALING OUT':down?'HEALTHY (2 ZONES)':'HEALTHY');
-        if(this.broke&&!this.scaleAt&&now-this.broke>3200){this.broke=0;win('sys-cloud');say('A whole zone died and users never noticed. That is the point of multi-zone.')}},
+        if(this.broke&&!this.scaleAt&&now-this.broke>3200){this.broke=0;say('A whole zone died and users never noticed. That is the point of multi-zone.')}},
       act:function(a,now){if(a==='azdown'){var up=[];for(var k in this.az)if(this.az[k].up)up.push(k);if(up.length<2){say('Two zones are already down. Hit RESTORE.');return}
-          var k=up.indexOf('b')>=0?'b':up[0];this.az[k].up=0;$('.laz[data-az="'+k+'"]',sysEl()).classList.add('down');sfx(k+'0','ガシャーン!');shake();this.scaleAt=now+1700;this.broke=now;this.draw();
+          var k=up.indexOf('b')>=0?'b':up[0];this.az[k].up=0;$('.laz[data-az="'+k+'"]',sysEl()).classList.add('down');sfx(k+'0','ガシャーン!');shake();this.scaleAt=now+1700;this.broke=now;this.draw();win('sys-cloud','BROKE IT');
           say('Zone '+k.toUpperCase()+' just went dark! The load balancer is rerouting...')}
         else if(a==='surge'){this.surge=now+6000;this.broke=this.broke||now;sfx('src','ドドド!');var self=this;setTimeout(function(){self.grow(1);say('Traffic surge! Auto scaling is adding instances.')},900);this.scaleIn=now+10000;say('Traffic surge incoming...')}
         else if(a==='reset'){this.reset();clearPk();say('All three zones healthy again.')}}};
