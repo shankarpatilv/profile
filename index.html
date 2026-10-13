@@ -864,7 +864,7 @@ body::before{content:"";position:fixed;inset:0;z-index:44;pointer-events:none;op
 .cvm-seal b{font-family:"Dela Gothic One",sans-serif;font-size:58px;line-height:1;color:var(--red)}.cvm-seal span{font-size:9px;letter-spacing:.35em;color:var(--red);margin-top:4px}
 .cvm-lead{background:var(--scroll)!important;color:var(--sink)!important;border:0!important;border-left:6px solid var(--maroon)!important}
 .cvm-lead span{color:var(--red)!important}
-.cvm-vt{background:transparent!important;color:var(--hi)!important;border:1px solid var(--hi)}
+.cvm-vt{background:transparent!important;color:var(--hi)!important;border:1px solid var(--hi);display:block;height:auto!important;max-height:none!important;line-height:1.15;white-space:nowrap;font-family:"Dela Gothic One","Hiragino Sans","Yu Gothic","Noto Sans CJK JP",sans-serif!important}
 .cvm-pn{border:1px solid var(--line)!important}
 .cvm-p1{background:rgba(21,17,13,.75)!important;border-color:var(--hi)!important;color:#f3ead9;display:flex;align-items:center;gap:18px}
 .cvm-medal{flex:none;width:76px;height:76px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#ffd28a,#f26b1d 60%,#8a3a0c);border:3px solid #f3ead9;display:grid;place-items:center;font-family:"Oswald",sans-serif;font-weight:700;font-size:40px;color:#15110d}
@@ -1050,11 +1050,61 @@ body::before{content:"";position:fixed;inset:0;z-index:44;pointer-events:none;op
 .ap.blk .stamp{background:#2a0e0e!important;color:#f3ead9!important;box-shadow:inset 0 0 0 3px #2a0e0e,inset 0 0 0 4px rgba(242,107,29,.55),0 6px 12px rgba(0,0,0,.35)!important}
 .ap.blk .stamp::before{background:var(--hi)!important;color:#15110d}
 .ap h3{font-size:26px!important}
+
+/* ---- 第四話 SIDE QUESTS v3: mission briefing ---- */
+.cards-sec{padding:70px clamp(16px,4vw,60px) 80px!important;overflow:hidden}
+.brief{position:relative;max-width:1180px;margin:0 auto;min-height:540px;outline:0}
+.mission{display:none;grid-template-columns:minmax(150px,.75fr) minmax(220px,1fr) minmax(320px,1.35fr);align-items:center;gap:clamp(18px,3vw,44px)}
+.mission.on{display:grid}
+.mission.enter .ms-file{animation:msIn .45s cubic-bezier(.2,1.2,.4,1)}
+.mission.enter .ms-rank{animation:msRank .5s cubic-bezier(.2,1.4,.4,1)}
+.mission.enter .ms-art{animation:msArt .5s ease-out}
+@keyframes msIn{0%{opacity:0;transform:translateX(40px) scale(.97)}100%{opacity:1;transform:none}}
+@keyframes msRank{0%{opacity:0;transform:scale(1.4)}100%{opacity:.9;transform:none}}
+@keyframes msArt{0%{opacity:0;transform:translateY(20px)}100%{opacity:1;transform:none}}
+.ms-rank{font-family:"Oswald",sans-serif;font-weight:700;font-size:clamp(200px,26vw,420px);line-height:.8;color:transparent;-webkit-text-stroke:3px #d9a0b0;opacity:.9;text-align:center;text-shadow:0 0 60px rgba(142,27,58,.5)}
+.ms-art{aspect-ratio:4/3;background:#0e0a0b;border:1px solid rgba(255,255,255,.14);display:grid;place-items:center;clip-path:polygon(0 4%,100% 0,96% 100%,3% 96%)}
+.ms-art svg{width:72%;height:auto;max-height:80%}
+.ms-file{position:relative;background:var(--scroll);color:var(--sink);border-left:14px solid #8e1b3a;padding:26px 30px 24px;box-shadow:0 30px 60px rgba(0,0,0,.6)}
+.ms-code{display:block;font-size:11px;font-weight:900;letter-spacing:.32em;text-transform:uppercase;color:#8e1b3a}
+.ms-file h3{margin:8px 0 0;font-family:"Oswald",sans-serif;font-weight:700;font-size:clamp(40px,4.4vw,58px);line-height:1;color:var(--sink)}
+.ms-file i{display:block;font-style:normal;font-size:12px;font-weight:900;letter-spacing:.24em;text-transform:uppercase;color:#8e1b3a;margin:8px 0 12px}
+.ms-file p{margin:0 0 8px;font-size:15px;line-height:1.6}
+.ms-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:16px 0}
+.ms-stats div{border-top:2px solid #8e1b3a;padding-top:8px;font-size:10px;font-weight:900;letter-spacing:.2em;text-transform:uppercase;color:#6b5a44}
+.ms-stats b{display:block;font-family:"Oswald",sans-serif;font-size:clamp(22px,2.4vw,32px);letter-spacing:0;color:var(--sink);line-height:1.1}
+.ms-stack{display:flex;flex-wrap:wrap;gap:6px}
+.ms-stack span{background:var(--sink);color:var(--scroll);font-size:12px;font-weight:700;padding:4px 10px}
+.ms-act{display:flex;flex-wrap:wrap;gap:12px;margin-top:20px}
+.ms-act .cta:not(.main){color:var(--sink)!important;border-color:rgba(42,29,18,.45)!important;cursor:pointer;background:transparent!important;font:inherit}
+.ms-file .pstamp{position:absolute;right:18px;top:18px;left:auto!important;bottom:auto!important;border:3px solid #8e1b3a;color:#8e1b3a;background:transparent!important;font-family:"Oswald",sans-serif;font-weight:700;font-size:18px;padding:2px 8px;rotate:8deg;transition:transform .5s cubic-bezier(.3,1.4,.5,1),opacity .4s}
+.mission.claimed .pstamp{transform:translate(60px,-80px) rotate(200deg) scale(.4);opacity:0}
+.ms-shards{position:absolute;inset:0;pointer-events:none;z-index:5}
+.msh{position:absolute;display:block;background:linear-gradient(135deg,#f3ead9,#cfc2ab);box-shadow:inset 0 0 0 1px rgba(255,255,255,.6)}
+.ms-nav{max-width:1180px;margin:34px auto 0;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.ms-prev{font:inherit;cursor:pointer;width:46px;height:46px;border:1px solid rgba(217,160,176,.5);background:transparent;color:#f3ead9;font-size:20px}
+.ms-dots{display:flex;gap:10px}
+.ms-dot{font:inherit;cursor:pointer;width:46px;height:46px;border:1px solid rgba(217,160,176,.35);background:transparent;color:#d9a0b0;font-family:"Oswald",sans-serif;font-weight:700;font-size:18px;position:relative}
+.ms-dot.seen{border-color:#d9a0b0}
+.ms-dot.on{background:#d9a0b0;color:#15110d}
+.ms-upnext{margin-left:auto;font-family:"Oswald",sans-serif;font-size:18px;letter-spacing:.06em;color:#d9a0b0}
+@media (max-width:760px){
+  .brief{min-height:0}
+  .mission.on{grid-template-columns:96px 1fr;grid-template-areas:"rank art" "file file";gap:14px}
+  .ms-rank{grid-area:rank;font-size:130px;-webkit-text-stroke:2px #d9a0b0}
+  .ms-art{grid-area:art}
+  .ms-file{grid-area:file;padding:20px 18px 18px;border-left-width:10px}
+  .ms-file h3{font-size:38px}.ms-file p{font-size:14px}
+  .ms-stats{gap:8px}.ms-stats div{font-size:9px;letter-spacing:.12em}
+  .ms-nav{justify-content:center}.ms-upnext{margin:0;width:100%;text-align:center}
+  .ms-dot,.ms-prev{width:42px;height:42px}
+}
+@media (prefers-reduced-motion:reduce){.mission.enter .ms-file,.mission.enter .ms-rank,.mission.enter .ms-art{animation:none}}
 </style>
 </head>
 <body>
 
-<div id="cover" role="dialog" aria-label="Cover: break the seal">
+<div id="cover" role="dialog" aria-label="Cover: meet the shinobi">
   <template id="cover-art">
     <div class="cv cvm">
       <header class="cvm-mast"><span class="cvm-wk">忍</span><div class="cvm-t">COMMIT<small>NINJA CHRONICLE &middot; ONE PUSH AT A TIME</small></div><div class="cvm-iss">VOL.01 &middot; 2026<b>&yen;0 FREE</b></div></header>
@@ -1068,7 +1118,7 @@ body::before{content:"";position:fixed;inset:0;z-index:44;pointer-events:none;op
         <div class="cvm-pn cvm-p2" role="img" aria-label="Boston skyline"><span class="cvm-city">THE HIDDEN CITY &middot; BOSTON</span></div>
         <div class="cvm-pn cvm-p3"><span class="tl">MISSION LOG &middot; 任務録</span><ol><li><b>第一話</b>Origin</li><li><b>第二話</b>Training arc</li><li><b>第三話</b>Amazon arc</li><li><b>第四話</b>Side quests</li><li><b>第五話</b>Arsenal</li></ol></div>
       </div>
-      <div class="cvm-bar"><button class="cv-open" type="button">Break the seal</button><span class="cvm-code" aria-hidden="true">ISBN 978-0-ENG-ARC-1<i></i></span><span class="cvm-foot">Scroll or press Enter to break the seal</span></div>
+      <div class="cvm-bar"><button class="cv-open" type="button">Meet the shinobi</button><span class="cvm-code" aria-hidden="true">ISBN 978-0-ENG-ARC-1<i></i></span><span class="cvm-foot">Scroll or press Enter to meet him</span></div>
     </div>
   </template>
 </div>
@@ -1407,114 +1457,79 @@ body::before{content:"";position:fixed;inset:0;z-index:44;pointer-events:none;op
     <div class="ct-body"><h2>Side quests</h2><p>Five relics, forged after hours.</p></div>
   </div>
   <div class="cards-sec" id="cards">
-    <p class="intro">Tap a shard to break the illusion and read the mission.</p>
-    <div class="fan">
-
-      <div class="card legend" tabindex="0" role="button" aria-label="gitStream card, flip for details" style="--rot:-14deg">
-        <div class="inner">
-          <div class="face front">
-            <div class="top"><span class="nm">gitStream</span><span class="ty">STREAM</span></div>
-            <div class="art blk"><svg width="200" height="120" viewBox="0 0 200 120"><g fill="none" stroke-width="5"><path d="M0 30 Q50 0 100 30 T200 30" stroke="#e3001b"/><path d="M0 60 Q50 30 100 60 T200 60" stroke="#ffe500"/><path d="M0 90 Q50 60 100 90 T200 90" stroke="#fff"/></g><circle cx="150" cy="60" r="8" fill="#ffe500"><animate attributeName="cx" from="-10" to="210" dur="1.6s" repeatCount="indefinite"/></circle></svg></div>
-            <div class="atk"><b>Million Rush</b><span>1M</span></div>
-            <div class="atk"><b>Zero Lag</b><span>0</span></div>
-            <div class="rar"><span>★★★★★ Legendary</span><span>01/05</span></div>
-            <div class="holo"></div>
-            <span class="pstamp" aria-hidden="true">+50</span>
-          </div>
-          <div class="face back">
-            <h4>gitStream</h4>
-            <p>Caught GitHub's entire public firehose, split it across Kafka by repo, and fed it to Go workers writing to two databases at once.</p>
-            <p>A million events through. Nine thousand a second. Not a single one left in the dead-letter queue.</p>
-            <div class="stack"><span>Go</span><span>Kafka</span><span>PostgreSQL</span><span>ClickHouse</span><span>Prometheus</span><span>Grafana</span></div>
-            <a href="https://github.com/shankarpatilv/gitStream" target="_blank" rel="noopener">View repo</a>
-          </div>
-        </div><span class="tap">tap to flip</span>
-      </div>
-
-      <div class="card" tabindex="0" role="button" aria-label="InterviewKit card, flip for details" style="--rot:-7deg">
-        <div class="inner">
-          <div class="face front">
-            <div class="top"><span class="nm">InterviewKit</span><span class="ty">MIND</span></div>
-            <div class="art redp"><svg width="180" height="120" viewBox="0 0 180 120"><g stroke="#fff" stroke-width="3"><line x1="40" y1="30" x2="90" y2="60"/><line x1="140" y1="30" x2="90" y2="60"/><line x1="40" y1="95" x2="90" y2="60"/><line x1="140" y1="95" x2="90" y2="60"/></g><circle cx="90" cy="60" r="16" fill="#ffe500" stroke="#000" stroke-width="3"><animate attributeName="r" values="14;19;14" dur="1.4s" repeatCount="indefinite"/></circle><g fill="#fff" stroke="#000" stroke-width="3"><circle cx="40" cy="30" r="9"/><circle cx="140" cy="30" r="9"/><circle cx="40" cy="95" r="9"/><circle cx="140" cy="95" r="9"/></g></svg></div>
-            <div class="atk"><b>Evidence Only</b><span>RAG</span></div>
-            <div class="atk"><b>Source Seal</b><span>STAR</span></div>
-            <div class="rar"><span>★★★★ Epic</span><span>02/05</span></div>
-            <div class="holo"></div>
-            <span class="pstamp" aria-hidden="true">+50</span>
-          </div>
-          <div class="face back">
-            <h4>InterviewKit</h4>
-            <p>Feeds on your real work notes, finds the right story for any company's questions, and drafts STAR answers with receipts.</p>
-            <p>Its one rule: if the evidence isn't there, it refuses to make a story up.</p>
-            <div class="stack"><span>Python</span><span>LangGraph</span><span>LangChain</span><span>pgvector</span><span>OpenAI</span><span>Typer</span></div>
-            <a href="https://github.com/shankarpatilv/interviewKit" target="_blank" rel="noopener">View repo</a>
-          </div>
-        </div><span class="tap">tap to flip</span>
-      </div>
-
-      <div class="card" tabindex="0" role="button" aria-label="ChildGuard card, flip for details" style="--rot:0deg">
-        <div class="inner">
-          <div class="face front">
-            <div class="top"><span class="nm">ChildGuard</span><span class="ty">GUARD</span></div>
-            <div class="art yel"><svg width="120" height="120" viewBox="0 0 120 120"><path d="M60 8 L104 26 V58 C104 86 84 104 60 112 C36 104 16 86 16 58 V26 Z" fill="#fff" stroke="#000" stroke-width="5"/><path d="M40 60 L54 74 L82 44" fill="none" stroke="#e3001b" stroke-width="8" stroke-linecap="round"/></svg></div>
-            <div class="atk"><b>Lazy Dash</b><span>-40%</span></div>
-            <div class="atk"><b>RS256 Seal</b><span>LOCK</span></div>
-            <div class="rar"><span>★★★ Rare</span><span>03/05</span></div>
-            <div class="holo"></div>
-            <span class="pstamp" aria-hidden="true">+50</span>
-          </div>
-          <div class="face back">
-            <h4>ChildGuard</h4>
-            <p>A dashboard built to protect kids' data. It loads only what it needs, so it opens 40% faster.</p>
-            <p>Every door locked: signed tokens, role checks, strict CSP, scrubbed inputs.</p>
-            <div class="stack"><span>React</span><span>Redux</span><span>TypeScript</span><span>Express</span><span>MongoDB</span><span>Auth0</span></div>
-            <a href="https://github.com/shankarpatilv/ChildGuard" target="_blank" rel="noopener">View repo</a>
-          </div>
-        </div><span class="tap">tap to flip</span>
-      </div>
-
-      <div class="card" tabindex="0" role="button" aria-label="Cloud-Native card, flip for details" style="--rot:7deg">
-        <div class="inner">
-          <div class="face front">
-            <div class="top"><span class="nm">Cloud-Native</span><span class="ty">SKY</span></div>
-            <div class="art wht tone"><svg width="170" height="110" viewBox="0 0 170 110"><path d="M40 90 H130 A26 26 0 0 0 126 38 A36 36 0 0 0 58 30 A28 28 0 0 0 40 90 Z" fill="#fff" stroke="#000" stroke-width="5"><animateTransform attributeName="transform" type="translate" values="0 0;0 -6;0 0" dur="2s" repeatCount="indefinite"/></path><g stroke="#e3001b" stroke-width="5" stroke-linecap="round"><line x1="60" y1="100" x2="56" y2="108"/><line x1="85" y1="100" x2="81" y2="108"/><line x1="110" y1="100" x2="106" y2="108"/></g></svg></div>
-            <div class="atk"><b>Multi-Zone Barrier</b><span>99.9%</span></div>
-            <div class="atk"><b>Silent Deploy</b><span>0s</span></div>
-            <div class="rar"><span>★★★ Rare</span><span>04/05</span></div>
-            <div class="holo"></div>
-            <span class="pstamp" aria-hidden="true">+50</span>
-          </div>
-          <div class="face back">
-            <h4>Cloud-Native</h4>
-            <p>Writes its own cloud from code: networks, load balancers, auto scaling across zones.</p>
-            <p>Emails go out async, so signups stay fast. Updates roll out without anyone noticing a blink.</p>
-            <div class="stack"><span>Spring Boot</span><span>AWS</span><span>Terraform</span><span>Packer</span><span>PostgreSQL</span><span>Actions</span></div>
-            <a href="https://github.com/shankarpatilv/Cloud-Native" target="_blank" rel="noopener">View repo</a>
-          </div>
-        </div><span class="tap">tap to flip</span>
-      </div>
-
-      <div class="card" tabindex="0" role="button" aria-label="HealthCare card, flip for details" style="--rot:14deg">
-        <div class="inner">
-          <div class="face front">
-            <div class="top"><span class="nm">HealthCare</span><span class="ty">PULSE</span></div>
-            <div class="art blk"><svg width="200" height="100" viewBox="0 0 200 100"><path d="M0 55 H60 L72 25 L88 85 L100 40 L110 55 H200" fill="none" stroke="#ffe500" stroke-width="5" stroke-dasharray="260" stroke-dashoffset="260"><animate attributeName="stroke-dashoffset" from="260" to="-260" dur="2s" repeatCount="indefinite"/></path></svg></div>
-            <div class="atk"><b>Queue Offload</b><span>-60%</span></div>
-            <div class="atk"><b>ETag Recall</b><span>HIT</span></div>
-            <div class="rar"><span>★★★ Rare</span><span>05/05</span></div>
-            <div class="holo"></div>
-            <span class="pstamp" aria-hidden="true">+50</span>
-          </div>
-          <div class="face back">
-            <h4>HealthCare</h4>
-            <p>Patient data service that hands the heavy search indexing to a background queue, so writes land 60% faster.</p>
-            <p>Reads come from cache when nothing changed. Bad data gets bounced at the door.</p>
-            <div class="stack"><span>FastAPI</span><span>Redis</span><span>Elasticsearch</span><span>RabbitMQ</span><span>OAuth 2.0</span></div>
-            <a href="https://github.com/shankarpatilv/HealthCare" target="_blank" rel="noopener">View repo</a>
-          </div>
-        </div><span class="tap">tap to flip</span>
-      </div>
-
+    <p class="intro">Five mission files. Read one, then shatter it for the next.</p>
+    <div class="brief" id="brief">
+      <article class="mission on" data-i="0" aria-label="S-rank mission: gitStream">
+        <div class="ms-rank" aria-hidden="true">S</div>
+        <div class="ms-art" aria-hidden="true"><svg width="200" height="120" viewBox="0 0 200 120"><g fill="none" stroke-width="5"><path d="M0 30 Q50 0 100 30 T200 30" stroke="#d9a0b0"/><path d="M0 60 Q50 30 100 60 T200 60" stroke="#f26b1d"/><path d="M0 90 Q50 60 100 90 T200 90" stroke="#fff"/></g><circle cx="150" cy="60" r="8" fill="#f26b1d"><animate attributeName="cx" from="-10" to="210" dur="1.6s" repeatCount="indefinite"/></circle></svg></div>
+        <div class="ms-file">
+          <span class="ms-code">S-rank mission &middot; 01 / 05 &middot; 任務 壱</span>
+          <h3>gitStream</h3><i>Million-event pipeline</i>
+          <p>Caught GitHub's entire public firehose, split it across Kafka by repo, and fed it to Go workers writing to two databases at once.</p><p>A million events through. Nine thousand a second. Not a single one left in the dead-letter queue.</p>
+          <div class="ms-stats"><div><b>1M</b>events through</div><div><b>9K/s</b>at peak</div><div><b>0</b>lost</div></div>
+          <div class="ms-stack"><span>Go</span><span>Kafka</span><span>PostgreSQL</span><span>ClickHouse</span><span>Prometheus</span><span>Grafana</span></div>
+          <div class="ms-act"><a class="cta main" href="https://github.com/shankarpatilv/gitStream" target="_blank" rel="noopener">View repo</a><button class="cta ms-next" type="button">Next mission &rarr;</button></div>
+          <span class="pstamp" aria-hidden="true">+50</span>
+        </div>
+      </article>
+      <article class="mission" data-i="1" aria-label="A-rank mission: InterviewKit" hidden>
+        <div class="ms-rank" aria-hidden="true">A</div>
+        <div class="ms-art" aria-hidden="true"><svg width="180" height="120" viewBox="0 0 180 120"><g stroke="#fff" stroke-width="3"><line x1="40" y1="30" x2="90" y2="60"/><line x1="140" y1="30" x2="90" y2="60"/><line x1="40" y1="95" x2="90" y2="60"/><line x1="140" y1="95" x2="90" y2="60"/></g><circle cx="90" cy="60" r="16" fill="#f26b1d" stroke="#0e0a0b" stroke-width="3"><animate attributeName="r" values="14;19;14" dur="1.4s" repeatCount="indefinite"/></circle><g fill="#fff" stroke="#0e0a0b" stroke-width="3"><circle cx="40" cy="30" r="9"/><circle cx="140" cy="30" r="9"/><circle cx="40" cy="95" r="9"/><circle cx="140" cy="95" r="9"/></g></svg></div>
+        <div class="ms-file">
+          <span class="ms-code">A-rank mission &middot; 02 / 05 &middot; 任務 弐</span>
+          <h3>InterviewKit</h3><i>Evidence-or-nothing RAG</i>
+          <p>Feeds on your real work notes, finds the right story for any company's questions, and drafts STAR answers with receipts.</p><p>Its one rule: if the evidence isn't there, it refuses to make a story up.</p>
+          <div class="ms-stats"><div><b>RAG</b>grounded retrieval</div><div><b>STAR</b>answers drafted</div><div><b>0</b>stories made up</div></div>
+          <div class="ms-stack"><span>Python</span><span>LangGraph</span><span>LangChain</span><span>pgvector</span><span>OpenAI</span><span>Typer</span></div>
+          <div class="ms-act"><a class="cta main" href="https://github.com/shankarpatilv/interviewKit" target="_blank" rel="noopener">View repo</a><button class="cta ms-next" type="button">Next mission &rarr;</button></div>
+          <span class="pstamp" aria-hidden="true">+50</span>
+        </div>
+      </article>
+      <article class="mission" data-i="2" aria-label="A-rank mission: ChildGuard" hidden>
+        <div class="ms-rank" aria-hidden="true">A</div>
+        <div class="ms-art" aria-hidden="true"><svg width="120" height="120" viewBox="0 0 120 120"><path d="M60 8 L104 26 V58 C104 86 84 104 60 112 C36 104 16 86 16 58 V26 Z" fill="#fff" stroke="#0e0a0b" stroke-width="5"/><path d="M40 60 L54 74 L82 44" fill="none" stroke="#d9a0b0" stroke-width="8" stroke-linecap="round"/></svg></div>
+        <div class="ms-file">
+          <span class="ms-code">A-rank mission &middot; 03 / 05 &middot; 任務 参</span>
+          <h3>ChildGuard</h3><i>Locked-down dashboard</i>
+          <p>A dashboard built to protect kids' data. It loads only what it needs, so it opens 40% faster.</p><p>Every door locked: signed tokens, role checks, strict CSP, scrubbed inputs.</p>
+          <div class="ms-stats"><div><b>40%</b>faster load</div><div><b>RS256</b>signed tokens</div><div><b>CSP</b>strict policy</div></div>
+          <div class="ms-stack"><span>React</span><span>Redux</span><span>TypeScript</span><span>Express</span><span>MongoDB</span><span>Auth0</span></div>
+          <div class="ms-act"><a class="cta main" href="https://github.com/shankarpatilv/ChildGuard" target="_blank" rel="noopener">View repo</a><button class="cta ms-next" type="button">Next mission &rarr;</button></div>
+          <span class="pstamp" aria-hidden="true">+50</span>
+        </div>
+      </article>
+      <article class="mission" data-i="3" aria-label="B-rank mission: Cloud-Native" hidden>
+        <div class="ms-rank" aria-hidden="true">B</div>
+        <div class="ms-art" aria-hidden="true"><svg width="170" height="110" viewBox="0 0 170 110"><path d="M40 90 H130 A26 26 0 0 0 126 38 A36 36 0 0 0 58 30 A28 28 0 0 0 40 90 Z" fill="#fff" stroke="#0e0a0b" stroke-width="5"><animateTransform attributeName="transform" type="translate" values="0 0;0 -6;0 0" dur="2s" repeatCount="indefinite"/></path><g stroke="#d9a0b0" stroke-width="5" stroke-linecap="round"><line x1="60" y1="100" x2="56" y2="108"/><line x1="85" y1="100" x2="81" y2="108"/><line x1="110" y1="100" x2="106" y2="108"/></g></svg></div>
+        <div class="ms-file">
+          <span class="ms-code">B-rank mission &middot; 04 / 05 &middot; 任務 肆</span>
+          <h3>Cloud-Native</h3><i>Infrastructure as code</i>
+          <p>Writes its own cloud from code: networks, load balancers, auto scaling across zones.</p><p>Emails go out async, so signups stay fast. Updates roll out without anyone noticing a blink.</p>
+          <div class="ms-stats"><div><b>99.9%</b>multi-zone</div><div><b>0s</b>downtime deploys</div><div><b>IaC</b>Terraform</div></div>
+          <div class="ms-stack"><span>Spring Boot</span><span>AWS</span><span>Terraform</span><span>Packer</span><span>PostgreSQL</span><span>Actions</span></div>
+          <div class="ms-act"><a class="cta main" href="https://github.com/shankarpatilv/Cloud-Native" target="_blank" rel="noopener">View repo</a><button class="cta ms-next" type="button">Next mission &rarr;</button></div>
+          <span class="pstamp" aria-hidden="true">+50</span>
+        </div>
+      </article>
+      <article class="mission" data-i="4" aria-label="B-rank mission: HealthCare" hidden>
+        <div class="ms-rank" aria-hidden="true">B</div>
+        <div class="ms-art" aria-hidden="true"><svg width="200" height="100" viewBox="0 0 200 100"><path d="M0 55 H60 L72 25 L88 85 L100 40 L110 55 H200" fill="none" stroke="#f26b1d" stroke-width="5" stroke-dasharray="260" stroke-dashoffset="260"><animate attributeName="stroke-dashoffset" from="260" to="-260" dur="2s" repeatCount="indefinite"/></path></svg></div>
+        <div class="ms-file">
+          <span class="ms-code">B-rank mission &middot; 05 / 05 &middot; 任務 伍</span>
+          <h3>HealthCare</h3><i>Queue-offloaded API</i>
+          <p>Patient data service that hands the heavy search indexing to a background queue, so writes land 60% faster.</p><p>Reads come from cache when nothing changed. Bad data gets bounced at the door.</p>
+          <div class="ms-stats"><div><b>60%</b>faster writes</div><div><b>ETag</b>cache hits</div><div><b>Queue</b>background indexing</div></div>
+          <div class="ms-stack"><span>FastAPI</span><span>Redis</span><span>Elasticsearch</span><span>RabbitMQ</span><span>OAuth 2.0</span></div>
+          <div class="ms-act"><a class="cta main" href="https://github.com/shankarpatilv/HealthCare" target="_blank" rel="noopener">View repo</a><button class="cta ms-next" type="button">Back to mission 01 &rarr;</button></div>
+          <span class="pstamp" aria-hidden="true">+50</span>
+        </div>
+      </article>
+      <div class="ms-shards" id="msShards" aria-hidden="true"></div>
+    </div>
+    <div class="ms-nav">
+      <button class="ms-prev" type="button" aria-label="Previous mission">&larr;</button>
+      <div class="ms-dots"><button type="button" class="ms-dot on" aria-label="Mission 1: gitStream"><span>S</span></button><button type="button" class="ms-dot" aria-label="Mission 2: InterviewKit"><span>A</span></button><button type="button" class="ms-dot" aria-label="Mission 3: ChildGuard"><span>A</span></button><button type="button" class="ms-dot" aria-label="Mission 4: Cloud-Native"><span>B</span></button><button type="button" class="ms-dot" aria-label="Mission 5: HealthCare"><span>B</span></button></div>
+      <span class="ms-upnext" id="msUp">Up next: InterviewKit</span>
     </div>
   </div>
 </section>
@@ -1683,7 +1698,7 @@ body::before{content:"";position:fixed;inset:0;z-index:44;pointer-events:none;op
 
   /* click pops: mouse pops on press as before; touch pops only on a real tap, not on every scroll swipe */
   var tapStart=null;
-  addEventListener('pointerdown',function(e){if(!opened||e.target.closest('a,button,.card,#qlog'))return;
+  addEventListener('pointerdown',function(e){if(!opened||e.target.closest('a,button,.card,.ms-file,#qlog'))return;
     if(e.pointerType==='mouse'){pop(e.clientX,e.clientY);boomScore(e.clientX,e.clientY-40);return}
     tapStart={x:e.clientX,y:e.clientY,t:Date.now()}},{passive:true});
   addEventListener('pointerup',function(e){if(!tapStart)return;var s=tapStart;tapStart=null;
@@ -1744,7 +1759,7 @@ body::before{content:"";position:fixed;inset:0;z-index:44;pointer-events:none;op
     return [
       ['Read every chapter',ch+'/5','+100 each',ch===5,''],
       ['Defeat the boss','','+300',!!got.boss,''],
-      ['Flip every project card',cd+'/'+cards.length,'+50 each',cd===cards.length,''],
+      ['Read every mission file',cd+'/'+cards.length,'+50 each',cd===cards.length,''],
       ['Booms',boomPts+'/200','+5 each',boomPts>=200,''],
       ['Finish the manga','','+500',!!got.end,''],
       ['Break my systems',(got['sys-git']?1:0)+(got['sys-ev']?1:0)+(got['sys-cloud']?1:0)+'/3','+100 each',!!(got['sys-git']&&got['sys-ev']&&got['sys-cloud']),''],
@@ -2055,15 +2070,33 @@ body::before{content:"";position:fixed;inset:0;z-index:44;pointer-events:none;op
   var ep=$('#eyesPanel');
   addEventListener('pointermove',function(e){ep.style.setProperty('--ex',((e.clientX/innerWidth-.5)*2).toFixed(2));ep.style.setProperty('--ey',((e.clientY/innerHeight-.5)*2).toFixed(2))},{passive:true});
 
-  /* cards */
-  var cards=$$('.card');
-  function deal(){cards.forEach(function(c,i){setTimeout(function(){c.classList.add('dealt');if(!RM)pop(c.getBoundingClientRect().left+130,c.getBoundingClientRect().top+120,null)},i*160)})}
-  cards.forEach(function(c){
-    function flip(){c.classList.toggle('flip');if(c.classList.contains('flip')){c.classList.add('claimed');var r=c.getBoundingClientRect();addScore(50,'card-'+cards.indexOf(c),r.left+r.width/2,r.top+40)}c.setAttribute('aria-label',c.getAttribute('aria-label').replace(/flip for details|flip back/,c.classList.contains('flip')?'flip back':'flip for details'))}
-    c.addEventListener('click',function(e){if(e.target.closest('a'))return;flip()});
-    c.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();flip()}});
-    c.addEventListener('pointermove',function(e){var r=c.getBoundingClientRect();c.style.setProperty('--mx',((e.clientX-r.left)/r.width).toFixed(2));c.style.setProperty('--my',((e.clientY-r.top)/r.height).toFixed(2))},{passive:true});
-  });
+  /* ===== 第四話: MISSION BRIEFING (one file at a time, shatters on next) ===== */
+  var cards=$$('.mission'),brief=$('#brief'),shardBox=$('#msShards'),dots=$$('.ms-dot'),upNext=$('#msUp'),cur=0,busy=false;
+  function claim(k){var m=cards[k];if(!m||m.classList.contains('claimed'))return;m.classList.add('claimed');var st=$('.pstamp',m),r=(st||m).getBoundingClientRect();addScore(50,'card-'+k,r.left+r.width/2,r.top+10,'FILE READ')}
+  function show(k){cards.forEach(function(m,i){var on=i===k;m.classList.toggle('on',on);if(on)m.removeAttribute('hidden');else m.setAttribute('hidden','')});
+    dots.forEach(function(d,i){d.classList.toggle('on',i===k);d.classList.toggle('seen',cards[i].classList.contains('claimed')||i===k)});
+    var nx=cards[(k+1)%cards.length];upNext.textContent='Up next: '+$('h3',nx).textContent;cur=k;claim(k)}
+  function shatter(cb){var f=$('.mission.on .ms-file',brief);if(RM||!f||!f.animate){cb();return}
+    var br=brief.getBoundingClientRect(),r=f.getBoundingClientRect(),cols=5,rows=4,w=r.width/cols,h=r.height/rows,frag=document.createDocumentFragment(),els=[];
+    for(var y=0;y<rows;y++)for(var x=0;x<cols;x++)for(var t=0;t<2;t++){var e=document.createElement('i');e.className='msh';
+      e.style.cssText='left:'+(r.left-br.left+x*w)+'px;top:'+(r.top-br.top+y*h)+'px;width:'+(w+1)+'px;height:'+(h+1)+'px;clip-path:'+(t?'polygon(0 0,100% 0,0 100%)':'polygon(100% 0,100% 100%,0 100%)');
+      frag.appendChild(e);els.push([e,x-cols/2+.5,y-rows/2+.5])}
+    shardBox.appendChild(frag);f.style.visibility='hidden';
+    var c=$('.ms-rank',brief),cx=br.left+(r.left-br.left)+r.width/2,cy=r.top+r.height/2;pop(cx,cy-40,'パリン!');if(document.documentElement.classList.contains('super'))shake();
+    els.forEach(function(p){var dx=p[1]*(60+Math.random()*120)+(Math.random()-.5)*80,dy=p[2]*(50+Math.random()*90)+120+Math.random()*160,rot=(Math.random()-.5)*160;
+      p[0].animate([{transform:'translate(0,0) rotate(0)',opacity:1},{transform:'translate('+dx+'px,'+dy+'px) rotate('+rot+'deg)',opacity:0}],{duration:620+Math.random()*260,easing:'cubic-bezier(.2,.6,.3,1)',fill:'forwards'})});
+    setTimeout(function(){f.style.visibility='';cb()},200);
+    setTimeout(function(){shardBox.innerHTML=''},1000)}
+  function go(k,withShatter){if(busy||k===cur)return;busy=true;var n=(k+cards.length)%cards.length;
+    function sw(){show(n);var nf=$('.mission.on',brief);nf.classList.remove('enter');void nf.offsetWidth;nf.classList.add('enter');setTimeout(function(){busy=false},420)}
+    if(withShatter)shatter(sw);else sw()}
+  function deal(){show(0)}
+  $$('.ms-next',brief).forEach(function(b){b.addEventListener('click',function(){go(cur+1,true)})});
+  $('.ms-prev').addEventListener('click',function(){go(cur-1,false)});
+  dots.forEach(function(d,i){d.addEventListener('click',function(){go(i,i>cur)})});
+  brief.addEventListener('keydown',function(e){if(e.key==='ArrowRight'){e.preventDefault();go(cur+1,true)}else if(e.key==='ArrowLeft'){e.preventDefault();go(cur-1,false)}});
+  var sx=null,sy=null;brief.addEventListener('touchstart',function(e){var t=e.touches[0];sx=t.clientX;sy=t.clientY},{passive:true});
+  brief.addEventListener('touchend',function(e){if(sx===null)return;var t=e.changedTouches[0],dx=t.clientX-sx,dy=t.clientY-sy;sx=null;if(Math.abs(dx)>60&&Math.abs(dx)>Math.abs(dy)*1.4)go(cur+(dx<0?1:-1),dx<0)},{passive:true});
 })();
 </script>
 </body>
