@@ -704,6 +704,74 @@ html.super.shake main{animation:shake2 .38s cubic-bezier(.36,.07,.19,.97)}
 .intro>:not(.i-head){transition:opacity .4s ease-out .45s}
 .intro:not(.landed)>:not(.i-head){opacity:.001}
 
+/* ===== 番外編: Break my systems ===== */
+.lab{max-width:1140px;margin:0 auto;padding:50px clamp(14px,3vw,28px) 10px}
+.lab-tabs{display:flex;gap:10px;flex-wrap:wrap;position:relative;z-index:2;margin-bottom:-5px}
+.lab-tab{font:inherit;cursor:pointer;font-family:"Bangers",cursive;font-size:21px;letter-spacing:.05em;line-height:1;color:var(--ink);background:var(--paper);border:5px solid var(--ink);border-bottom:0;padding:9px 16px 8px;text-align:left}
+.lab-tab small{display:block;font-family:"Zen Kaku Gothic New",sans-serif;font-size:11px;letter-spacing:0;font-weight:900;margin-top:3px}
+.lab-tab.on{background:var(--hi);color:#000;border-color:#000}
+.lab-stage{position:relative;border:5px solid var(--ink);box-shadow:9px 9px 0 var(--red);background-color:var(--paper);background-image:radial-gradient(var(--tone) 1.2px,transparent 1.6px);background-size:8px 8px;padding:64px clamp(12px,2vw,24px) 22px;color:#000;overflow:hidden}
+.lab-narr{position:absolute;left:16px;right:16px;top:-2px;z-index:4;background:#fff;color:#000;border:3px solid #000;border-top:0;padding:6px 12px;font-weight:800;font-size:13px;box-shadow:3px 3px 0 #000;max-width:min(70%,520px)}
+.lab-narr.bump{animation:narrBump .35s cubic-bezier(.2,1.8,.4,1)}
+@keyframes narrBump{0%{scale:1.12}100%{scale:1}}
+.lab-sys{display:none}.lab-sys.on{display:block}
+.lab-flow{display:grid;grid-template-columns:1fr 1.3fr 1.25fr 1fr;gap:clamp(14px,2.4vw,34px);align-items:center;margin-top:14px}
+.ln{position:relative;z-index:1;border:4px solid #000;background:#fff;box-shadow:5px 5px 0 #000;padding:10px;text-align:center;font-weight:900;font-size:12px;transition:background .2s,opacity .2s}
+.ln b{display:block;font-family:"Bangers",cursive;font-weight:400;font-size:19px;letter-spacing:.04em;line-height:1.05;margin-bottom:6px}
+.ln-src{background:#000;color:#fff}.ln-src b{color:var(--hi)}
+.ln-col{display:grid;gap:12px}
+.lp,.lw{display:flex;justify-content:space-between;align-items:center;gap:6px;border:3px solid #000;padding:5px 8px;margin-top:6px;font-size:11px;font-weight:900;background:#fff;transition:background .2s}
+.lp i{font-style:normal;font-family:"Bangers",cursive;font-size:14px;color:var(--red)}
+.lw{background:var(--hi)}.lw i{font-style:normal;font-size:10px}
+.lw.dead{background:#222;color:#888;text-decoration:line-through}
+.lw.reb,.lp.reb{background:#ffd6d6}
+.lq{height:14px;border:3px solid #000;background:#fff;margin:2px 0 6px}.lq i{display:block;height:100%;width:0;background:var(--red);transition:width .2s}
+.lslots{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;margin-bottom:6px}
+.lslots span{height:14px;border:2px solid #000;background:#fff}.lslots span.busy{background:var(--hi)}.lslots span.capoff{border-style:dashed;opacity:.5}
+.lgate{font-size:11px}
+.lalarm.on{background:var(--red);color:#fff;animation:alarmStrobe .3s steps(1) infinite}
+@keyframes alarmStrobe{50%{background:#fff;color:#000}}
+.lazs{gap:10px}
+.laz{position:relative;z-index:1;display:flex;align-items:center;gap:6px;border:4px solid #000;background:#fff;box-shadow:4px 4px 0 #000;padding:6px 8px;transition:background .25s}
+.laz b{font-family:"Bangers",cursive;font-weight:400;font-size:15px;letter-spacing:.04em;margin-right:auto}
+.li{width:18px;height:18px;border:3px solid #000;background:var(--hi);transition:scale .3s cubic-bezier(.2,1.8,.4,1),opacity .2s}
+.li.off{scale:0;opacity:0}
+.laz.down{background:#222}.laz.down b{color:#888;text-decoration:line-through}.laz.down .li{background:#555}
+.lab-meta{display:grid;grid-template-columns:2fr repeat(3,1fr);gap:12px;margin-top:22px}
+.lab-sys[data-sys="cloud"] .lab-meta{grid-template-columns:repeat(4,1fr)}
+.lab-dlq{position:relative;z-index:1;border:4px dashed var(--red);background:#fff;padding:8px 12px;font-weight:900;font-size:13px}
+.lab-dlq b{display:block;font-family:"Bangers",cursive;font-weight:400;font-size:19px;color:var(--red);letter-spacing:.04em}
+.lab-st{border:4px solid #000;background:#000;color:#fff;padding:7px 10px;text-align:center}
+.lab-st b{display:block;font-family:"Bangers",cursive;font-weight:400;font-size:24px;color:var(--hi);line-height:1;white-space:nowrap}
+.lab-st small{font-size:10px;font-weight:900;letter-spacing:.06em}
+.lab-ctrl{display:flex;flex-wrap:wrap;gap:12px;margin-top:20px}
+.lab-btn{font:inherit;cursor:pointer;font-family:"Bangers",cursive;font-size:20px;letter-spacing:.05em;border:4px solid #000;padding:8px 16px;box-shadow:5px 5px 0 #000;background:#fff;color:#000;transition:translate .1s,box-shadow .1s}
+.lab-btn:active{translate:3px 3px;box-shadow:2px 2px 0 #000}
+.lab-btn.red{background:var(--red);color:#fff}.lab-btn.y{background:var(--hi)}.lab-btn.ghost{margin-left:auto;box-shadow:none}
+.lab-btn[disabled]{opacity:.45;cursor:not-allowed}
+.lab-pk{position:absolute;inset:0;pointer-events:none;z-index:3}
+.pk{position:absolute;left:-6px;top:-6px;width:12px;height:12px;border-radius:50%;background:var(--hi);border:2px solid #000;display:none;will-change:transform}
+.pk.bad{background:var(--red);width:15px;height:15px;left:-7.5px;top:-7.5px}
+.pk.retry{background:#fff;border-style:dashed}
+.lab-sfx{position:absolute;z-index:5;pointer-events:none;font-family:"Dela Gothic One",sans-serif;font-size:26px;color:var(--red);-webkit-text-stroke:2px #000;paint-order:stroke fill;white-space:nowrap;animation:labSfx .9s cubic-bezier(.2,1.6,.4,1) forwards}
+@keyframes labSfx{0%{opacity:0;transform:translate(-50%,-50%) scale(2.2) rotate(-10deg)}20%{opacity:1;transform:translate(-50%,-80%) scale(1) rotate(-6deg)}100%{opacity:0;transform:translate(-50%,-150%) scale(1) rotate(-6deg)}}
+.lab-note{margin:18px 0 0;font-weight:700;font-size:13px;color:var(--muted);text-align:center}
+.lab-note b{color:var(--red)}
+@media (max-width:760px){
+  .lab-tabs{gap:6px;flex-wrap:nowrap}.lab-tab{font-size:15px;padding:7px 8px 6px;border-width:4px}.lab-tab small{display:none}
+  .lab-stage{padding-top:58px}
+  .lab-narr{left:10px;right:10px;max-width:none;font-size:12px}
+  .lab-flow{grid-template-columns:1fr 1fr;gap:12px;margin-top:6px}
+  .ln{padding:7px;font-size:11px}.ln b{font-size:16px;margin-bottom:4px}
+  .lp,.lw{padding:4px 6px;font-size:10px;margin-top:4px}
+  .lab-meta{margin-top:14px;gap:8px}.lab-st b{font-size:19px}
+  .lab-ctrl{margin-top:14px;gap:8px}
+  .laz{padding:4px 6px}.li{width:14px;height:14px}
+  .lab-meta,.lab-sys[data-sys="cloud"] .lab-meta{grid-template-columns:1fr 1fr}
+  .lab-dlq{grid-column:span 2}
+  .lab-btn{font-size:17px;padding:7px 12px;flex:1 1 40%}.lab-btn.ghost{margin-left:0}
+}
+
 /* memory: offscreen decorations drop their GPU layers; big movers only promoted near their section */
 .idle::before{display:none!important}
 .menace.idle,.ring.idle{animation:none!important}
@@ -1235,6 +1303,99 @@ html.super.shake main{animation:shake2 .38s cubic-bezier(.36,.07,.19,.97)}
   </div>
 </section>
 
+<!-- ================= 番外編: BREAK MY SYSTEMS ================= -->
+<section id="bonus" data-label="番外編 Break my systems">
+  <div class="ct"><span class="kanji">番外編</span>
+    <div class="slash s1"></div><div class="slash s2"></div><div class="slash s3"></div>
+    <div class="ct-body"><h2>Break my systems</h2><p>Bonus chapter: they&rsquo;re live. Try to take them down.</p><span class="hint">Pick a system, then break it &darr;</span></div>
+  </div>
+  <div class="lab" id="lab">
+    <div class="lab-tabs" role="tablist" aria-label="Systems">
+      <button class="lab-tab on" type="button" role="tab" aria-selected="true" data-sys="git">gitStream<small>event pipeline</small></button>
+      <button class="lab-tab" type="button" role="tab" aria-selected="false" data-sys="ev">Event-driven<small>serverless system</small></button>
+      <button class="lab-tab" type="button" role="tab" aria-selected="false" data-sys="cloud">Cloud-Native<small>multi-zone cloud</small></button>
+    </div>
+    <div class="lab-stage" id="labStage">
+      <div class="lab-narr" id="labNarr" aria-live="polite">Narrator: Everything&rsquo;s healthy. For now.</div>
+
+      <div class="lab-sys on" data-sys="git">
+        <div class="lab-flow">
+          <div class="ln ln-src" data-n="src"><b>GitHub firehose</b>public events in</div>
+          <div class="ln"><b>Kafka topic</b>
+            <div class="lp" data-n="p0">partition 0<i data-lag="0">lag 0</i></div>
+            <div class="lp" data-n="p1">partition 1<i data-lag="1">lag 0</i></div>
+            <div class="lp" data-n="p2">partition 2<i data-lag="2">lag 0</i></div></div>
+          <div class="ln"><b>Go workers</b>
+            <div class="lw" data-n="w0"><span>worker-1</span><i>p0</i></div>
+            <div class="lw" data-n="w1"><span>worker-2</span><i>p1</i></div>
+            <div class="lw" data-n="w2"><span>worker-3</span><i>p2</i></div></div>
+          <div class="ln-col"><div class="ln" data-n="pg"><b>PostgreSQL</b>writes</div><div class="ln" data-n="ch"><b>ClickHouse</b>analytics</div></div>
+        </div>
+        <div class="lab-meta">
+          <div class="lab-dlq" data-n="dlq"><b>DEAD-LETTER QUEUE</b><span data-o="dlq">0 parked</span> &middot; 0 lost</div>
+          <div class="lab-st"><b data-o="eps">0</b><small>EVENTS / SEC</small></div>
+          <div class="lab-st"><b>0</b><small>LOST</small></div>
+          <div class="lab-st"><b data-o="status">HEALTHY</b><small>STATUS</small></div>
+        </div>
+        <div class="lab-ctrl">
+          <button type="button" class="lab-btn red" data-act="kill">KILL A WORKER</button>
+          <button type="button" class="lab-btn y" data-act="spike">SPIKE TRAFFIC &times;3</button>
+          <button type="button" class="lab-btn" data-act="poison">SEND POISON EVENT</button>
+          <button type="button" class="lab-btn ghost" data-act="reset">RESET</button>
+        </div>
+      </div>
+
+      <div class="lab-sys" data-sys="ev">
+        <div class="lab-flow">
+          <div class="ln ln-src" data-n="src"><b>Requests</b>events in</div>
+          <div class="ln" data-n="q"><b>Queue</b><div class="lq"><i data-o="qbar"></i></div><span data-o="qn">0 waiting</span></div>
+          <div class="ln" data-n="fn"><b>Serverless workers</b><div class="lslots" data-o="slots"></div><span class="lgate" data-o="gate">cap: 5 concurrent</span></div>
+          <div class="ln-col"><div class="ln" data-n="db"><b>DynamoDB</b>writes</div><div class="ln lalarm" data-n="alarm"><b>Alarm</b><span data-o="alarm">all clear</span></div></div>
+        </div>
+        <div class="lab-meta">
+          <div class="lab-dlq" data-n="dlq"><b>DEAD-LETTER QUEUE</b><span data-o="dlq">0 parked</span> &middot; <span data-o="retries">0 retries</span></div>
+          <div class="lab-st"><b data-o="eps">0</b><small>REQUESTS / SEC</small></div>
+          <div class="lab-st"><b>0</b><small>LOST</small></div>
+          <div class="lab-st"><b data-o="status">HEALTHY</b><small>STATUS</small></div>
+        </div>
+        <div class="lab-ctrl">
+          <button type="button" class="lab-btn y" data-act="flood">FLOOD (10K REQ/S)</button>
+          <button type="button" class="lab-btn red" data-act="fail">INJECT FAILURE</button>
+          <button type="button" class="lab-btn" data-act="gate">CONCURRENCY CAP: ON</button>
+          <button type="button" class="lab-btn ghost" data-act="reset">RESET</button>
+        </div>
+      </div>
+
+      <div class="lab-sys" data-sys="cloud">
+        <div class="lab-flow">
+          <div class="ln ln-src" data-n="src"><b>Users</b>traffic in</div>
+          <div class="ln" data-n="lb"><b>Load balancer</b>health-checked</div>
+          <div class="ln-col lazs">
+            <div class="laz" data-az="a"><b>Zone A</b><span class="li" data-n="a0"></span><span class="li" data-n="a1"></span><span class="li" data-n="a2"></span><span class="li" data-n="a3"></span></div>
+            <div class="laz" data-az="b"><b>Zone B</b><span class="li" data-n="b0"></span><span class="li" data-n="b1"></span><span class="li" data-n="b2"></span><span class="li" data-n="b3"></span></div>
+            <div class="laz" data-az="c"><b>Zone C</b><span class="li" data-n="c0"></span><span class="li" data-n="c1"></span><span class="li" data-n="c2"></span><span class="li" data-n="c3"></span></div>
+          </div>
+          <div class="ln" data-n="db"><b>PostgreSQL</b>multi-zone</div>
+        </div>
+        <div class="lab-meta">
+          <div class="lab-st"><b data-o="eps">0</b><small>REQUESTS / SEC</small></div>
+          <div class="lab-st"><b data-o="inst">6</b><small>INSTANCES</small></div>
+          <div class="lab-st"><b>99.9%</b><small>UPTIME</small></div>
+          <div class="lab-st"><b data-o="status">HEALTHY</b><small>STATUS</small></div>
+        </div>
+        <div class="lab-ctrl">
+          <button type="button" class="lab-btn red" data-act="azdown">TAKE DOWN A ZONE</button>
+          <button type="button" class="lab-btn y" data-act="surge">TRAFFIC SURGE</button>
+          <button type="button" class="lab-btn ghost" data-act="reset">RESTORE</button>
+        </div>
+      </div>
+
+      <div class="lab-pk" id="labPk" aria-hidden="true"></div>
+    </div>
+    <p class="lab-note">Animated simulations of how each system is designed to behave. Break one and watch it recover for <b>+100</b> each.</p>
+  </div>
+</section>
+
 <section class="end" data-label="つづく Next chapter">
   <div class="end-panel lines-bg" id="endp">
     <span class="tsuzuku">つづく</span>
@@ -1355,6 +1516,7 @@ html.super.shake main{animation:shake2 .38s cubic-bezier(.36,.07,.19,.97)}
       ['Flip every project card',cd+'/'+cards.length,'+50 each',cd===cards.length,''],
       ['Booms',boomPts+'/200','+5 each',boomPts>=200,''],
       ['Finish the manga','','+500',!!got.end,''],
+      ['Break my systems',(got['sys-git']?1:0)+(got['sys-ev']?1:0)+(got['sys-cloud']?1:0)+'/3','+100 each',!!(got['sys-git']&&got['sys-ev']&&got['sys-cloud']),''],
       [eggFound?'Secret found!':'??? Secret','','+9000',eggFound,'egg']]}
   function renderQuests(){qlist.innerHTML=quests().map(function(q){return '<li class="'+(q[3]?'done ':'')+q[4]+'"><span class="qb"></span><span class="qt">'+q[0]+'</span><span class="qp">'+q[2]+(q[1]?'<small>'+q[1]+'</small>':'')+'</span></li>'}).join('');
     qfoot.textContent='Score '+fmtN(score)+' \u00b7 Rank: '+rankOf(score)}
@@ -1379,9 +1541,116 @@ html.super.shake main{animation:shake2 .38s cubic-bezier(.36,.07,.19,.97)}
 
   /* ===== CHAPTER SLASH BANNER ===== */
   var nsEl=$('#nextslash'),nsName=$('#nsName'),nsT=0;
-  var chapters=[['training','Training arc'],['amazon','Amazon arc'],['sidequests','Side quests'],['arsenal','Arsenal']].map(function(c){var sec=document.getElementById(c[0]);return {ct:sec?$('.ct',sec):null,name:c[1],prev:1e9,done:false}}).filter(function(c){return c.ct});
+  var chapters=[['training','Training arc'],['amazon','Amazon arc'],['sidequests','Side quests'],['arsenal','Arsenal'],['bonus','Break my systems']].map(function(c){var sec=document.getElementById(c[0]);return {ct:sec?$('.ct',sec):null,name:c[1],prev:1e9,done:false}}).filter(function(c){return c.ct});
   function slashBanner(name){if(RM)return;nsName.textContent=name+'!!';nsEl.classList.remove('go');void nsEl.offsetWidth;nsEl.classList.add('go');clearTimeout(nsT);nsT=setTimeout(function(){nsEl.classList.remove('go')},1200)}
   function chapterBanners(dir){var ih=innerHeight;chapters.forEach(function(c){var t=c.ct.getBoundingClientRect().top;if(!c.done&&dir>0&&c.prev>=ih&&t<ih){c.done=true;slashBanner(c.name)}c.prev=t})}
+
+
+  /* ===== 番外編: BREAK MY SYSTEMS (interactive simulations) ===== */
+  var lab=$('#lab');
+  if(lab){try{(function(){
+    var stage=$('#labStage'),pkL=$('#labPk'),narr=$('#labNarr'),cur='git',inView=false,pool=[],live=[],lastT=0,raf=0;
+    var tabs=$$('.lab-tab',lab);
+    function sysEl(k){return $('.lab-sys[data-sys="'+(k||cur)+'"]',stage)}
+    function nd(n){return $('[data-n="'+n+'"]',sysEl())}
+    function out(k,v){var e=$('[data-o="'+k+'"]',sysEl());if(e&&e.textContent!==String(v))e.textContent=v;return e}
+    function center(n){var e=nd(n);if(!e)return null;var r=e.getBoundingClientRect(),sr=stage.getBoundingClientRect();return [r.left-sr.left+r.width/2,r.top-sr.top+r.height/2]}
+    function getPk(c){var e=pool.pop();if(!e){e=document.createElement('span');pkL.appendChild(e)}e.className='pk'+(c?' '+c:'');e.style.display='block';return e}
+    function hop(a,b,d,c,cb){var p=center(a),q=center(b);if(!p||!q){if(cb)cb();return}var e=getPk(c);e.style.transform='translate('+p[0]+'px,'+p[1]+'px)';live.push({e:e,x0:p[0],y0:p[1],x1:q[0],y1:q[1],t0:performance.now(),d:d,cb:cb})}
+    function clearPk(){live.forEach(function(k){k.e.style.display='none';pool.push(k.e)});live=[]}
+    function say(t){narr.textContent='Narrator: '+t;narr.classList.remove('bump');void narr.offsetWidth;narr.classList.add('bump')}
+    function sfx(n,t){var c=center(n);if(!c)return;var e=document.createElement('span');e.className='lab-sfx';e.textContent=t;e.style.left=c[0]+'px';e.style.top=c[1]+'px';stage.appendChild(e);setTimeout(function(){e.remove()},950)}
+    function recent(arr,now,ms){while(arr.length&&now-arr[0]>ms)arr.shift();return arr.length}
+    function win(key,label){var r=stage.getBoundingClientRect();addScore(100,key,r.left+r.width/2,r.top+60,label||'SURVIVED');if(!RM)sfx('src','ドン!!')}
+
+    /* ---- gitStream: Kafka partitions -> Go workers -> two sinks ---- */
+    var G={reset:function(){this.rate=3;this.spike=0;this.poison=0;this.q=[[],[],[]];this.asg=[0,1,2];this.alive=[1,1,1];this.busy=[0,0,0];this.reb=0;this.done=[];this.dlq=0;this.broke=0;this.acc=0;
+        for(var w=0;w<3;w++){var e=nd('w'+w);if(!e)continue;e.classList.remove('dead','reb');$('i',e).textContent='p'+w}$$('.lp',sysEl('git')).forEach(function(e){e.classList.remove('reb')});out('dlq','0 parked')},
+      tick:function(now,dt){var r=this.rate*(now<this.spike?3:1);this.acc+=dt*r/1000;
+        while(this.acc>=1){this.acc--;var p=Math.random()*3|0,bad=false;if(this.poison>0){this.poison--;bad=true}
+          (function(p,bad){hop('src','p'+p,520,bad?'bad':'',function(){G.q[p].push(bad)})})(p,bad)}
+        if(this.reb&&now>this.reb){this.reb=0;var al=[];for(var w=0;w<3;w++)if(this.alive[w])al.push(w);var k=0;
+          for(var p=0;p<3;p++){if(this.asg[p]<0){this.asg[p]=al[k++%al.length];nd('p'+p).classList.remove('reb')}}
+          for(var w=0;w<3;w++){var e=nd('w'+w);e.classList.remove('reb');var mine=[];for(var p=0;p<3;p++)if(this.asg[p]===w)mine.push('p'+p);$('i',e).textContent=this.alive[w]?(mine.join('+')||'idle'):'DOWN'}
+          say('Rebalanced. The survivors picked up the orphaned partition. Nothing was lost.')}
+        for(var w=0;w<3;w++){if(!this.alive[w]||this.busy[w])continue;var best=-1;
+          for(var p=0;p<3;p++)if(this.asg[p]===w&&this.q[p].length&&(best<0||this.q[p].length>this.q[best].length))best=p;
+          if(best<0)continue;var bad=this.q[best].shift();this.busy[w]=1;
+          (function(w,p,bad){hop('p'+p,'w'+w,170,bad?'bad':'',function(){
+            if(!G.alive[w]){G.busy[w]=0;G.q[p].unshift(bad);return}
+            if(bad){sfx('w'+w,'ガキン!');setTimeout(function(){hop('w'+w,'dlq',560,'bad',function(){G.dlq++;out('dlq',G.dlq+' parked');sfx('dlq','ポイ!');say('Poison event parked in the dead-letter queue. The pipeline kept flowing.')})},260);setTimeout(function(){G.busy[w]=0},300)}
+            else{hop('w'+w,'pg',360,'',null);hop('w'+w,'ch',400,'',null);G.done.push(performance.now());setTimeout(function(){G.busy[w]=0},20)}})})(w,best,bad)}
+        var lag=0;for(var p=0;p<3;p++){lag+=this.q[p].length;out('lag'+p,'');var li=$('[data-lag="'+p+'"]',sysEl());if(li){var t='lag '+this.q[p].length*40;if(li.textContent!==t)li.textContent=t}}
+        out('eps',(recent(this.done,now,2000)/2*3000|0).toLocaleString('en-US'));
+        out('status',this.reb?'REBALANCING':lag>8?'CATCHING UP':'HEALTHY');
+        if(this.broke&&!this.reb&&lag<5&&now>this.spike&&now-this.broke>2600){this.broke=0;win('sys-git');say('It held. Workers died, traffic spiked, poison came in. Zero events lost.')}},
+      act:function(a,now){if(a==='kill'){var al=[];for(var w=0;w<3;w++)if(this.alive[w])al.push(w);if(al.length<2){say('Only one worker left. Even chaos needs a survivor. Hit RESET.');return}
+          var w=al[Math.random()*al.length|0];this.alive[w]=0;var e=nd('w'+w);e.classList.add('dead');$('i',e).textContent='DOWN';sfx('w'+w,'バキッ!');shake();
+          for(var p=0;p<3;p++)if(this.asg[p]===w){this.asg[p]=-1;nd('p'+p).classList.add('reb')}this.reb=now+1600;this.broke=now;say('worker-'+(w+1)+' is down! Kafka is rebalancing its partitions...')}
+        else if(a==='spike'){this.spike=now+5000;this.broke=now;sfx('src','ドドド!');say('Traffic ×3! Watch the lag climb, then drain.')}
+        else if(a==='poison'){this.poison++;this.broke=now;say('A malformed event is coming through...')}
+        else if(a==='reset'){this.reset();clearPk();say('Fresh pipeline. Everything is healthy. For now.')}}};
+
+    /* ---- Event-driven: queue -> capped serverless workers -> DynamoDB, retries + DLQ + alarm ---- */
+    var E={reset:function(){this.rate=3.5;this.flood=0;this.fail=0;this.gate=true;this.q=[];this.inf=0;this.dlq=0;this.retries=0;this.fails=[];this.done=[];this.alarm=false;this.broke=0;this.acc=0;
+        out('dlq','0 parked');out('retries','0 retries');var b=$('[data-act="gate"]',sysEl('ev'));if(b)b.textContent='CONCURRENCY CAP: ON';var al=nd('alarm');if(al)al.classList.remove('on');out('alarm','all clear');this.slots()},
+      slots:function(){var box=$('[data-o="slots"]',sysEl('ev'));if(!box)return;var cap=this.gate?5:10,html='';for(var i=0;i<10;i++)html+='<span class="'+(i<this.inf?'busy ':'')+(i>=cap?'capoff':'')+'"></span>';if(box.innerHTML!==html)box.innerHTML=html;out('gate',this.gate?'cap: 5 concurrent':'cap: OFF')},
+      tick:function(now,dt){var r=this.rate*(now<this.flood?3:1);this.acc+=dt*r/1000;
+        while(this.acc>=1){this.acc--;hop('src','q',480,'',function(){E.q.push(0)})}
+        var cap=this.gate?5:10;
+        while(this.inf<cap&&this.q.length){var att=this.q.shift();this.inf++;
+          (function(att){hop('q','fn',260,att?'retry':'',function(){
+            var pf=(performance.now()<E.fail?.55:0)+(!E.gate&&E.inf>6?.5:0);
+            if(Math.random()<pf){E.fails.push(performance.now());if(!E.gate&&E.inf>6)sfx('db','スロットル!');
+              if(att<2){E.retries++;out('retries',E.retries+' retries');setTimeout(function(){hop('fn','q',420,'retry',function(){E.q.push(att+1)})},120)}
+              else hop('fn','dlq',520,'bad',function(){E.dlq++;out('dlq',E.dlq+' parked')})}
+            else{hop('fn','db',340,'',null);E.done.push(performance.now())}
+            setTimeout(function(){E.inf--},120)})})(att)}
+        var f=recent(this.fails,now,3000),on=f>=3;
+        if(on!==this.alarm){this.alarm=on;var al=nd('alarm');if(al)al.classList.toggle('on',on);out('alarm',on?'FIRING':'all clear');if(on){sfx('alarm','ビーッ!!');say('The alarm fired before any user noticed. Retries are kicking in.')}}
+        var ql=this.q.length,qb=$('[data-o="qbar"]',sysEl());if(qb)qb.style.width=Math.min(100,ql*3)+'%';out('qn',ql+' waiting');this.slots();
+        out('eps',(recent(this.done,now,2000)/2*1400|0).toLocaleString('en-US'));
+        out('status',this.alarm?'DEGRADED':ql>12?'BUFFERING':'HEALTHY');
+        if(this.broke&&!this.alarm&&ql<3&&now>this.fail&&now>this.flood&&now-this.broke>3000){this.broke=0;win('sys-ev');say('Flooded, failed, retried and recovered. The queue absorbed it all.')}},
+      act:function(a,now){if(a==='flood'){this.flood=now+5000;this.broke=now;sfx('src','ドドド!');say(this.gate?'10K requests a second! The queue soaks it up while the cap protects the database.':'Flood with the cap OFF... the database is about to get hammered.')}
+        else if(a==='fail'){this.fail=now+5000;this.broke=now;sfx('fn','バキッ!');shake();say('Downstream is failing! Failed messages retry, the stubborn ones go to the dead-letter queue.')}
+        else if(a==='gate'){this.gate=!this.gate;var b=$('[data-act="gate"]',sysEl());b.textContent='CONCURRENCY CAP: '+(this.gate?'ON':'OFF');say(this.gate?'Cap back on. The storm stays outside.':'Cap OFF. Try a flood now and watch DynamoDB throttle.');if(!this.gate)this.broke=now}
+        else if(a==='reset'){this.reset();clearPk();say('Fresh system. Everything is healthy. For now.')}}};
+
+    /* ---- Cloud-Native: load balancer -> 3 zones with auto scaling ---- */
+    var C={reset:function(){this.rate=4;this.surge=0;this.az={a:{up:1,n:2},b:{up:1,n:2},c:{up:1,n:2}};this.rr=0;this.done=[];this.broke=0;this.scaleAt=0;this.scaleIn=0;this.acc=0;
+        $$('.laz',sysEl('cloud')).forEach(function(e){e.classList.remove('down')});this.draw()},
+      draw:function(){var tot=0;for(var k in this.az){var z=this.az[k];for(var i=0;i<4;i++){var e=nd(k+i);if(e)e.classList.toggle('off',!(i<z.n))}if(z.up)tot+=z.n}out('inst',tot)},
+      targets:function(){var t=[];for(var k in this.az){var z=this.az[k];if(!z.up)continue;for(var i=0;i<z.n;i++)t.push(k+i)}return t},
+      route:function(from){var t=this.targets();if(!t.length)return;var n=t[this.rr++%t.length];
+        hop(from,n,380,'',function(){var z=C.az[n[0]];if(!z.up||+n[1]>=z.n){C.route(n);return}hop(n,'db',360,'',null);C.done.push(performance.now())})},
+      grow:function(d){for(var k in this.az){var z=this.az[k];if(!z.up)continue;var nn=Math.max(1,Math.min(4,z.n+d));if(nn>z.n){for(var i=z.n;i<nn;i++)(function(id){setTimeout(function(){sfx(id,'シュッ')},60)})(k+i)}z.n=nn}this.draw()},
+      tick:function(now,dt){var r=this.rate*(now<this.surge?4:1);this.acc+=dt*r/1000;
+        while(this.acc>=1){this.acc--;hop('src','lb',420,'',function(){C.route('lb')})}
+        if(this.scaleAt&&now>this.scaleAt){this.scaleAt=0;this.grow(1);say('Auto scaling added instances in the healthy zones. Uptime: still 99.9%.')}
+        if(this.scaleIn&&now>this.scaleIn){this.scaleIn=0;for(var k in this.az)if(this.az[k].up)this.az[k].n=Math.min(this.az[k].n,this.az.b.up&&this.az.a.up&&this.az.c.up?2:3);this.draw();say('Surge over. Scaled back in so nobody pays for idle servers.')}
+        out('eps',(recent(this.done,now,2000)/2*1300|0).toLocaleString('en-US'));
+        var down=!this.az.a.up||!this.az.b.up||!this.az.c.up;
+        out('status',this.scaleAt?'REROUTING':now<this.surge?'SCALING OUT':down?'HEALTHY (2 ZONES)':'HEALTHY');
+        if(this.broke&&!this.scaleAt&&now-this.broke>3200){this.broke=0;win('sys-cloud');say('A whole zone died and users never noticed. That is the point of multi-zone.')}},
+      act:function(a,now){if(a==='azdown'){var up=[];for(var k in this.az)if(this.az[k].up)up.push(k);if(up.length<2){say('Two zones are already down. Hit RESTORE.');return}
+          var k=up.indexOf('b')>=0?'b':up[0];this.az[k].up=0;$('.laz[data-az="'+k+'"]',sysEl()).classList.add('down');sfx(k+'0','ガシャーン!');shake();this.scaleAt=now+1700;this.broke=now;this.draw();
+          say('Zone '+k.toUpperCase()+' just went dark! The load balancer is rerouting...')}
+        else if(a==='surge'){this.surge=now+6000;this.broke=this.broke||now;sfx('src','ドドド!');var self=this;setTimeout(function(){self.grow(1);say('Traffic surge! Auto scaling is adding instances.')},900);this.scaleIn=now+10000;say('Traffic surge incoming...')}
+        else if(a==='reset'){this.reset();clearPk();say('All three zones healthy again.')}}};
+
+    var SYS={git:G,ev:E,cloud:C},INTRO={git:'Events stream in from GitHub. Try killing a worker.',ev:'Requests queue up and serverless workers pull them. Try a flood, or a failure.',cloud:'Three zones behind a load balancer. Try taking one down.'};
+    cur='ev';E.reset();cur='cloud';C.reset();cur='git';G.reset();
+    function setTab(k){if(k===cur)return;cur=k;clearPk();tabs.forEach(function(t){var on=t.dataset.sys===k;t.classList.toggle('on',on);t.setAttribute('aria-selected',on?'true':'false')});
+      $$('.lab-sys',stage).forEach(function(e){e.classList.toggle('on',e.dataset.sys===k)});say(INTRO[k])}
+    tabs.forEach(function(t){t.addEventListener('click',function(){setTab(t.dataset.sys)})});
+    $$('.lab-btn',stage).forEach(function(b){b.addEventListener('click',function(){SYS[cur].act(b.dataset.act,performance.now())})});
+    function frame(now){raf=0;if(!inView)return;var dt=lastT?Math.min(now-lastT,80):16;lastT=now;
+      for(var i=live.length-1;i>=0;i--){var k=live[i],t=(now-k.t0)/k.d;if(t>=1){k.e.style.display='none';pool.push(k.e);live.splice(i,1);if(k.cb)k.cb();continue}
+        var e=t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2;k.e.style.transform='translate('+(k.x0+(k.x1-k.x0)*e).toFixed(1)+'px,'+(k.y0+(k.y1-k.y0)*e).toFixed(1)+'px)'}
+      try{SYS[cur].tick(now,dt)}catch(err){if(!frame.w){frame.w=1;try{console.warn('lab tick',err)}catch(e){}}}raf=requestAnimationFrame(frame)}
+    new IntersectionObserver(function(es){es.forEach(function(e){inView=e.isIntersecting;if(inView&&!raf){lastT=0;raf=requestAnimationFrame(frame)}if(!inView)clearPk()})},{threshold:.12}).observe(stage);
+  })()}catch(err){try{console.warn('lab disabled',err)}catch(e){}}}
 
   /* ===== MAD EFFECTS ===== */
   var impEl=$('#impactf');
