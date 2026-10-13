@@ -1012,6 +1012,44 @@ body::before{content:"";position:fixed;inset:0;z-index:44;pointer-events:none;op
 .super-badge{background:var(--hi)!important;color:#15110d!important}
 .jbub{background:var(--scroll)!important;color:var(--sink)!important}
 @media (max-width:760px){.lab-btn{font-size:12px!important;letter-spacing:.1em!important;padding:12px 14px!important}.cta,.cv-open{font-size:13px!important;letter-spacing:.16em!important}.i-id.iC::after{font-size:80px;right:4%;top:3%}}
+
+/* ---- fixes: Boston panel keeps its photo ---- */
+.hp-panel.boston{background:#000 var(--boston) 52% 50%/cover no-repeat!important}
+/* ---- 第四話 SIDE QUESTS v2: the illusionist's mirror shards ---- */
+.cards-sec{background:radial-gradient(circle at 50% 35%,#24101a,#070405 72%)!important}
+.cards-sec::after{content:"幻";position:absolute;inset:0;display:grid;place-items:center;font-family:"Dela Gothic One",sans-serif;font-size:min(46vw,520px);line-height:1;color:rgba(142,27,58,.16);pointer-events:none;background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 900' preserveAspectRatio='none'><g fill='none' stroke='rgba(255,255,255,.10)' stroke-width='1.5'><polyline points='720,300 610,180 560,40 520,-20'/><polyline points='720,300 840,170 900,60 980,-20'/><polyline points='720,300 520,330 300,300 60,360'/><polyline points='720,300 930,350 1160,320 1460,380'/><polyline points='720,300 650,480 600,700 560,920'/><polyline points='720,300 800,500 880,720 940,920'/><polyline points='720,300 560,420 380,560 160,700'/><polyline points='720,300 900,440 1100,580 1350,720'/><polyline points='610,180 520,230 430,210'/><polyline points='840,170 930,220 1040,200'/></g></svg>") center/100% 100% no-repeat;z-index:0}
+.cards-sec>*{position:relative;z-index:1}
+.cards-sec .intro{font-size:12px!important;font-weight:900!important;letter-spacing:.4em!important;text-transform:uppercase;color:#d9a0b0!important;margin-bottom:10px!important}
+.fan{gap:24px!important;padding:60px 24px 70px!important;min-height:0!important;align-items:center!important}
+.card{margin:0!important;width:232px!important;height:372px!important}
+.card:nth-child(1){--rot:-3deg!important}.card:nth-child(2){--rot:2deg!important}.card:nth-child(3){--rot:-1.5deg!important}.card:nth-child(4){--rot:2.5deg!important}.card:nth-child(5){--rot:-2deg!important}
+.front{padding:18px 18px 16px!important;gap:0;box-shadow:0 30px 60px rgba(0,0,0,.6)!important}
+.card .top{flex-direction:column;align-items:flex-start!important;gap:8px;border:0!important;padding:4px 0 0!important}
+.card .top::before{width:42px;height:42px;border:3px solid #8e1b3a;color:#8e1b3a;display:grid;place-items:center;font-family:"Oswald",sans-serif;font-weight:700;font-size:24px;line-height:1}
+.card:nth-child(1) .top::before{content:"S"}.card:nth-child(2) .top::before,.card:nth-child(3) .top::before{content:"A"}.card:nth-child(4) .top::before,.card:nth-child(5) .top::before{content:"B"}
+.card .top .nm{font-size:26px!important;color:#15110d}
+.card .top .ty{position:absolute;right:14px;top:16px;font-size:9px!important;letter-spacing:.2em;padding:2px 8px!important}
+.card .art{height:104px!important;margin:14px 0 12px;background:#0e0a0b!important;border:0!important}
+.card .art svg{filter:grayscale(1) brightness(1.4) contrast(1.1);transform:scale(.8)}
+.card .atk{border:0!important;padding:6px 0!important;border-top:1px solid rgba(0,0,0,.18)!important}
+.card .atk b{font-family:"Oswald",sans-serif!important;font-weight:500;font-size:15px!important;letter-spacing:.04em;text-transform:uppercase}
+.card .atk span{font-family:"Oswald",sans-serif!important;font-size:17px!important}
+.card .rar{margin-top:auto!important;padding:10px 0 0!important;font-size:9px!important;letter-spacing:.28em;color:#8e1b3a;text-transform:uppercase}
+.card .rar span:first-child{font-size:0}.card .rar span:first-child::before{font-size:9px}
+.card:nth-child(1) .rar span:first-child::before{content:"S-rank mission"}.card:nth-child(2) .rar span:first-child::before,.card:nth-child(3) .rar span:first-child::before{content:"A-rank mission"}.card:nth-child(4) .rar span:first-child::before,.card:nth-child(5) .rar span:first-child::before{content:"B-rank mission"}
+.pstamp{left:70px!important;right:auto!important;top:24px!important;bottom:auto!important;background:#f3ead9!important;font-size:16px!important;padding:0 6px!important}
+.card .holo{display:none}
+.tap{opacity:1!important;bottom:-30px!important;font-size:10px!important;letter-spacing:.3em!important;color:#b07a8a!important}
+.back{padding:22px 20px!important}
+@media (max-width:760px){.fan{justify-content:flex-start!important;gap:18px!important}.card{width:240px!important}}
+/* ---- STACK / ARSENAL v2: paper explosive-tag talismans ---- */
+.stamps{gap:10px!important}
+.stamp{--sr:0deg!important;background:#efe3c8!important;color:#2a1d12!important;border:0!important;padding:8px 14px 8px 34px!important;position:relative;font-family:"Oswald",sans-serif!important;font-weight:500!important;font-size:13px!important;letter-spacing:.08em;text-transform:uppercase;box-shadow:inset 0 0 0 3px #efe3c8,inset 0 0 0 4px rgba(196,22,28,.55),0 6px 12px rgba(0,0,0,.35)!important;display:inline-block!important}
+.stamp:nth-child(odd){--sr:-1deg!important}.stamp:nth-child(even){--sr:1deg!important}
+.stamp::before{content:"札"!important;position:absolute;left:0;top:0;bottom:0;width:24px!important;height:auto!important;display:grid;place-items:center;background:#c4161c!important;clip-path:none!important;color:#f3ead9;font-family:"Dela Gothic One",sans-serif;font-size:11px}
+.ap.blk .stamp{background:#2a0e0e!important;color:#f3ead9!important;box-shadow:inset 0 0 0 3px #2a0e0e,inset 0 0 0 4px rgba(242,107,29,.55),0 6px 12px rgba(0,0,0,.35)!important}
+.ap.blk .stamp::before{background:var(--hi)!important;color:#15110d}
+.ap h3{font-size:26px!important}
 </style>
 </head>
 <body>
