@@ -348,6 +348,50 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
 .gpop b{display:block;color:var(--ink);font-size:15px;margin-bottom:4px}
 .gpop em{display:block;font-style:normal;font-family:var(--mono);font-size:11.5px;color:var(--faint);margin-top:8px}
 @media (prefers-reduced-motion: reduce){.cr-off,.cr-code div,.gpop{transition:none}}
+
+/* incident replay */
+.ir{margin:6px 0 16px;max-width:980px}
+.ir-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:10px}
+.ir-head b{font-weight:700;font-size:19px;letter-spacing:-.01em}
+.ir-head span{font-size:14.5px;color:var(--soft)}
+.ir-grid{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:14px}
+.ir-chart{background:var(--bg2);border:1px solid var(--line);border-radius:20px;padding:14px 16px}
+.ir-chart canvas{display:block;width:100%;height:230px}
+.ir-ctl{display:flex;gap:10px;align-items:center;margin-top:10px;flex-wrap:wrap}
+.ir-ctl input{flex:1;min-width:140px;accent-color:var(--event)}
+.ir-clock{font-family:var(--mono);font-size:12px;color:var(--soft);min-width:5ch}
+.ir-seg{display:inline-flex;gap:6px}
+.ir-steps{display:flex;flex-direction:column;gap:8px}
+.ir-step{border:1.5px solid var(--line);border-radius:14px;padding:9px 13px;opacity:.38;transition:opacity .25s,border-color .25s}
+.ir-step.on{opacity:1;border-color:var(--ink)}
+.ir-step b{display:block;font-size:15px;color:var(--ink)}
+.ir-step span{font-size:13.5px;color:var(--soft);line-height:1.45}
+.ir-step em{font-style:normal;font-family:var(--mono);font-size:11px;color:var(--faint)}
+@media (max-width:860px){.ir-grid{grid-template-columns:minmax(0,1fr)}}
+@media (prefers-reduced-motion: reduce){.ir-step{transition:none}}
+
+/* trade-off dial */
+.td-card{background:var(--panel);border:1px solid var(--line);border-radius:22px;padding:20px 22px;max-width:980px}
+.td-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
+.td-ends{display:flex;justify-content:space-between;gap:16px;font-weight:700;font-size:16px}
+.td-ends span:last-child{text-align:right}
+.td-track{position:relative;height:46px;margin:8px 0 6px}
+.td-track input{width:100%;accent-color:var(--event)}
+.td-pin{position:absolute;top:30px;transform:translateX(-50%);font-family:var(--mono);font-size:11px;color:var(--ok);white-space:nowrap}
+.td-text{margin:0;font-size:17px;line-height:1.6;color:var(--soft);min-height:56px;max-width:70ch}
+.td-text b{color:var(--ink)}
+/* ask this page */
+.ask-card{background:var(--panel);border:1px solid var(--line);border-radius:22px;padding:20px 22px;max-width:980px}
+.ask-f{display:flex;gap:8px}
+.ask-f input{flex:1;min-width:0;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);border-radius:12px;padding:12px 14px;font:inherit;font-size:16px}
+.ask-f input:focus{outline:2px solid var(--worker);outline-offset:2px}
+.ask-f button{border:0;background:var(--ink);color:var(--bg);font-weight:700;border-radius:12px;padding:0 18px;cursor:pointer;font-size:15px}
+.ask-sug{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
+.ask-rep{margin-top:16px;border-left:3px solid var(--line);padding:4px 0 4px 16px;min-height:60px}
+.ask-rep.ok{border-left-color:var(--ok)} .ask-rep.no{border-left-color:var(--fail)}
+.ask-rep p{margin:0;font-size:17px;line-height:1.6;color:var(--ink);max-width:68ch}
+.ask-rep small{display:block;font-family:var(--mono);font-size:11.5px;color:var(--faint);margin-top:6px}
+.ask-rep a{color:var(--ink);font-weight:600}
 </style>
 
 </head>
@@ -550,6 +594,18 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
     </div>
   </section>
 
+  <section class="s td" id="tradeoffs" aria-labelledby="td-h" style="padding-top:0">
+    <div class="wrap">
+      <div class="sh"><h2 id="td-h" class="dec">Every design is a trade‑off</h2><p>Drag the dial away from my choice to see what would break. It snaps back.</p></div>
+      <div class="td-card">
+        <div class="td-tabs" id="tdTabs" role="group" aria-label="Choose a project"></div>
+        <div class="td-ends"><span id="tdL"></span><span id="tdR"></span></div>
+        <div class="td-track"><input id="tdV" type="range" min="0" max="100" value="20" aria-label="Trade-off dial"><span class="td-pin" id="tdPin">↑ my choice</span></div>
+        <p class="td-text" id="tdText" aria-live="polite"></p>
+      </div>
+    </div>
+  </section>
+
   <section class="heal" aria-label="An interactive headline">
     <canvas id="healCv" aria-label="The words Break it, it heals, drawn with points. Move through them and they return to place."></canvas>
     <p class="cap">My systems heal themselves.</p>
@@ -567,6 +623,22 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
           <p>In my first year, I built full-stack apps and quick proofs of concept for client projects, owning features from the front end to the back end, and kept our cloud services healthy and locked down. I also built a sentiment-analysis system end to end, from raw data to the dashboard.</p>
           <p>Then I moved to <span class="gterm" tabindex="0" data-g="dp">data pipelines</span> for an enterprise banking client, including a large core-banking migration. The jobs were high-volume with tight processing windows, so most days were about speed and reliability: finding out why something failed in production, tuning it, and getting it done on time.</p>
           <p>The failure I still remember happened only at peak load. It wasn’t a logic bug; the job was running out of memory. After that, I added the monitoring, alerts and docs the team leaned on to catch problems early.</p>
+          <div class="ir" id="irBox">
+            <div class="ir-head"><b>Replay the incident</b></div>
+            <div class="ir-grid">
+              <div class="ir-chart"><canvas id="irCv" aria-label="A chart of load and memory during the incident. Memory reaches its ceiling at peak load."></canvas>
+                <div class="ir-ctl"><button class="chip" id="irPlay">Play</button><input id="irT" type="range" min="0" max="100" value="0" aria-label="Incident timeline"><span id="irClock" class="ir-clock">start</span></div>
+                <div class="ir-ctl"><span class="ir-seg" role="group" aria-label="Before or after the fix"><button class="chip" aria-pressed="true" data-ir="0">Before the fix</button><button class="chip" aria-pressed="false" data-ir="1">After the fix</button></span></div>
+              </div>
+              <div class="ir-steps" id="irSteps">
+                <div class="ir-step"><em>normal</em><b>Normal volume</b><span>The migration jobs run fine.</span></div>
+                <div class="ir-step"><em>peak</em><b>Load climbs</b><span>Peak volume arrives, and memory climbs with it.</span></div>
+                <div class="ir-step"><em>failure</em><b>Jobs fail</b><span>Memory hits the ceiling. It looks like a logic bug, but it isn’t.</span></div>
+                <div class="ir-step"><em>diagnosis</em><b>A memory ceiling, not a bug</b><span>Failures line up with peak memory, not with any code path.</span></div>
+                <div class="ir-step"><em>prevention</em><b>Monitoring, alerts and docs</b><span>An alert fires well before the ceiling, and on-call knows what to do.</span></div>
+              </div>
+            </div>
+          </div>
           <p>Along the way, I was named <b>Best Talent</b> for 2021 to 2022.</p>
           <div class="tags"><span>React</span><span>TypeScript</span><span>Angular</span><span>C#</span><span>.NET Core</span><span>Java</span><span>Python</span><span>SQL</span><span>AWS</span></div>
         </div>
@@ -615,6 +687,17 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
     </div>
   </section>
 
+
+  <section class="s ask" id="ask" aria-labelledby="ask-h" style="padding-top:0">
+    <div class="wrap">
+      <div class="sh"><h2 id="ask-h" class="dec">Ask this page</h2><p>Quick answers about roles, location and experience, only from what’s on this page.</p></div>
+      <div class="ask-card">
+        <form class="ask-f" id="askF"><input id="askQ" type="text" placeholder="Ask about roles, location, experience, or “Does he do…?”" aria-label="Ask a question about this page" autocomplete="off"><button type="submit">Ask</button></form>
+        <div class="ask-sug" id="askSug"></div>
+        <div class="ask-rep" id="askRep" aria-live="polite"><p>Pick a question above, or type your own.</p></div>
+      </div>
+    </div>
+  </section>
 
   <section class="s ct" id="contact" aria-labelledby="ct-h" style="padding-top:clamp(40px,6vw,80px)">
     <div class="wrap">
@@ -678,6 +761,22 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
     return st;
   }
 
+  /* ---------- sound: soft tones on the visitor's own actions ---------- */
+  let AC = null;
+  const unlock = () => { if (!AC){ try { AC = new (window.AudioContext || window.webkitAudioContext)(); } catch(e){ AC = null; } } if (AC && AC.state === 'suspended') AC.resume(); };
+  ['pointerdown','keydown','touchstart'].forEach(ev => document.addEventListener(ev, unlock, {passive:true}));
+  function tone(f0, f1, dur, type, vol, delay){ if (!AC) return; const t = AC.currentTime + (delay||0), o = AC.createOscillator(), g = AC.createGain();
+    o.type = type; o.frequency.setValueAtTime(f0, t); o.frequency.exponentialRampToValueAtTime(f1, t + dur);
+    g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + 0.012); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    o.connect(g).connect(AC.destination); o.start(t); o.stop(t + dur + 0.03); }
+  window.sfx = kind => { if (!AC || AC.state !== 'running') return;
+    if (kind === 'down') tone(190, 70, 0.24, 'sine', 0.2);
+    else if (kind === 'up'){ tone(440, 880, 0.15, 'triangle', 0.09); tone(660, 1320, 0.12, 'triangle', 0.06, 0.09); }
+    else if (kind === 'tick') tone(1500, 1150, 0.05, 'square', 0.025);
+    else if (kind === 'deny'){ tone(300, 220, 0.12, 'sawtooth', 0.05); tone(260, 180, 0.14, 'sawtooth', 0.05, 0.12); }
+    else if (kind === 'ok') tone(880, 1320, 0.1, 'triangle', 0.07); };
+  const sfx = k => window.sfx(k);
+
   /* ---------- hero: pipeline in a card ---------- */
   const streamTele = document.getElementById('streamTele');
   const S = Stage(document.getElementById('streamCv'), {
@@ -702,7 +801,7 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
     sinkOf(i){ return i < this.workers.length/2 ? this.sinks[0] : this.sinks[1]; },
     alive(i){ let b=-1,d=1e9; this.workers.forEach(w => { if (w.alive && Math.abs(w.i-i)<d){ d=Math.abs(w.i-i); b=w.i; } }); return b; },
     kill(w){ if (!w.alive) return; if (this.workers.filter(v=>v.alive).length < 2){ this.log='At least one worker has to stay up. Wait for a restart.'; return; }
-      w.alive=false; w.deadAt=performance.now(); this.rebal++; const to=this.alive(w.i);
+      w.alive=false; w.deadAt=performance.now(); this.rebal++; w.byUser=true; sfx('down'); const to=this.alive(w.i);
       this.log=`Worker ${w.i+1} stopped. Its events moved to worker ${to+1}, and only finished work is committed, so nothing was lost.`; },
     sm(t){ t=Math.max(0,Math.min(1,t)); return t*t*(3-2*t); },
     yAt(lane, route, x){
@@ -717,7 +816,7 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
       this.acc += dt*(this.W<520?20:32);
       while (this.acc > 1){ this.acc--; const l=Math.floor(Math.random()*this.workers.length); this.parts.push({lane:l, route:l, x:this.x0, v:sp*(0.75+Math.random()*0.5), c:false}); }
       this.workers.forEach(w => { w.y += (w.ty - w.y)*Math.min(1, dt*6); w.a += (1 - w.a)*Math.min(1, dt*3); });
-      this.workers.forEach(w => { if (!w.alive && now-w.deadAt > 3200){ w.alive=true; this.log=`Worker ${w.i+1} restarted and took its events back.`; } });
+      this.workers.forEach(w => { if (!w.alive && now-w.deadAt > 3200){ w.alive=true; if (w.byUser){ w.byUser=false; sfx('up'); } this.log=`Worker ${w.i+1} restarted and took its events back.`; } });
       for (let k=this.parts.length-1;k>=0;k--){ const p=this.parts[k]; p.x += p.v*dt;
         if (p.x > this.wx-64 && p.x < this.wx-56){ const w=this.workers[p.lane]; p.route = w.alive ? p.lane : this.alive(p.lane); }
         if (!p.c && p.x >= this.wx){ p.c=true; this.win.push(now); }
@@ -852,7 +951,7 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
     {q:'Tell me about something you owned end to end.', c:2, a:'<b>Situation:</b> customers needed a self-service portal. <b>Task:</b> build it, from screens to APIs. <b>Action:</b> built the front end and designed the REST APIs behind it. <b>Result:</b> a portal customers used every day.'},
     {q:'Tell me about disagreeing with your manager.', c:-1, a:''}
   ];
-  const THRESH = 0.60;
+  const THRESH = 0.70;
   const R = Stage(document.getElementById('ragCv'), {
     dots:[], qi:-1, t:1, qx:0, qy:0, fromX:0, fromY:0, top:[], done:false,
     setup(){
@@ -868,7 +967,7 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
     place(i, instant){
       this.qi=i; const q=QS[i]; this.fromX=this.qi<0?20:(this.qx||20); this.fromY=this.qy||this.H/2;
       let tx, ty;
-      if (q.c>=0){ const c=this.centers[q.c]; tx=c.x+12; ty=c.y-6; } else { tx=this.sx*0.95; ty=this.H*0.88; }
+      if (q.c>=0){ const c=this.centers[q.c]; tx=c.x+12; ty=c.y-6; } else { tx=this.W*0.60; ty=this.H*0.36; }
       this.tx=tx; this.ty=ty; this.t = instant?1:0; this.done=false;
       if (instant){ this.qx=tx; this.qy=ty; this.finish(); }
     },
@@ -877,6 +976,7 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
       const sc=this.dots.map(d => ({d, s:Math.max(0, 1 - Math.hypot(d.x-this.qx, d.y-this.qy)/(diag*0.42))}));
       sc.sort((a,b)=>b.s-a.s); this.top=sc.slice(0,3); this.done=true;
       const q=QS[this.qi]; const ok=this.top[0].s>=THRESH;
+      if (this.userAsk){ this.userAsk=false; sfx(ok ? 'ok' : 'deny'); }
       if (ok){ ragAns.className='ans'; ragAns.innerHTML = `<div class="k">STAR answer, drafted from your notes</div><div class="a">${q.a}</div><div class="src">(source: <b>${CL[this.top[0].d.c].name}</b>)<br>${this.top.map((t,i)=>`[${i+1}] ${t.d.n} · ${t.s.toFixed(2)}`).join('<br>')}</div>`; }
       else { ragAns.className='ans refuse'; ragAns.innerHTML = `<div class="k">no answer</div><div class="a">None of your notes tell a story like this, so I won’t make one up.</div><div class="src">best match: ${this.top[0].d.n} in <b>${CL[this.top[0].d.c].name}</b> · ${this.top[0].s.toFixed(2)}<br>Write the story up, then run ingest again.</div>`; }
     },
@@ -904,7 +1004,7 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
     tele(){}
   });
   QS.forEach((q,i) => { const b=document.createElement('button'); b.className='chip'+(q.c<0?' warn':''); b.textContent=q.q; b.setAttribute('aria-pressed','false');
-    b.addEventListener('click', () => { ragQs.querySelectorAll('.chip').forEach(x=>x.setAttribute('aria-pressed','false')); b.setAttribute('aria-pressed','true'); R.place(i, paused); R.nudge(); R.draw(true); });
+    b.addEventListener('click', () => { ragQs.querySelectorAll('.chip').forEach(x=>x.setAttribute('aria-pressed','false')); b.setAttribute('aria-pressed','true'); R.userAsk = true; R.place(i, paused); R.nudge(); R.draw(true); });
     ragQs.appendChild(b); });
   ragAns.className='ans'; ragAns.innerHTML='<div class="k">waiting for a question</div><div class="a">Answers are drafted only from your own notes, and every one cites its file.</div>';
 
@@ -923,16 +1023,16 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
     instPos(z,j){ const n=z.inst.length, gap=z.w/(n+1); return {x:z.x+gap*(j+1), y:z.y+z.h*0.58}; },
     healthy(){ const h=[]; this.zones.forEach(z => { if (!z.up) return; z.inst.forEach((s,j)=>{ if (s.st==='ok') h.push([z,j]); }); }); return h; },
     toggleZone(){ const z=this.zones[0];
-      if (z.up){ z.up=false; this.log='Zone A is down. Its instances failed health checks, so the load balancer stopped sending them traffic. Auto Scaling is adding capacity in B and C.';
+      if (z.up){ z.up=false; sfx('down'); this.log='Zone A is down. Its instances failed health checks, so the load balancer stopped sending them traffic. Auto Scaling is adding capacity in B and C.';
         setTimeout(() => { this.zones[1].inst.push({v:this.zones[1].inst[0].v, st:'boot', t:performance.now()}); this.zones[2].inst.push({v:this.zones[2].inst[0].v, st:'boot', t:performance.now()}); A.nudge(); }, 900);
         azDown.textContent='Bring zone A back'; }
-      else { z.up=true; z.inst.forEach(s=>s.st='ok'); this.zones.forEach((zz,i)=>{ if (i>0 && zz.inst.length>2) zz.inst.splice(2); }); this.log='Zone A is back. Extra capacity in B and C was scaled in again.'; azDown.textContent='Take zone A down'; }
+      else { z.up=true; sfx('up'); z.inst.forEach(s=>s.st='ok'); this.zones.forEach((zz,i)=>{ if (i>0 && zz.inst.length>2) zz.inst.splice(2); }); this.log='Zone A is back. Extra capacity in B and C was scaled in again.'; azDown.textContent='Take zone A down'; }
     },
     deploy(){
       if (this.deploying) return;
       const next = Math.max(...this.zones.flatMap(z=>z.inst.map(s=>s.v)))+1;
       this.deploying=true; this.nextV=next; this.dq=[]; this.zones.forEach(z => { if (z.up) z.inst.forEach((s,j)=>this.dq.push([z,j])); });
-      this.dt0=performance.now(); this.log=`Rolling out version ${next}, one instance at a time.`; azDeploy.disabled=true;
+      sfx('tick'); this.dt0=performance.now(); this.log=`Rolling out version ${next}, one instance at a time.`; azDeploy.disabled=true;
     },
     step(dt, now){
       // requests
@@ -945,7 +1045,7 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
       // rolling deploy
       if (this.deploying){
         const cur = this.dq[0];
-        if (!cur){ this.deploying=false; azDeploy.disabled=false; azDeploy.textContent=`Deploy version ${this.nextV+1}`; this.log=`Version ${this.nextV} is live everywhere. Errors during the rollout: 0.`; }
+        if (!cur){ this.deploying=false; sfx('ok'); azDeploy.disabled=false; azDeploy.textContent=`Deploy version ${this.nextV+1}`; this.log=`Version ${this.nextV} is live everywhere. Errors during the rollout: 0.`; }
         else { const [z,j]=cur, s=z.inst[j];
           if (!s){ this.dq.shift(); }
           else if (s.st==='ok' && s.v!==this.nextV){ s.st='drain'; s.t=now; }
@@ -1020,7 +1120,7 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
     tele(){ const s=this.lat.filter(l=>l.sync), a=this.lat.filter(l=>!l.sync); const avg=x=>x.length?Math.round(x.reduce((p,q)=>p+q.ms,0)/x.length)+' ms':'none yet';
       hcTele.innerHTML = `<div class="row">old path, waits for search <b class="${s.length?'bad':''}">${avg(s)}</b></div><div class="row">new path, background update <b class="good">${avg(a)}</b></div><div class="row">repeat reads served from cache <b>${this.saved}</b></div><div class="log">${this.log}</div>`; }
   });
-  hcRead.addEventListener('click', () => { Hc.saved++; Hc.flash=1.4; Hc.log='The client already had the latest version, so the server replied “nothing changed” without touching the database.'; Hc.nudge(); });
+  hcRead.addEventListener('click', () => { sfx('tick'); Hc.saved++; Hc.flash=1.4; Hc.log='The client already had the latest version, so the server replied “nothing changed” without touching the database.'; Hc.nudge(); });
 
 
   /* ---------- ChildGuard: request through the checks ---------- */
@@ -1051,7 +1151,7 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
       const k = Math.floor(this.p) - 1;
       for (let g=0; g<=k && g<6; g++){ if (this.st[g]===-1){ this.st[g]=r.res[g]; if (r.res[g]===0){ this.p=g+1; this.done=true; break; } } }
       if (!this.done && this.p>=6 && this.st[5]!==-1) this.done=true;
-      if (this.done){ const ok = r.code[0]==='2';
+      if (this.done){ const ok = r.code[0]==='2'; sfx(ok ? 'ok' : 'deny');
         cgTele.innerHTML = `<div class="row">request <b>${r.q}</b></div><div class="row">result <b class="${ok?'good':'bad'}">${r.code}</b></div><div class="log">${r.msg}</div>`; }
     },
     render(){
@@ -1216,7 +1316,7 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
       timer = setTimeout(tick, rm ? 600 : 220*speed);
     }
     document.getElementById('crCrash').addEventListener('click', async () => {
-      clearTimeout(timer); hl([9,10]); const lost = flying.length, redo = done.size;
+      clearTimeout(timer); sfx('down'); hl([9,10]); const lost = flying.length, redo = done.size;
       flying.forEach(f => st[f.o] = 'idle'); done.forEach(o => st[o] = 'idle'); flying = []; done = new Set();
       for (let o = committed+1; o < next; o++) st[o] = 'rep'; next = committed + 1; draw();
       lg.textContent = `Crashed with ${lost} running and ${redo} finished but not committed. Restarting from offset ${committed+1}: ${lost+redo} events will run again, and none are lost.`;
@@ -1253,6 +1353,123 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
       t.addEventListener('mouseenter', () => show(t)); t.addEventListener('mouseleave', hide); t.addEventListener('focus', () => show(t)); t.addEventListener('blur', hide);
       t.addEventListener('click', e => { e.stopPropagation(); cur === t ? hide() : show(t); }); });
     document.addEventListener('click', hide); addEventListener('scroll', () => { if (cur) hide(); }, {passive:true});
+  })();
+
+  /* ---------- incident replay ---------- */
+  (() => {
+    const cv = document.getElementById('irCv'); if (!cv) return;
+    const cx = cv.getContext('2d'), tl = document.getElementById('irT'), clock = document.getElementById('irClock'), steps = [...document.querySelectorAll('#irSteps .ir-step')], play = document.getElementById('irPlay');
+    let fixed = false, playing = false, W = 0, H = 0, failedOnce = false;
+    const css = k => getComputedStyle(document.documentElement).getPropertyValue('--'+k).trim();
+    const size = () => { const r = cv.getBoundingClientRect(); if (!r.width) return; const d = Math.min(devicePixelRatio||1, 2); W = r.width; H = r.height; cv.width = W*d; cv.height = H*d; cx.setTransform(d,0,0,d,0,0); draw(); };
+    const load = t => 0.25 + 0.7*Math.exp(-Math.pow((t-0.58)/0.16, 2));
+    const mem = t => fixed ? Math.min(0.72, 0.3 + 0.42*load(t)) : Math.min(1, 0.22 + 0.95*load(t));
+    function draw(){
+      if (!W) return; const t = tl.value/100; cx.clearRect(0,0,W,H);
+      const L = 38, R = W-8, T = 12, B = H-24, X = v => L + (R-L)*v, Y = v => B - (B-T)*v;
+      cx.font = '500 11px '+MONO; cx.textBaseline = 'middle'; cx.lineWidth = 1; cx.strokeStyle = css('line'); cx.fillStyle = css('faint'); cx.textAlign = 'right';
+      [0, .5, 1].forEach(v => { cx.beginPath(); cx.moveTo(L, Y(v)); cx.lineTo(R, Y(v)); cx.stroke(); cx.fillText(Math.round(v*100)+'%', L-6, Y(v)); });
+      cx.setLineDash([5,5]); cx.strokeStyle = css('fail'); cx.beginPath(); cx.moveTo(L, Y(1)); cx.lineTo(R, Y(1)); cx.stroke();
+      if (fixed){ cx.strokeStyle = css('event'); cx.beginPath(); cx.moveTo(L, Y(.8)); cx.lineTo(R, Y(.8)); cx.stroke(); }
+      cx.setLineDash([]); cx.textAlign = 'left'; cx.fillStyle = css('fail'); cx.fillText('memory ceiling', L+6, Y(1)+12);
+      if (fixed){ cx.fillStyle = css('event'); cx.fillText('alert at 80%', L+6, Y(.8)+12); }
+      const line = (fn, col, w) => { cx.strokeStyle = col; cx.lineWidth = w; cx.beginPath(); for (let i=0;i<=200;i++){ const v = i/200; if (v > t) break; const x = X(v), y = Y(fn(v)); i ? cx.lineTo(x,y) : cx.moveTo(x,y); } cx.stroke(); };
+      line(load, css('faint'), 1.6); line(mem, fixed ? css('ok') : css('worker'), 2.6);
+      if (!fixed) for (let i=0;i<=200;i+=6){ const v = i/200; if (v > t) break; if (mem(v) >= 1){ cx.fillStyle = css('fail'); cx.beginPath(); cx.arc(X(v), Y(1), 4, 0, 7); cx.fill(); } }
+      const lx = X(Math.min(t, .06)) + 4;
+      cx.fillStyle = css('soft'); cx.fillText('load', lx, Y(load(Math.min(t,.06))) + 14);
+      cx.fillStyle = fixed ? css('ok') : css('worker'); cx.fillText('memory', lx, Y(mem(Math.min(t,.06))) - 12);
+      clock.textContent = t < .37 ? 'normal' : t < .52 ? 'peak' : t < .75 ? (fixed ? 'peak' : 'failure') : 'after';
+      const lit = fixed ? [0, t >= .37 ? 1 : -1, t >= .3 ? 4 : -1] : [0, t >= .37 ? 1 : -1, t >= .52 ? 2 : -1, t >= .7 ? 3 : -1];
+      steps.forEach((s,i) => s.classList.toggle('on', lit.includes(i)));
+      if (!fixed && t >= .52 && !failedOnce && playing){ failedOnce = true; sfx('down'); }
+    }
+    new ResizeObserver(size).observe(cv);
+    tl.addEventListener('input', draw);
+    play.addEventListener('click', () => { if (playing){ playing = false; play.textContent = 'Play'; return; }
+      playing = true; failedOnce = false; play.textContent = 'Pause'; if (+tl.value >= 100) tl.value = 0;
+      const step = () => { if (!playing) return; tl.value = Math.min(100, +tl.value + (reduce.matches ? 100 : 0.5)); draw();
+        if (+tl.value < 100) requestAnimationFrame(step); else { playing = false; play.textContent = 'Replay'; if (fixed) sfx('ok'); } };
+      step(); });
+    document.querySelectorAll('[data-ir]').forEach(b => b.addEventListener('click', () => { fixed = b.dataset.ir === '1'; document.querySelectorAll('[data-ir]').forEach(x => x.setAttribute('aria-pressed', String(x === b))); sfx(fixed ? 'ok' : 'tick'); draw(); }));
+  })();
+
+  /* ---------- trade-off dial ---------- */
+  (() => {
+    const tabs = document.getElementById('tdTabs'); if (!tabs) return;
+    const D = [
+      {n:'GitStream', l:'Never lose an event', r:'Never process one twice', pick:18, t:[
+        '<b>My choice:</b> nothing is ever lost, and after a crash a few events may run twice. Repeats are easy to handle.',
+        '<b>In the middle:</b> some events could be skipped after a crash, and nobody would know which.',
+        '<b>At this end:</b> no repeats, but every crash risks silent data loss. For analytics, that’s the worse failure.']},
+      {n:'Cloud-Native', l:'Stay up through anything', r:'Lowest cost', pick:28, t:[
+        '<b>My choice:</b> copies in several zones, so losing one doesn’t take the app down. It costs some spare capacity.',
+        '<b>In the middle:</b> fewer spare copies. A zone outage would slow things down for everyone.',
+        '<b>At this end:</b> one copy in one zone. Cheapest, until that zone has a bad day.']},
+      {n:'InterviewKit', l:'Only cited answers', r:'Always answer', pick:12, t:[
+        '<b>My choice:</b> it answers only from your notes, and says so when it can’t. Sometimes that means “I don’t know”.',
+        '<b>In the middle:</b> it fills gaps with plausible guesses, and you can’t tell which parts are real.',
+        '<b>At this end:</b> it always sounds confident, and sometimes it’s confidently wrong. Bad news the night before an interview.']},
+      {n:'Healthcare', l:'Answer the save right away', r:'Search always up to date', pick:22, t:[
+        '<b>My choice:</b> saves answer as soon as the data is safe, and search catches up a moment later.',
+        '<b>In the middle:</b> some saves wait and some don’t, so timing becomes unpredictable for callers.',
+        '<b>At this end:</b> every save waits for search to update. Always in sync, and slower for everyone.']},
+      {n:'ChildGuard', l:'Check every request', r:'Fastest possible response', pick:15, t:[
+        '<b>My choice:</b> every request passes every check. It costs a few extra steps, and for safety reports that’s right.',
+        '<b>In the middle:</b> skip checks on “safe” routes. The one route someone forgets becomes the hole.',
+        '<b>At this end:</b> fastest responses, and wide open to anyone who looks.']}
+    ];
+    let di = 0; const v = document.getElementById('tdV'), txt = document.getElementById('tdText'), pin = document.getElementById('tdPin');
+    D.forEach((d,i) => { const b = document.createElement('button'); b.className = 'chip'; b.type = 'button'; b.textContent = d.n; b.setAttribute('aria-pressed', String(i===0));
+      b.addEventListener('click', () => { di = i; tabs.querySelectorAll('.chip').forEach((x,k) => x.setAttribute('aria-pressed', String(k===i))); set(); sfx('tick'); }); tabs.appendChild(b); });
+    const textFor = x => { const d = D[di]; return x < 34 ? d.t[0] : x < 67 ? d.t[1] : d.t[2]; };
+    function set(){ const d = D[di]; document.getElementById('tdL').textContent = d.l; document.getElementById('tdR').textContent = d.r; v.value = d.pick; pin.style.left = d.pick + '%'; txt.innerHTML = textFor(d.pick); }
+    let zone = 0;
+    v.addEventListener('input', () => { const z = +v.value < 34 ? 0 : +v.value < 67 ? 1 : 2; if (z !== zone){ zone = z; sfx(z ? 'deny' : 'ok'); } txt.innerHTML = textFor(+v.value); });
+    v.addEventListener('change', () => { const d = D[di], from = +v.value; if (Math.abs(from - d.pick) < 2) return;
+      if (reduce.matches){ v.value = d.pick; txt.innerHTML = textFor(d.pick); zone = 0; return; }
+      setTimeout(() => { const t0 = performance.now(); const go = now => { const p = Math.min(1, (now-t0)/500), e = 1 - Math.pow(1-p, 3); v.value = from + (d.pick-from)*e; txt.innerHTML = textFor(+v.value); if (p < 1) requestAnimationFrame(go); else { zone = 0; sfx('up'); } }; requestAnimationFrame(go); }, 1000); });
+    set();
+  })();
+
+  /* ---------- ask this page ---------- */
+  (() => {
+    const form = document.getElementById('askF'); if (!form) return;
+    const KB = [
+      /* logistics */
+      {k:['relocate','relocating','relocation','move','moving','location','based','live','where','city','country'], a:'He’s based in the US and open to relocating.', s:'Footer'},
+      {k:['remote','hybrid','onsite','on site','in office','office','wfh'], a:'He’s open to relocating, so on-site works. For remote or hybrid details, email him.', s:'Footer'},
+      {k:['roles','role','position','positions','looking for','job','jobs','hiring for'], a:'Backend, infra, full-stack or AI roles, plus front end. One engineer for the whole stack.', s:'Contact'},
+      {k:['experience','years','how long','how much','level','new grad','junior','senior'], a:'About two years at Collabera Digital (2021 to 2023), a software engineering internship at Amazon in summer 2025, and bigonotes, which he has built and run since July 2026.', s:'Experience'},
+      {k:['graduate','graduated','graduation','degree','education','masters','master','northeastern','gpa','university','college','bachelor'], a:'He finished his MS in Computer Software Engineering at Northeastern University in December 2025 (GPA 3.78), after a Bachelor’s in Information Technology from Ramaiah Institute of Technology in 2021.', s:'Experience → Education'},
+      {k:['available','availability','start','start date','when can','notice','join'], a:'He’s open to roles now. For a start date, email him and he’ll reply with the details.', s:'Contact'},
+      {k:['resume','cv','résumé'], a:'There’s no resume on this page. Email him and ask for one.', s:'Contact'},
+      {k:['contact','email','reach','talk','call','schedule','interview','get in touch','message'], a:'Email <a href="mailto:patilshankarvivek@gmail.com">patilshankarvivek@gmail.com</a>.', s:'Contact'},
+      {k:['amazon','intern','internship'], a:'He was a Software Development Engineer Intern at Amazon in Arlington, VA, from May to August 2025.', s:'Experience → Amazon'},
+      {k:['collabera','bank','banking','analyst','data engineer','first job','india','bangalore'], a:'He spent two years at Collabera Digital in Bangalore, first as an Analyst and then as an Associate Data Engineer, and was named Best Talent for 2021 to 2022.', s:'Experience → Collabera Digital'},
+      {k:['bigonotes','notes','writing','blog','teach','teaching'], a:'bigonotes.com is his free study site: 261 notes across 48 topics, built and run by him.', s:'Experience → bigonotes'},
+      /* "does he do ..." */
+      {k:['front end','frontend','front-end','react','ui','user interface','web app','websites'], a:'Yes. React and TypeScript at Collabera and in ChildGuard, Angular at Collabera, and Next.js for bigonotes.', s:'Stack · Experience'},
+      {k:['backend','back end','back-end','api','apis','services','server'], a:'Yes, it’s the core of his work: Go, Java, Python and Node.js services, and event-driven systems at Amazon.', s:'Selected work · Stack'},
+      {k:['full stack','full-stack','fullstack','end to end','end-to-end'], a:'Yes. At Collabera he owned features from the front end to the back end, and bigonotes is his alone, from design to deploys.', s:'Experience'},
+      {k:['ai','llm','llms','rag','agent','agents','machine learning','genai','gen ai'], a:'Yes. He built InterviewKit, a RAG system that cites its sources, and worked on LLM systems with guardrails and evaluation at Amazon.', s:'Selected work → InterviewKit · Experience → Amazon'},
+      {k:['cloud','aws','azure','kubernetes','terraform','infra','infrastructure','devops','ci cd','cicd','deploy','deployments'], a:'Yes. AWS and Azure, Terraform, Docker and zero-downtime deploys, shown in the Cloud-Native Platform.', s:'Selected work → Cloud-Native Platform'},
+      {k:['data','pipelines','pipeline','streaming','kafka','etl','databases','database','sql'], a:'Yes. Data pipelines for an enterprise bank at Collabera, and GitStream, a real-time pipeline on Kafka.', s:'Experience → Collabera Digital · Selected work → GitStream'},
+      {k:['system design','distributed','scale','scaling','reliability','reliable'], a:'Yes, most of this page is about it. Every project shows how it keeps working when something fails.', s:'Selected work'},
+      {k:['on call','oncall','on-call','production','incident','incidents','support'], a:'Yes. At Collabera he root-caused a production failure and set up the alerts and docs for on-call. You can replay it in the Collabera section.', s:'Experience → Collabera Digital'},
+      {k:['security','secure','auth','authentication'], a:'Yes. ChildGuard checks every request with signed tokens, roles and input cleaning, built with three classmates at Northeastern.', s:'Selected work → ChildGuard'}
+    ];
+    const SUG = ['Is he open to relocating?','What roles is he looking for?','How much experience does he have?','When did he graduate?','Does he do front end?','Does he do AI?','Does he do cloud?','Can I see his resume?','How do I reach him?','What’s his salary expectation?'];
+    const sug = document.getElementById('askSug'), rep = document.getElementById('askRep'), q = document.getElementById('askQ');
+    SUG.forEach(t => { const b = document.createElement('button'); b.type = 'button'; b.className = 'chip'; b.textContent = t; b.addEventListener('click', () => { q.value = t; answer(t); }); sug.appendChild(b); });
+    const norm = t => ' ' + t.toLowerCase().replace(/[’']/g,'').replace(/[^a-z0-9#+ ]/g,' ').replace(/\s+/g,' ') + ' ';
+    function answer(text){
+      const t = norm(text); let best = null, score = 0;
+      KB.forEach(e => { let sc = 0; e.k.forEach(k => { if (t.includes(' ' + k + ' ')) sc += k.includes(' ') ? 2 : 1; }); if (sc > score){ score = sc; best = e; } });
+      if (best){ rep.className = 'ask-rep ok'; rep.innerHTML = `<p>${best.a}</p><small>source: ${best.s}</small>`; sfx('ok'); }
+      else { rep.className = 'ask-rep no'; rep.innerHTML = `<p>That isn’t on this page, so I won’t guess.</p><small>Ask me directly: <a href="mailto:patilshankarvivek@gmail.com">patilshankarvivek@gmail.com</a></small>`; sfx('deny'); }
+    }
+    form.addEventListener('submit', e => { e.preventDefault(); if (q.value.trim()) answer(q.value); });
   })();
 
   /* ---------- case study accordion ---------- */
