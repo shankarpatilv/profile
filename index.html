@@ -15,8 +15,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#eef1f6; --bg2:#e4e9f1; --ink:#0f1420; --soft:#566074; --faint:#8a93a5; --line:#d2d8e2; --panel:rgba(255,255,255,.75);
-  --event:#c97a0a; --worker:#0a8fa8; --fail:#d93d35; --ok:#118a5c; --lane:rgba(15,20,32,.10);
+  --bg:#eef1f6; --bg2:#e4e9f1; --ink:#0f1420; --soft:#566074; --faint:#646d80; --line:#d2d8e2; --panel:rgba(255,255,255,.75);
+  --event:#9c5a06; --worker:#06748a; --fail:#d93d35; --ok:#118a5c; --lane:rgba(15,20,32,.10);
   --display:"Bricolage Grotesque", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --mono:"JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   color-scheme: light;
@@ -26,13 +26,13 @@
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
-    --bg:#0f1420; --bg2:#131a29; --ink:#eef1f6; --soft:#99a3b6; --faint:#6b7489; --line:#253049; --panel:rgba(18,24,38,.78);
+    --bg:#0f1420; --bg2:#131a29; --ink:#eef1f6; --soft:#99a3b6; --faint:#8690a6; --line:#253049; --panel:rgba(18,24,38,.78);
     --event:#ffb547; --worker:#6ee7f9; --fail:#ff6b6b; --ok:#4ade9b; --lane:rgba(238,241,246,.09);
     color-scheme: dark;
   }
 }
 :root[data-theme="dark"]{
-  --bg:#0f1420; --bg2:#131a29; --ink:#eef1f6; --soft:#99a3b6; --faint:#6b7489; --line:#253049; --panel:rgba(18,24,38,.78);
+  --bg:#0f1420; --bg2:#131a29; --ink:#eef1f6; --soft:#99a3b6; --faint:#8690a6; --line:#253049; --panel:rgba(18,24,38,.78);
   --event:#ffb547; --worker:#6ee7f9; --fail:#ff6b6b; --ok:#4ade9b; --lane:rgba(238,241,246,.09);
   color-scheme: dark;
 }
@@ -394,6 +394,61 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
 .ask-rep p{margin:0;font-size:17px;line-height:1.6;color:var(--ink);max-width:68ch}
 .ask-rep small{display:block;font-family:var(--mono);font-size:11.5px;color:var(--faint);margin-top:6px}
 .ask-rep a{color:var(--ink);font-weight:600}
+
+/* ===== spectacle: traffic hero ===== */
+.vh{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.hx{position:relative;height:calc(100svh - 62px - env(safe-area-inset-top,0px));min-height:520px;overflow:hidden;border-bottom:1px solid var(--line)}
+.hx canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:pan-y}
+.hx-copy{position:absolute;left:0;right:0;bottom:clamp(26px,7vh,64px);text-align:center;padding:0 18px;pointer-events:none}
+.hx-copy p{margin:0 auto 18px;max-width:52ch;color:var(--soft);font-size:clamp(15px,1.4vw,19px);line-height:1.55}
+.hx-copy p b{color:var(--ink);font-weight:600}
+.hx-copy .cta{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;pointer-events:auto}
+.hx-hint{position:absolute;left:50%;top:clamp(16px,4vh,32px);transform:translateX(-50%);font-family:var(--mono);font-size:11.5px;color:var(--soft);background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:4px 11px;white-space:nowrap;pointer-events:none;transition:opacity .4s}
+.hx-hint .tap{display:none}
+@media (hover:none){.hx-hint .tap{display:inline}.hx-hint .click{display:none}}
+
+/* ===== spectacle: follow one event ===== */
+.jy{position:relative;height:640vh;border-bottom:1px solid var(--line)}
+.jy-stick{position:sticky;top:calc(env(safe-area-inset-top,0px) + 62px);height:calc(100svh - 62px - env(safe-area-inset-top,0px));overflow:hidden}
+.jy-stick canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.jy-cap{position:absolute;left:clamp(18px,5vw,64px);bottom:clamp(40px,10vh,110px);max-width:min(480px,86vw);transition:opacity .35s}
+.jy-cap .n{font-family:var(--mono);font-size:12px;color:var(--event);letter-spacing:.06em}
+.jy-cap h2{font-weight:800;font-size:clamp(28px,4.2vw,54px);line-height:1;letter-spacing:-.035em;margin:8px 0 10px}
+.jy-cap p{margin:0;color:var(--soft);font-size:clamp(15px,1.35vw,18px);line-height:1.55}
+.jy-open{display:inline-block;margin-top:14px;font-weight:600;font-size:15px;color:var(--ink);text-decoration:none;border-bottom:2px solid var(--event)}
+.jy-prog{position:absolute;right:clamp(14px,3vw,32px);top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:10px}
+.jy-prog i{width:8px;height:8px;border-radius:50%;background:var(--line);transition:background .3s, transform .3s}
+.jy-prog i.on{background:var(--event);transform:scale(1.4)}
+.jy-tag{position:absolute;left:clamp(18px,5vw,64px);top:clamp(14px,3vh,26px);font-family:var(--mono);font-size:12px;color:var(--faint)}
+@media (prefers-reduced-motion: reduce){.jy-cap,.hx-hint{transition:none}}
+
+/* ===== spectacle: data center ===== */
+.demo.dc canvas{height:440px;touch-action:pan-y;cursor:grab}
+@media (max-width:560px){.demo.dc canvas{height:380px}}
+
+/* ===== spectacles for each project ===== */
+.demo.gs3 canvas{height:440px;touch-action:pan-y;cursor:grab}
+.demo.cg canvas{height:400px!important}
+.demo.rag canvas{height:440px}
+@media (max-width:560px){.demo.gs3 canvas{height:380px}.demo.cg canvas{height:360px!important}}
+
+.demo.gsf canvas{height:400px}
+@media (max-width:560px){.demo.gsf canvas{height:420px}}
+
+/* GitStream: belts with live code */
+.demo.gs3{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(0,1fr)}
+.demo.gs3 .gs-main{position:relative;min-width:0}
+.demo.gs3 .gs-side{padding:16px;display:flex;flex-direction:column;gap:10px;border-left:1px solid var(--line);min-width:0}
+.demo.gs3 .gs-side .cr-code{font-size:12px}
+.demo.gs3 .gs-side .tele{position:static;max-width:none;min-width:0;left:auto;right:auto;top:auto;bottom:auto}
+@media (max-width:860px){.demo.gs3{grid-template-columns:minmax(0,1fr)}.demo.gs3 .gs-side{border-left:0;border-top:1px solid var(--line)}}
+.demo.dc canvas{height:520px}
+.demo.rag canvas{height:480px}
+.demo.hc canvas{height:470px}
+@media (max-width:560px){.demo.dc canvas{height:440px}.demo.rag canvas{height:440px}}
+
+/* phones: always show each demo's explanation line */
+@media (max-width:760px){.demo .tele .log{display:block!important;margin-top:8px;padding-top:8px}}
 </style>
 
 </head>
@@ -409,19 +464,14 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
 </header>
 
 <main id="top">
-  <section class="hero3" aria-label="Introduction">
-    <div class="wrap hsplit">
-      <div class="hcopy">
-        <h1 id="heroH" aria-label="I build systems that get back up.">I build systems that get <span class="up">back up</span>.</h1>
-        <p>Full-stack, backend, distributed systems and AI, built to survive the bad day. Previously at <b>Amazon</b> and <b>Collabera Digital</b>.</p>
-        <div class="cta"><a class="btn main" href="#work">See the work</a><a class="btn" href="#contact">Get in touch</a></div>
-      </div>
-      <div class="hcard">
-        <div class="hcap"><span><b>Live:</b> an event pipeline like GitStream</span><span class="hhint2"><span class="click">Click</span><span class="tap">Tap</span> a worker to stop it</span></div>
-        <div class="hcv"><canvas id="streamCv" aria-label="A live event pipeline: events flow from Kafka through six workers into PostgreSQL and ClickHouse. Click a worker to stop it and watch its work move to another worker."></canvas></div>
-        <div class="hnums" id="streamTele" aria-live="polite"></div>
-      </div>
+  <section class="hx" aria-labelledby="hx-h">
+    <h1 id="hx-h" class="vh">I build systems that get back up.</h1>
+    <canvas id="hxCv" aria-hidden="true"></canvas>
+    <div class="hx-copy">
+      <p>Full-stack, backend, distributed systems and AI, built to survive the bad day. Previously at <b>Amazon</b> and <b>Collabera Digital</b>.</p>
+      <div class="cta"><a class="btn main" href="#work">See the work</a><a class="btn" href="#contact">Get in touch</a></div>
     </div>
+    <span class="hx-hint" id="hxHint"><span class="click">Move</span><span class="tap">Drag</span> through the words. Traffic routes around you.</span>
   </section>
 
   <section class="s" id="work" aria-labelledby="work-h">
@@ -432,7 +482,7 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
       <div class="proj">
         <button class="ph" aria-expanded="true" aria-controls="p-cn">
           <span class="t">Cloud-Native Platform<small>A web app that stays online through a data center outage or a new release, on AWS or Azure.</small></span>
-          <span class="r"><b>Zero-downtime</b>releases</span>
+          <span class="r"><b>Zero failed requests</b>when a zone goes down</span>
           <span class="x" aria-hidden="true">+</span>
         </button>
         <div class="pb" id="p-cn">
@@ -448,10 +498,10 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
               <p class="cost"><b>What it costs:</b> spare capacity you pay for and hope never to use, and skipping shortcuts that only work on one cloud.</p>
             </div>
           </div>
-          <div class="demo">
-            <canvas id="azCv" aria-label="A load balancer sending requests to servers in three zones. You can take a zone down or roll out a new version."></canvas>
-            <div class="ctl"><div class="chips"><button class="chip" id="azDown">Take zone A down</button><button class="chip" id="azDeploy">Deploy version 2</button></div></div>
-            <div class="tele" id="azTele" aria-live="polite"></div>
+          <div class="demo dc">
+            <canvas id="dcCv" aria-label="An isometric data center with three zones of servers. Take a zone down and traffic reroutes to the others. Drag to orbit."></canvas>
+            <div class="ctl"><div class="chips"><button class="chip" id="dcA">Take zone A down</button><button class="chip" id="dcB">Take zone B down</button><button class="chip" id="dcD">Deploy version 2</button></div></div>
+            <div class="tele" id="dcTele" aria-live="polite"></div>
           </div>
           <div class="stack">Java, Spring Boot, AWS, Azure, PostgreSQL, Terraform, Packer, Docker, GitHub Actions</div>
         </div>
@@ -477,26 +527,19 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
               <p>Results land in two databases on purpose: one that is quick at finding a single record, and one that is quick at adding up millions. That split made analytics queries <b>10 to <span data-count="100" data-from="10">100</span> times faster</b>.</p>
             </div>
           </div>
-          <div class="cr" id="crDemo">
-            <div class="cr-head"><b>The commit rule, running</b></div>
-            <div class="cr-grid">
-              <div class="cr-panel">
-                <div class="cr-ptr"><span>Offsets in one partition</span><span>a.committed <b id="crCm">0</b></span></div>
-                <div class="cr-offs" id="crOffs"></div>
-                <div class="cr-ptr"><span><i style="color:var(--event)">■</i> running</span><span><i style="color:var(--worker)">■</i> finished</span><span><i style="color:var(--ok)">■</i> committed</span></div>
-                <div class="cr-ctl"><button class="chip" id="crCrash">Crash a worker</button><button class="chip" id="crSlow">Slow down</button></div>
-                <div class="cr-log" id="crLog" aria-live="polite">Three workers take offsets in order, but finish whenever they finish.</div>
-              </div>
-              <div class="cr-panel">
-                <div class="cr-code" id="crCode"><div><span class="k">func</span> (a *Accountant) Complete(off <span class="k">int64</span>) {</div><div>    a.done[off] = <span class="k">true</span></div><div>    <span class="k">for</span> a.done[a.committed+1] {</div><div>        a.committed++</div><div>        <span class="k">delete</span>(a.done, a.committed)</div><div>    }</div><div>    a.commit(a.committed) <span class="c">// only contiguous work</span></div><div>}</div><div> </div><div><span class="k">func</span> (a *Accountant) OnCrash() {</div><div>    a.restartFrom(a.committed + 1) <span class="c">// repeats, never gaps</span></div><div>}</div></div>
-                <div class="cr-vars">a.done = <b id="crDone">map[]</b></div>
-              </div>
-            </div>
+          <div class="demo gsf">
+            <canvas id="gfCv" aria-label="Events flow from Kafka through a worker into PostgreSQL, drawn as rows, and ClickHouse, drawn as columns. Run a lookup or a sum to see which store answers which question."></canvas>
+            <div class="ctl"><div class="chips"><button class="chip" id="gfLook">Look up one event</button><button class="chip" id="gfSum">Add up the last hour</button></div></div>
+            <div class="tele" id="gfTele" aria-live="polite"></div>
           </div>
-          <div class="demo">
-            <canvas id="loadCv" aria-label="A simulation of a bounded queue. Raise the load to see the producer slow down instead of the system failing."></canvas>
-            <div class="ctl"><label for="loadR">Incoming load</label><input id="loadR" type="range" min="1" max="10" step="1" value="3"><output id="loadV" for="loadR">3×</output></div>
-            <div class="tele" id="loadTele" aria-live="polite"></div>
+          <div class="demo gs3">
+            <div class="gs-main"><canvas id="gsCv" aria-label="Three Kafka partitions shown as conveyor belts carrying events to three worker towers. Crash a worker and its events wait, then replay from the last committed offset. Drag to orbit."></canvas>
+            <div class="ctl"><div class="chips"><button class="chip" id="gsCrash">Crash worker 2</button><button class="chip" id="gsSpike">Spike traffic</button></div></div></div>
+            <div class="gs-side">
+              <div class="cr-code" id="gsCode"><div><span class="k">func</span> (a *Accountant) Complete(off <span class="k">int64</span>) {</div><div>    a.done[off] = <span class="k">true</span></div><div>    <span class="k">for</span> a.done[a.committed+1] {</div><div>        a.committed++</div><div>        <span class="k">delete</span>(a.done, a.committed)</div><div>    }</div><div>    a.commit(a.committed) <span class="c">// only contiguous work</span></div><div>}</div><div> </div><div><span class="k">func</span> (a *Accountant) OnCrash() {</div><div>    a.restartFrom(a.committed + 1) <span class="c">// repeats, never gaps</span></div><div>}</div></div>
+              <div class="cr-vars">partition 2 · a.committed = <b id="gsCm">—</b></div>
+              <div class="tele" id="gsTele" aria-live="polite"></div>
+            </div>
           </div>
           <div class="stack">Go, Kafka, PostgreSQL, ClickHouse, Prometheus, Docker</div>
         </div>
@@ -601,11 +644,6 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
         <p class="td-text" id="tdText" aria-live="polite"></p>
       </div>
     </div>
-  </section>
-
-  <section class="heal" aria-label="An interactive headline">
-    <canvas id="healCv" aria-label="The words Break it, it heals, drawn with points. Move through them and they return to place."></canvas>
-    <p class="cap">My systems heal themselves.</p>
   </section>
 
   <section class="s" id="experience" aria-labelledby="xp-h">
@@ -775,6 +813,8 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
   const sfx = k => window.sfx(k);
 
   /* ---------- hero: pipeline in a card ---------- */
+  if (document.getElementById('streamCv')) {
+
   const streamTele = document.getElementById('streamTele');
   const S = Stage(document.getElementById('streamCv'), {
     workers:[], parts:[], acc:0, win:[], rebal:0, log:'All workers healthy.',
@@ -851,7 +891,10 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
   sc.addEventListener('pointerdown', e => { const w=workerAt(e); if (w){ S.kill(w); S.nudge(); } });
   document.addEventListener('keydown', e => { if ((e.key==='k'||e.key==='K') && S.visible && !/input|textarea/i.test(document.activeElement.tagName)){ const a=S.workers.filter(w=>w.alive); if (a.length>1){ S.kill(a[Math.floor(Math.random()*a.length)]); S.nudge(); } } });
 
+  }
   /* ---------- GitStream demo: backpressure ---------- */
+  if (document.getElementById('loadCv')) {
+
   const loadR = document.getElementById('loadR'), loadV = document.getElementById('loadV'), loadTele = document.getElementById('loadTele');
   loadR.addEventListener('input', () => { loadV.textContent = loadR.value+'×'; L.nudge(); });
   const L = Stage(document.getElementById('loadCv'), {
@@ -900,7 +943,10 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
     }
   });
 
+  }
   /* ---------- heal: self-healing type ---------- */
+  if (document.getElementById('healCv')) {
+
   const ptr = {x:-9999, y:-9999, down:false, on:false};
   const Hh = Stage(document.getElementById('healCv'), {
     pts:[], lastBreak:0, rec:null, broken:0,
@@ -937,9 +983,10 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
   hc.addEventListener('pointerdown', e => { ptr.down=true; ptr.x=e.clientX; ptr.y=e.clientY; ptr.on=true; Hh.nudge(); });
   hc.addEventListener('pointerleave', () => { ptr.on=false; });
   window.addEventListener('pointerup', () => { ptr.down=false; });
-  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { Hh.build(); Hh.draw(true); S.size(); });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { Hh.build(); Hh.draw(true); if (typeof S !== 'undefined') S.size(); });
 
 
+  }
   /* ---------- InterviewKit: grounded or refuse ---------- */
   const ragAns = document.getElementById('ragAns'), ragQs = document.getElementById('ragQs');
   const CL = [
@@ -953,7 +1000,7 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
     {q:'Tell me about something you owned end to end.', c:2, a:'<b>Situation:</b> customers needed a self-service portal. <b>Task:</b> build it, from screens to APIs. <b>Action:</b> built the front end and designed the REST APIs behind it. <b>Result:</b> a portal customers used every day.'},
     {q:'Tell me about disagreeing with your manager.', c:-1, a:''}
   ];
-  const THRESH = 0.70;
+  const THRESH = 0.80;
   const R = Stage(document.getElementById('ragCv'), {
     dots:[], qi:-1, t:1, qx:0, qy:0, fromX:0, fromY:0, top:[], done:false,
     setup(){
@@ -969,7 +1016,7 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
     place(i, instant){
       this.qi=i; const q=QS[i]; this.fromX=this.qi<0?20:(this.qx||20); this.fromY=this.qy||this.H/2;
       let tx, ty;
-      if (q.c>=0){ const c=this.centers[q.c]; tx=c.x+12; ty=c.y-6; } else { tx=this.W*0.60; ty=this.H*0.36; }
+      if (q.c>=0){ const c=this.centers[q.c]; tx=c.x+12; ty=c.y-6; } else { tx=(this.sx||this.W)*0.95; ty=this.H*0.80; }
       this.tx=tx; this.ty=ty; this.t = instant?1:0; this.done=false;
       if (instant){ this.qx=tx; this.qy=ty; this.finish(); }
     },
@@ -986,22 +1033,52 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
       if (this.qi>=0 && this.t<1){ this.t=Math.min(1,this.t+dt*1.6); const e=this.t*this.t*(3-2*this.t); this.qx=this.fromX+(this.tx-this.fromX)*e; this.qy=this.fromY+(this.ty-this.fromY)*e; if (this.t>=1) this.finish(); }
     },
     render(now){
-      const ctx=this.ctx;
+      const ctx=this.ctx, W=this.W, H=this.H;
+      if (!this._stars){ this._stars = Array.from({length:70}, () => ({x:Math.random(), y:Math.random(), r:Math.random()*1.2+0.3})); }
+      if (!this._links){ this._links = []; this.dots.forEach((d,i) => { const near = this.dots.map((e,j) => ({j, dd: e.c===d.c && j!==i ? Math.hypot(e.x-d.x, e.y-d.y) : 1e9})).sort((a,b)=>a.dd-b.dd).slice(0,2); near.forEach(n => { if (n.dd < 1e8 && i < n.j) this._links.push([i,n.j]); }); }); }
+      const cx = (this.sx||W)/2, cy = H/2, a = reduce.matches ? 0 : 0.42*Math.sin(now/5200), ca = Math.cos(a), sa = Math.sin(a), Z = Math.min(W,H)*0.55, F = Math.min(W,H)*1.6;
+      const zOf = i => (((i*73)%100)/100 - 0.5) * Z;
+      const proj = (x, y, z) => { const dx = x - cx, X = dx*ca + z*sa, D = -dx*sa + z*ca, s = F/(F + D); return {x: cx + X*s, y: cy + (y-cy)*s, s}; };
+      ctx.fillStyle = C.faint; this._stars.forEach(st => { ctx.globalAlpha = .35; ctx.fillRect(st.x*W, st.y*H, st.r, st.r); }); ctx.globalAlpha = 1;
+      const P = this.dots.map((d,i) => proj(d.x, d.y, zOf(i)));
+      ctx.lineWidth = 1; ctx.strokeStyle = C.line; this._links.forEach(([i,j]) => { ctx.globalAlpha = 0.5*Math.min(P[i].s, P[j].s); ctx.beginPath(); ctx.moveTo(P[i].x,P[i].y); ctx.lineTo(P[j].x,P[j].y); ctx.stroke(); }); ctx.globalAlpha = 1;
       ctx.font='500 12px '+MONO; ctx.textAlign='center'; ctx.textBaseline='middle';
-      this.centers.forEach((c,i) => { ctx.fillStyle=C.faint; ctx.fillText(CL[i].name, c.x, c.y - Math.min(this.W,this.H)*0.15); });
+      this.centers.forEach((c,i) => { const p = proj(c.x, c.y - Math.min(W,H)*0.15, 0); ctx.fillStyle = C.faint; ctx.fillText(CL[i].name, p.x, p.y); });
       const hit = new Set(this.done ? this.top.map(t=>t.d) : []);
-      this.dots.forEach(d => { ctx.beginPath(); ctx.arc(d.x,d.y,hit.has(d)?4.5:3,0,Math.PI*2); ctx.fillStyle = hit.has(d) ? C.worker : C.lane.replace(/\.\d+\)$/,'.35)'); if (!hit.has(d)) ctx.fillStyle = C.faint; ctx.globalAlpha = hit.has(d)?1:.55; ctx.fill(); });
-      ctx.globalAlpha=1;
-      if (this.qi>=0){
-        if (this.done){ const ok=this.top[0].s>=THRESH;
-          this.top.forEach(t => { ctx.strokeStyle = ok ? C.worker : C.fail; ctx.setLineDash(ok?[]:[4,4]); ctx.lineWidth=1.6; ctx.beginPath(); ctx.moveTo(this.qx,this.qy); ctx.lineTo(t.d.x,t.d.y); ctx.stroke(); });
+      const order = this.dots.map((d,i) => i).sort((i,j) => P[j].s - P[i].s);
+      order.forEach(i => { const d = this.dots[i], p = P[i], h = hit.has(d), r = (h ? 4.2 : 2.6) * p.s;
+        if (h){ const g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, 16*p.s); g.addColorStop(0, 'rgba(110,231,249,.55)'); g.addColorStop(1, 'rgba(110,231,249,0)'); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(p.x, p.y, 16*p.s, 0, 7); ctx.fill(); }
+        ctx.globalAlpha = h ? 1 : 0.35 + 0.5*Math.min(1, p.s - 0.6); ctx.fillStyle = h ? C.worker : C.soft; ctx.beginPath(); ctx.arc(p.x, p.y, r, 0, 7); ctx.fill(); });
+      ctx.globalAlpha = 1;
+      if (this.qi >= 0){
+        const q = proj(this.qx, this.qy, 0);
+        this._trail = (this._trail || []); this._trail.push([q.x, q.y]); if (this._trail.length > 18) this._trail.shift();
+        this._trail.forEach((t,k) => { ctx.globalAlpha = k/this._trail.length*0.5; ctx.fillStyle = C.event; ctx.beginPath(); ctx.arc(t[0], t[1], 3 + k*0.25, 0, 7); ctx.fill(); }); ctx.globalAlpha = 1;
+        if (this.done){ const ok = this.top[0].s >= THRESH;
+          this.top.forEach(t => { const i = this.dots.indexOf(t.d), p = P[i]; ctx.strokeStyle = ok ? C.worker : C.fail; ctx.setLineDash(ok ? [] : [4,4]); ctx.lineWidth = 1.8; ctx.beginPath(); ctx.moveTo(q.x, q.y); ctx.lineTo(p.x, p.y); ctx.stroke(); });
           ctx.setLineDash([]); }
-        ctx.beginPath(); ctx.arc(this.qx,this.qy,8,0,Math.PI*2); ctx.fillStyle=C.event; ctx.fill();
-        ctx.beginPath(); ctx.arc(this.qx,this.qy,14+4*Math.sin(now/300),0,Math.PI*2); ctx.strokeStyle=C.event; ctx.globalAlpha=.4; ctx.lineWidth=1.5; ctx.stroke(); ctx.globalAlpha=1;
-        ctx.fillStyle=C.ink; ctx.font='600 12px '+MONO; ctx.textAlign='left'; ctx.fillText('your question', this.qx+16, this.qy-16);
-      } else {
-        ctx.fillStyle=C.soft; ctx.font='500 14px '+MONO; ctx.textAlign='left'; ctx.fillText(this.W<560?'Pick a question.':'Pick a question to see which notes it matches.', 20, this.H-28);
+        const g = ctx.createRadialGradient(q.x, q.y, 0, q.x, q.y, 22); g.addColorStop(0, 'rgba(255,181,71,.7)'); g.addColorStop(1, 'rgba(255,181,71,0)'); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(q.x, q.y, 22, 0, 7); ctx.fill();
+        ctx.beginPath(); ctx.arc(q.x, q.y, 6, 0, 7); ctx.fillStyle = C.event; ctx.fill();
+        ctx.fillStyle = C.ink; ctx.font = '600 12px '+MONO; ctx.textAlign = 'left'; ctx.fillText('your question', q.x + 16, q.y - 16);
       }
+      // the system around the question: ingestion on the left, the LangGraph workflow along the bottom
+      { const mobS = W < 560, sxw = this.sx || W;
+        const pc = (t, x, y, col, left) => { ctx.font = '600 11px '+MONO; const w = ctx.measureText(t).width + 14, x0 = left ? x : x - w/2; ctx.fillStyle = C.bg; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(x0, y-10, w, 20, 10) : ctx.rect(x0, y-10, w, 20); ctx.fill(); ctx.strokeStyle = col; ctx.lineWidth = 1.2; ctx.stroke(); ctx.fillStyle = col; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText(t, x0 + 7, y + .5); return w; };
+        if (!mobS){ const steps = [['your notes.md', C.soft], ['split into chunks', C.soft], ['embedded', C.worker], ['stored in pgvector', C.ok]], y0 = Math.max(H*0.36, 160);
+          steps.forEach(([t,col],i) => { const y = y0 + i*40; pc(t, 14, y, col, true); if (i < 3){ ctx.strokeStyle = C.line; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.moveTo(30, y + 11); ctx.lineTo(30, y + 29); ctx.stroke(); } });
+          this._ing = this._ing || []; if (!reduce.matches && Math.random() < 0.06) this._ing.push({t:0, i:Math.floor(Math.random()*this.dots.length)});
+          const ix0 = 150, iy0 = y0 + 3*40; this._ing.forEach(o => { o.t += 0.018; const p = P[o.i]; ctx.fillStyle = C.ok; ctx.globalAlpha = Math.max(0, 1 - o.t*0.7); ctx.beginPath(); ctx.arc(ix0 + (p.x - ix0)*o.t, iy0 + (p.y - iy0)*o.t, 2.3, 0, 7); ctx.fill(); }); ctx.globalAlpha = 1; this._ing = this._ing.filter(o => o.t < 1); }
+        const stage = this.qi < 0 ? -1 : !this.done ? 1 : (this.top[0].s >= THRESH ? 3 : 4);
+        const names = mobS ? ['question','retrieve','check','STAR','refuse'] : ['question','retrieve from pgvector','check support','draft STAR answer','refuse'];
+        const yb = H - 30, xs = mobS ? [0.03,0.24,0.47,0.70,0.70] : [0.02,0.17,0.40,0.62,0.62], ys = [yb, yb, yb, yb - 15, yb + 13];
+        const lit = k => stage >= 0 && (k <= 1 ? stage >= 1 : k === 2 ? stage >= 3 : k === 3 ? stage === 3 : stage === 4);
+        ctx.fillStyle = C.faint; ctx.font = '500 11px '+MONO; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText('LangGraph workflow', sxw*0.02, yb - (mobS ? 34 : 38));
+        let px = null, py = null;
+        names.forEach((n,k) => { const x = sxw*xs[k], y = ys[k], col = lit(k) ? (k === 4 ? C.fail : k === 3 ? C.ok : C.worker) : C.line;
+          if (k > 0){ const fx = k >= 3 ? sxw*xs[2] : px, fy = k >= 3 ? yb : py; ctx.strokeStyle = lit(k) ? col : C.line; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.moveTo(fx + (k >= 3 ? (mobS ? 50 : 110) : 0), fy); ctx.lineTo(x - 4, y); ctx.stroke(); }
+          const w = pc(n, x, y, lit(k) ? col : C.soft, true); px = x + w; py = y; });
+      }
+      if (!reduce.matches) this.nudgeUntil = performance.now() + 400;
     },
     tele(){}
   });
@@ -1011,6 +1088,8 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
   ragAns.className='ans'; ragAns.innerHTML='<div class="k">waiting for a question</div><div class="a">Answers are drafted only from your own notes, and every one cites its file.</div>';
 
   /* ---------- Cloud-Native: zones, health checks, rolling deploy ---------- */
+  if (document.getElementById('azCv')) {
+
   const azTele=document.getElementById('azTele'), azDown=document.getElementById('azDown'), azDeploy=document.getElementById('azDeploy');
   const A = Stage(document.getElementById('azCv'), {
     zones:[], reqs:[], acc:0, win:[], errors:0, log:'All zones healthy. Traffic is spread across every instance.', deploying:false, dq:[], dt0:0, rr:0,
@@ -1089,7 +1168,9 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
   azDown.addEventListener('click', () => { A.toggleZone(); A.nudge(); });
   azDeploy.addEventListener('click', () => { A.deploy(); A.nudge(); });
 
+  }
   /* ---------- Healthcare: sync vs async writes, ETag reads ---------- */
+  const lerpF = (a,b,t) => a + (b-a)*Math.max(0, Math.min(1, t));
   const hcTele=document.getElementById('hcTele'), hcRead=document.getElementById('hcRead');
   let hcMode='async';
   document.querySelectorAll('[data-hc]').forEach(b => b.addEventListener('click', () => { hcMode=b.dataset.hc; document.querySelectorAll('[data-hc]').forEach(x=>x.setAttribute('aria-pressed', String(x===b))); Hc.log = hcMode==='sync' ? 'Each save waits for search to update before it answers.' : 'Each save answers right away. Search updates in the background.'; Hc.nudge(); }));
@@ -1097,7 +1178,7 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
     reqs:[], jobs:[], acc:0, lat:[], reads:0, saved:0, log:'Each save answers right away. Search updates in the background.', flash:0,
     setup(){ const W=this.W, H=this.H, mob=W<560;
       this.n = { client:{x:Math.max(W*0.09,52),y:H*(mob?0.30:0.42),l:'Client'}, api:{x:W*(mob?0.47:0.27),y:H*(mob?0.30:0.42),l:'API'}, store:{x:W*(mob?0.78:0.46),y:H*(mob?0.20:0.26),l:'Redis'}, es:{x:W*(mob?0.74:0.46),y:H*(mob?0.42:0.62),l:'Elasticsearch'}, mq:{x:W*(mob?0.47:0.27),y:H*(mob?0.50:0.84),l:'RabbitMQ'} };
-      this.chart = {x:W*(mob?0.06:0.58), y:H*(mob?0.62:0.22), w:W*(mob?0.88:0.38), h:H*(mob?0.12:0.30)}; },
+      this.chart = {x:W*(mob?0.06:0.60), y:H*(mob?0.80:0.20), w:W*(mob?0.88:0.36), h:H*(mob?0.13:0.26)}; },
     step(dt, now){
       this.acc += dt*2.2;
       while (this.acc > 1){ this.acc--; const sync = hcMode==='sync'; const ms = sync ? 120+Math.random()*30 : 48+Math.random()*12;
@@ -1113,18 +1194,37 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
         const legs=[[n.client,n.api],[n.api,n.store],[n.store,n.api],[n.api,n.es],[n.es,n.api],[n.api,n.client]]; const f=t*legs.length, i=Math.min(legs.length-1,Math.floor(f)); return this.seg(legs[i][0],legs[i][1],f-i); }
       const legs=[[n.client,n.api],[n.api,n.store],[n.store,n.api],[n.api,n.client]]; const f=t*legs.length, i=Math.min(legs.length-1,Math.floor(f)); return this.seg(legs[i][0],legs[i][1],f-i); },
     render(){
-      const ctx=this.ctx, n=this.n; ctx.font='500 12px '+MONO; ctx.textBaseline='middle'; ctx.textAlign='center';
-      const line=(a,b,dash,col)=>{ ctx.setLineDash(dash?[5,5]:[]); ctx.strokeStyle=col||C.line; ctx.lineWidth=1.5; ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke(); ctx.setLineDash([]); };
-      line(n.client,n.api); line(n.api,n.store); line(n.api,n.es,false,hcMode==='sync'?C.event:C.line); line(n.api,n.mq,true); line(n.mq,n.es,true);
-      Object.values(n).forEach(v => { const w=Math.max(84, ctx.measureText(v.l).width+26); ctx.beginPath(); ctx.roundRect ? ctx.roundRect(v.x-w/2,v.y-17,w,34,9) : ctx.rect(v.x-w/2,v.y-17,w,34); ctx.fillStyle=C.bg; ctx.fill(); ctx.strokeStyle=(v===n.store && this.flash>0)?C.ok:C.ink; ctx.lineWidth=1.8; ctx.stroke(); ctx.fillStyle=C.ink; ctx.fillText(v.l, v.x, v.y); });
-      if (this.flash>0){ ctx.fillStyle=C.ok; ctx.fillText('nothing changed, no database query', n.store.x, n.store.y-30); }
-      this.reqs.forEach(r => { const p=this.pathPos(r); ctx.beginPath(); ctx.arc(p.x,p.y,4,0,Math.PI*2); ctx.fillStyle = r.sync ? C.fail : C.event; ctx.fill(); });
-      this.jobs.forEach(j => { const a = j.t<0.5 ? this.seg(n.api,n.mq,j.t*2) : this.seg(n.mq,n.es,(j.t-0.5)*2); ctx.beginPath(); ctx.arc(a.x,a.y,3,0,Math.PI*2); ctx.fillStyle=C.worker; ctx.fill(); });
-      // latency chart
-      const c=this.chart; ctx.strokeStyle=C.line; ctx.lineWidth=1; ctx.strokeRect(c.x,c.y,c.w,c.h);
-      ctx.fillStyle=C.soft; ctx.textAlign='left'; ctx.fillText('time per save, last 40 saves', c.x, c.y-14);
-      const max=170, bw=c.w/40;
-      this.lat.forEach((l,i) => { const h=(l.ms/max)*c.h; ctx.fillStyle = l.sync ? C.fail : C.event; ctx.fillRect(c.x+i*bw+1, c.y+c.h-h, Math.max(1,bw-2), h); });
+      const ctx=this.ctx, W=this.W, H=this.H, mob=W<560, D = C.bg.toLowerCase() === '#0f1420';
+      const ang = -0.62 + (reduce.matches ? 0 : 0.12*Math.sin(performance.now()/6000)), ca = Math.cos(ang), sa = Math.sin(ang);
+      const k = Math.min(W*(mob ? 1.05 : 0.58), H*1.25)/20, ox = mob ? W*0.5 : W*0.29, oy = mob ? H*0.36 : H*0.56;
+      const iso = (x,y,z) => ({X: ox + (x*ca - y*sa)*k, Y: oy + (x*sa + y*ca)*k*0.5 - z*k});
+      const box = (x,y,w,d,h,top,side,front) => { const p=[iso(x-w/2,y-d/2,0),iso(x+w/2,y-d/2,0),iso(x+w/2,y+d/2,0),iso(x-w/2,y+d/2,0)], q=[iso(x-w/2,y-d/2,h),iso(x+w/2,y-d/2,h),iso(x+w/2,y+d/2,h),iso(x-w/2,y+d/2,h)];
+        const f=(a,c)=>{ ctx.beginPath(); ctx.moveTo(a[0].X,a[0].Y); for(let i=1;i<a.length;i++) ctx.lineTo(a[i].X,a[i].Y); ctx.closePath(); ctx.fillStyle=c; ctx.fill(); }; f([p[1],p[2],q[2],q[1]],side); f([p[2],p[3],q[3],q[2]],front); f([q[0],q[1],q[2],q[3]],top); };
+      const pill = (t,x,y,col) => { ctx.font='600 11px '+MONO; const w=ctx.measureText(t).width+14; ctx.fillStyle=C.bg; ctx.beginPath(); ctx.roundRect?ctx.roundRect(x-w/2,y-10,w,20,10):ctx.rect(x-w/2,y-10,w,20); ctx.fill(); ctx.strokeStyle=col||C.line; ctx.lineWidth=1.2; ctx.stroke(); ctx.fillStyle=col||C.soft; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText(t,x,y+.5); };
+      const belt = (x0,y0,x1,y1,active) => { const a=iso(x0,y0,0), b=iso(x1,y1,0); ctx.strokeStyle = D ? '#22304d' : '#cfd7e3'; ctx.lineWidth = 12; ctx.lineCap='round'; ctx.beginPath(); ctx.moveTo(a.X,a.Y); ctx.lineTo(b.X,b.Y); ctx.stroke(); ctx.lineCap='butt';
+        if (active){ ctx.strokeStyle = D ? '#3a4b72' : '#aab6c9'; ctx.lineWidth = 2; ctx.setLineDash([3,10]); ctx.lineDashOffset = -(performance.now()/30)%13; ctx.beginPath(); ctx.moveTo(a.X,a.Y); ctx.lineTo(b.X,b.Y); ctx.stroke(); ctx.setLineDash([]); ctx.lineDashOffset = 0; } };
+      const old = hcMode === 'sync', N = {api:[-6,2], save:[0,2], reply:[6,2], search:[0,-5], queue:[0,-1.6]};
+      ctx.strokeStyle = D ? '#151d30' : '#e1e6ee'; ctx.lineWidth = 1; for (let i=-9;i<=9;i++){ let a=iso(i,-8,0), b=iso(i,6,0); ctx.beginPath(); ctx.moveTo(a.X,a.Y); ctx.lineTo(b.X,b.Y); ctx.stroke(); a=iso(-9,i*0.75-1.5,0); b=iso(9,i*0.75-1.5,0); ctx.beginPath(); ctx.moveTo(a.X,a.Y); ctx.lineTo(b.X,b.Y); ctx.stroke(); }
+      belt(N.api[0],N.api[1],N.reply[0],N.reply[1], true); belt(N.save[0],N.save[1],N.search[0],N.search[1], true);
+      const side = D ? '#1b2a46' : '#b9c6d8', front = D ? '#22355a' : '#cdd7e4';
+      const inQ = this.jobs.filter(j => j.t >= .3 && j.t < .7);
+      [['api','API',C.worker],['save','save',C.worker],['search','search index', old ? C.fail : C.ok],['reply','reply',C.worker],['queue','RabbitMQ',C.event]].sort((a,b) => (N[a[0]][1]) - (N[b[0]][1])).forEach(([key,label,col]) => { const [x,y] = N[key];
+        if (key === 'queue'){ ctx.globalAlpha = old ? 0.35 : 1; box(x, y, 2.8, 1.2, 0.7, D ? 'rgba(255,181,71,.4)' : 'rgba(201,122,10,.35)', side, front);
+          inQ.slice(0,6).forEach((j,k) => box(x - 1.05 + k*0.42, y, 0.34, 0.34, 0.3 + 0.0, C.worker, side, front));
+          const t = W < 900 ? iso(x, y - 2.6, 1.4) : iso(x, y - 1.7, 0.9); pill(old ? 'RabbitMQ · not used' : `RabbitMQ · ${inQ.length} waiting`, t.X, t.Y, C.event); ctx.globalAlpha = 1; return; }
+        box(x, y, 1.8, 1.8, key==='search' ? 2.6 : 1.6, col, side, front); const t = iso(x, y, (key==='search' ? 2.6 : 1.6) + 0.9); pill(label, t.X, t.Y, col); });
+      const lb = iso(N.search[0] + (mob ? 0 : 3.2), (N.search[1]+N.save[1])/2, 0.2); ctx.fillStyle = C.soft; ctx.font = '500 11px '+MONO; ctx.textAlign = mob ? 'center' : 'left'; if (old) ctx.fillText('every save waits for this', lb.X, lb.Y);
+      const lerp=(a,b,t)=>a+(b-a)*Math.max(0,Math.min(1,t)), along=(A,B,t)=>[lerp(A[0],B[0],t), lerp(A[1],B[1],t)];
+      this.jobs.forEach(j => { if (j.t >= .3 && j.t < .7) return; const [x,y] = j.t < .3 ? along(N.save, N.queue, j.t/.3) : along(N.queue, N.search, (j.t-.7)/.3); box(x, y, 0.5, 0.5, 0.45, C.worker, side, front); });
+      this.reqs.forEach(r => { let pos, waiting = false;
+        if (r.sync){ if (r.t < .25) pos = along(N.api, N.save, r.t/.25); else if (r.t < .4) pos = along(N.save, N.search, (r.t-.25)/.15); else if (r.t < .85){ pos = N.search; waiting = true; } else pos = along(N.search, N.reply, (r.t-.85)/.15); }
+        else { pos = r.t < .45 ? along(N.api, N.save, r.t/.45) : along(N.save, N.reply, (r.t-.45)/.55); }
+        box(pos[0], pos[1], 0.6, 0.6, 0.55, waiting ? C.fail : C.event, D ? '#7a4d12' : '#e4b062', D ? '#9a6418' : '#efc684');
+        if (waiting){ const t = iso(pos[0], pos[1], 3.2); ctx.strokeStyle = C.fail; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.arc(t.X, t.Y, 11, -Math.PI/2, -Math.PI/2 + Math.PI*2*((r.t-.4)/.45)); ctx.stroke(); } });
+      if (this.flash > 0){ const t = iso(N.save[0], N.save[1], 3.4); pill('nothing changed · no database query', t.X, t.Y - 16, C.ok); }
+      const c = this.chart; ctx.strokeStyle=C.line; ctx.lineWidth=1; ctx.strokeRect(c.x,c.y,c.w,c.h); ctx.fillStyle=C.soft; ctx.textAlign='left'; ctx.textBaseline='middle'; ctx.font='500 12px '+MONO; ctx.fillText('time per save, last 40 saves', c.x, c.y-14);
+      const max=170, bw=c.w/40; this.lat.forEach((l,i) => { const h=(l.ms/max)*c.h; ctx.fillStyle = l.sync ? C.fail : C.event; ctx.fillRect(c.x+i*bw+1, c.y+c.h-h, Math.max(1,bw-2), h); });
+      if (!reduce.matches) this.nudgeUntil = performance.now() + 400;
     },
     tele(){ const s=this.lat.filter(l=>l.sync), a=this.lat.filter(l=>!l.sync); const avg=x=>x.length?Math.round(x.reduce((p,q)=>p+q.ms,0)/x.length)+' ms':'none yet';
       hcTele.innerHTML = `<div class="row">old path, waits for search <b class="${s.length?'bad':''}">${avg(s)}</b></div><div class="row">new path, background update <b class="good">${avg(a)}</b></div><div class="row">repeat reads served from cache <b>${this.saved}</b></div><div class="log">${this.log}</div>`; }
@@ -1164,20 +1264,36 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
         cgTele.innerHTML = `<div class="row">request <b>${r.q}</b></div><div class="row">result <b class="${ok?'good':'bad'}">${r.code}</b></div><div class="log">${r.msg}</div>`; }
     },
     render(){
-      const ctx=this.ctx; ctx.font='500 12px '+MONO; ctx.textAlign='center'; ctx.textBaseline='middle';
-      const pts=[this.start, ...this.pos];
-      ctx.strokeStyle=C.line; ctx.lineWidth=2; ctx.beginPath(); pts.forEach((p,i)=> i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y)); ctx.stroke();
-      this.pos.forEach((p,i) => { const s=this.st[i];
-        let col=C.line, label=(this.W<560?['Origin','Headers','Clean input','Login','Role','Save']:GATES)[i], note='';
-        if (s===1){ col=C.ok; note='passed'; } else if (s===0){ col=C.fail; note='stopped'; } else if (s===2){ col=C.faint; note='skipped'; } else if (s===3){ col=C.event; note='cleaned'; }
-        const w=Math.min(124, this.W*(this.W<560?0.27:0.10)), h=40;
-        ctx.beginPath(); ctx.roundRect ? ctx.roundRect(p.x-w/2,p.y-h/2,w,h,10) : ctx.rect(p.x-w/2,p.y-h/2,w,h);
-        ctx.fillStyle=C.bg; ctx.fill(); ctx.lineWidth = s===-1||s===undefined ? 1.5 : 2.5; ctx.strokeStyle=col; if (s===2) ctx.setLineDash([4,4]); ctx.stroke(); ctx.setLineDash([]);
-        ctx.fillStyle = (s===-1||s===undefined) ? C.soft : C.ink; ctx.font='600 '+(this.W<560?'11px ':'11.5px ')+MONO; ctx.fillText(label, p.x, p.y);
-        if (note){ ctx.fillStyle=col; ctx.font='500 11px '+MONO; ctx.fillText(note, p.x, p.y+34); } });
-      if (this.ri>=0){ const q=this.pt(this.p); const stopped = this.done && CGR[this.ri].code[0]!=='2';
-        ctx.beginPath(); ctx.arc(q.x, q.y - (this.W<560?0:30), 7, 0, Math.PI*2); ctx.fillStyle = stopped ? C.fail : C.event; ctx.fill(); }
-      else { ctx.fillStyle=C.soft; ctx.font='500 13px '+MONO; ctx.textAlign='left'; ctx.fillText('Pick a request to send it through the checks.', 20, this.H-26); }
+      const ctx=this.ctx, W=this.W, H=this.H, mob=W<560, vx=W*0.5, vy=H*0.47;
+      const labels = mob ? ['Origin','Headers','Clean input','Login','Role','Save'] : GATES;
+      const cam = this.ri >= 0 ? Math.max(0, this.p - 0.6) : 0;
+      const F = 1.6, scaleAt = z => F/(F + Math.max(0.05, z)), bw = Math.min(W*0.86, 720), bh = Math.min(H*0.86, 320);
+      ctx.strokeStyle = C.line; ctx.lineWidth = 1;
+      [[-1,-1],[1,-1],[1,1],[-1,1]].forEach(([sx,sy]) => { ctx.beginPath(); ctx.moveTo(vx + sx*bw/2*scaleAt(0.1), vy + sy*bh/2*scaleAt(0.1)); ctx.lineTo(vx + sx*bw/2*scaleAt(9), vy + sy*bh/2*scaleAt(9)); ctx.stroke(); });
+      for (let k=5; k>=0; k--){
+        const z = (k+1)*1.1 - cam*1.1; if (z < 0.15) continue;
+        const s = scaleAt(z), w = bw*s, h = bh*s, st = this.st[k];
+        let col = C.line, lw = 1.5, note = '';
+        if (st===1){ col=C.ok; lw=2.5; note='passed'; } else if (st===0){ col=C.fail; lw=3; note='stopped'; } else if (st===2){ col=C.faint; note='skipped'; } else if (st===3){ col=C.event; lw=2.5; note='cleaned'; }
+        ctx.globalAlpha = Math.min(1, 0.25 + s*1.1);
+        if (st===2) ctx.setLineDash([6,6]);
+        ctx.strokeStyle = col; ctx.lineWidth = lw*Math.max(.6, s*1.4); ctx.strokeRect(vx - w/2, vy - h/2, w, h); ctx.setLineDash([]);
+        if (st===0){ ctx.fillStyle = 'rgba(255,107,107,.16)'; ctx.fillRect(vx - w/2, vy - h/2, w, h); ctx.strokeStyle = C.fail; ctx.lineWidth = 2.5*s; for (let b=1;b<6;b++){ ctx.beginPath(); ctx.moveTo(vx - w/2 + w*b/6, vy - h/2); ctx.lineTo(vx - w/2 + w*b/6, vy + h/2); ctx.stroke(); } }
+        if (s > 0.42){ const t = labels[k] + (note ? ' · ' + note : ''); ctx.font = `600 ${s > 0.6 ? 13 : 12}px ${MONO}`; const tw = ctx.measureText(t).width + 16, ty = vy - h/2 - 14;
+          ctx.globalAlpha = 1; ctx.fillStyle = C.bg; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(vx - tw/2, ty - 11, tw, 22, 11) : ctx.rect(vx - tw/2, ty - 11, tw, 22); ctx.fill(); ctx.strokeStyle = col; ctx.lineWidth = 1.2; ctx.stroke();
+          ctx.fillStyle = st===-1 || st===undefined ? C.soft : col; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(t, vx, ty + .5); }
+        ctx.globalAlpha = 1;
+      }
+      { const sym = v => v===1?'✓':v===0?'✕':v===2?'–':v===3?'~':'·', colr = v => v===1?C.ok:v===0?C.fail:v===3?C.event:C.faint;
+        ctx.font = '600 12px '+MONO; ctx.textBaseline = 'middle';
+        labels.forEach((l,k) => { const v = this.ri >= 0 ? this.st[k] : -1, t = sym(v) + ' ' + l, tw = ctx.measureText(t).width + 16;
+          let x, y; if (mob){ x = 12 + (k%3)*((W-24)/3); y = H - 58 + Math.floor(k/3)*26; } else { x = 16; y = Math.max(H*0.32, 118) + k*30; }
+          const bw2 = mob ? (W-24)/3 - 6 : tw; ctx.fillStyle = C.bg; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(x, y - 11, bw2, 22, 11) : ctx.rect(x, y-11, bw2, 22); ctx.fill(); ctx.strokeStyle = colr(v); ctx.lineWidth = 1.2; ctx.stroke();
+          ctx.fillStyle = v===-1 ? C.soft : colr(v); ctx.textAlign = 'left'; ctx.font = (mob ? '600 10.5px ' : '600 12px ')+MONO; ctx.fillText(t, x + 8, y + .5); }); }
+      if (this.ri >= 0){ const stopped = this.done && CGR[this.ri].code[0] !== '2', s = scaleAt(0.55), r = 9*s*1.6;
+        const g = ctx.createRadialGradient(vx, vy, 0, vx, vy, r*3); g.addColorStop(0, stopped ? 'rgba(255,107,107,.6)' : 'rgba(255,181,71,.65)'); g.addColorStop(1, 'rgba(0,0,0,0)'); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(vx, vy, r*3, 0, 7); ctx.fill();
+        ctx.fillStyle = stopped ? C.fail : C.event; ctx.beginPath(); ctx.arc(vx, vy, r, 0, 7); ctx.fill(); }
+      else { ctx.fillStyle = C.soft; ctx.font = '500 13px '+MONO; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('Pick a request to send it down the tunnel.', vx, mob ? H*0.1 : H - 22); }
     },
     tele(){}
   });
@@ -1218,14 +1334,13 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
       up.innerHTML = up.textContent.split('').map((c,i) => c === ' ' ? ' ' : `<span class="ch" aria-hidden="true" style="--r:${((i*37)%24)-12}deg;animation-delay:${(i*0.05).toFixed(2)}s">${c}</span>`).join('');
       if (!rm){ const go = () => setTimeout(() => hh.classList.add('go'), 350); (document.fonts && document.fonts.ready) ? document.fonts.ready.then(go) : go(); } }
 
-    // 2. numbers count up the first time they appear
+    // 2. numbers count up the first time they appear (the real value stays in the page until then)
     document.querySelectorAll('[data-count]').forEach(el => {
       const to = +el.dataset.count, from = +(el.dataset.from || 0);
       if (rm) return;
-      el.textContent = from;
-      seen(el, () => { const t0 = performance.now(), dur = 1100;
+      seen(el, () => { el.textContent = from; const t0 = performance.now(), dur = 1100;
         const tick = now => { const p = Math.min(1, (now - t0)/dur), e = 1 - Math.pow(1-p, 3); el.textContent = Math.round(from + (to-from)*e); if (p < 1) requestAnimationFrame(tick); };
-        requestAnimationFrame(tick); }, 1);
+        requestAnimationFrame(tick); }, 0.6);
     });
 
     // 3. the stack installs itself
@@ -1483,8 +1598,339 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
     form.addEventListener('submit', e => { e.preventDefault(); if (q.value.trim()) answer(q.value); });
   })();
 
+  /* ===== spectacle 1: the headline is traffic ===== */
+  (() => {
+    const cv = document.getElementById('hxCv'); if (!cv) return;
+    const ctx = cv.getContext('2d'); let W = 0, H = 0, P = [], on = true;
+    const mouse = {x:-9999, y:-9999, active:false}, hint = document.getElementById('hxHint');
+    const DISPLAY = getComputedStyle(document.documentElement).getPropertyValue('--display').trim() || 'sans-serif';
+    function build(){
+      const r = cv.getBoundingClientRect(), d = Math.min(devicePixelRatio||1, 2); W = r.width; H = r.height; if (!W) return;
+      cv.width = Math.round(W*d); cv.height = Math.round(H*d); ctx.setTransform(d,0,0,d,0,0);
+      const mob = W < 700, lines = mob ? ['I build','systems that','get back up.'] : ['I build systems','that get back up.'];
+      const off = document.createElement('canvas'); off.width = Math.floor(W); off.height = Math.floor(H); const o = off.getContext('2d');
+      let fs = 100; o.font = `800 ${fs}px ${DISPLAY}`; const widest = Math.max(...lines.map(l => o.measureText(l).width));
+      fs = Math.min(fs * (W*0.9) / widest, H * (mob ? 0.17 : 0.22));
+      o.font = `800 ${fs}px ${DISPLAY}`; o.textAlign = 'center'; o.textBaseline = 'middle'; o.fillStyle = '#000';
+      const lh = fs*1.02, y0 = H*0.40 - (lines.length-1)*lh/2; lines.forEach((l,i) => o.fillText(l, W/2, y0 + i*lh));
+      const data = o.getImageData(0,0,off.width,off.height).data, step = mob ? 3 : 4, runs = [];
+      for (let y=0; y<off.height; y+=step){ let x0 = -1; for (let x=0; x<=off.width; x++){ const inside = x < off.width && data[(y*off.width+x)*4+3] > 128; if (inside && x0 < 0) x0 = x; if (!inside && x0 >= 0){ if (x - x0 > 3) runs.push({y, x0, x1:x}); x0 = -1; } } }
+      P = []; const per = mob ? 0.16 : 0.14;
+      runs.forEach(rn => { const n = Math.max(1, Math.round((rn.x1 - rn.x0) * per)); for (let k=0;k<n;k++) P.push({r:rn, x: rn.x0 + Math.random()*(rn.x1-rn.x0), dy:0, vy:0, v:30 + Math.random()*55, hot:0}); });
+    }
+    function frame(dt){
+      ctx.clearRect(0,0,W,H); const R = W < 700 ? 70 : 110, move = reduce.matches ? 0 : 1;
+      for (const p of P){
+        p.x += p.v*dt*move; if (p.x > p.r.x1) p.x = p.r.x0;
+        let y = p.r.y + p.dy;
+        if (mouse.active){ const dx = p.x - mouse.x, dyy = y - mouse.y, dd = Math.hypot(dx, dyy); if (dd < R){ p.vy += (dyy >= 0 ? 1 : -1) * (1 - dd/R) * 1800 * dt; p.hot = 1; } }
+        p.vy += -p.dy*16*dt; p.vy *= Math.pow(0.02, dt); p.dy += p.vy*dt; p.hot = Math.max(0, p.hot - dt*1.4);
+        ctx.fillStyle = p.hot > 0.05 ? C.worker : C.event; ctx.globalAlpha = 0.72 + 0.28*Math.min(1, p.v/80);
+        ctx.fillRect(p.x, p.r.y + p.dy, p.hot > 0.05 ? 3.4 : 2.6, 2.4);
+      }
+      ctx.globalAlpha = 1;
+      if (mouse.active){ ctx.beginPath(); ctx.arc(mouse.x, mouse.y, R*0.45, 0, 7); ctx.strokeStyle = C.fail; ctx.globalAlpha = .6; ctx.setLineDash([4,6]); ctx.lineWidth = 1.5; ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1;
+        ctx.fillStyle = C.fail; ctx.font = '600 11px '+MONO; ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic'; ctx.fillText('outage', mouse.x, mouse.y - R*0.45 - 10); }
+    }
+    const pos = e => { const r = cv.getBoundingClientRect(); mouse.x = e.clientX - r.left; mouse.y = e.clientY - r.top; mouse.active = true; if (hint) hint.style.opacity = 0; };
+    cv.addEventListener('pointermove', pos); cv.addEventListener('pointerdown', pos);
+    cv.addEventListener('pointerleave', () => mouse.active = false); cv.addEventListener('pointerup', e => { if (e.pointerType === 'touch') mouse.active = false; }); cv.addEventListener('pointercancel', () => mouse.active = false);
+    new ResizeObserver(build).observe(cv); if (document.fonts && document.fonts.ready) document.fonts.ready.then(build);
+    new IntersectionObserver(es => es.forEach(e => on = e.isIntersecting), {threshold:0.02}).observe(cv);
+    let last = performance.now(); const loop = now => { const dt = Math.min(.05, (now-last)/1000); last = now; if (on && W) frame(dt); requestAnimationFrame(loop); }; requestAnimationFrame(loop);
+  })();
+
+  /* ===== spectacle 2: follow one event ===== */
+  (() => {
+    const sec = document.getElementById('journey'), cv = document.getElementById('jyCv'); if (!sec || !cv) return;
+    const ctx = cv.getContext('2d'); let W = 0, H = 0, on = false, cur = -1, bg = [];
+    const N = { phone:{x:0,y:0,l:'a user taps “Buy”'}, lb:{x:600,y:0,l:'load balancer'}, gate:{x:1200,y:0,l:'security checks'}, kafka:{x:1800,y:0,l:'Kafka · partition 3'}, worker:{x:2400,y:0,l:'worker 2'}, pg:{x:3000,y:-180,l:'PostgreSQL'}, ch:{x:3000,y:180,l:'ClickHouse'}, idx:{x:3600,y:0,l:'search index'} };
+    const STOPS = [
+      {n:'01 / 08', h:'It starts with one tap.', p:'Every action in a product becomes an event. Let’s follow one through the systems I build.', cam:{x:0,y:20,z:1.6}, at:0},
+      {n:'02 / 08', h:'The load balancer picks a healthy copy.', p:'Copies run in several zones, and health checks decide who gets traffic.', cam:{x:600,y:30,z:1.5}, at:.14, open:['p-cn','See the Cloud-Native Platform']},
+      {n:'03 / 08', h:'Every request gets checked.', p:'Signed tokens, roles and clean input, before anything touches the data.', cam:{x:1200,y:20,z:1.6}, at:.28, open:['p-cg','See ChildGuard']},
+      {n:'04 / 08', h:'Kafka writes it down, in order.', p:'The event lands on partition 3 at offset 48,213. From now on, it can’t be lost.', cam:{x:1800,y:30,z:1.6}, at:.42, open:['p-gitstream','See GitStream']},
+      {n:'05 / 08', h:'A worker processes it, then commits.', p:'Only when everything before it is done does the offset move. That’s GitStream’s one rule.', cam:{x:2400,y:0,z:1.6}, at:.56, open:['p-gitstream','See GitStream']},
+      {n:'06 / 08', h:'Two databases, two questions.', p:'PostgreSQL answers “what happened to this one?” ClickHouse answers “what happened across all of them?”', cam:{x:3000,y:0,z:1.2}, at:.70, open:['p-gitstream','See GitStream']},
+      {n:'07 / 08', h:'Search catches up a moment later.', p:'The save already returned. Indexing happens in the background, so saves are 60% faster.', cam:{x:3600,y:0,z:1.5}, at:.84, open:['p-hc','See the Healthcare Data Service']},
+      {n:'08 / 08', h:'Now picture 4,820 of those a second.', p:'Every one of them, through every failure, with zero lost. That’s the job.', cam:{x:1800,y:0,z:0.28}, at:1}
+    ];
+    const prog = document.getElementById('jyProg'); STOPS.forEach(() => prog.appendChild(document.createElement('i')));
+    const capEl = document.getElementById('jyCap'), nEl = document.getElementById('jyN'), hEl = document.getElementById('jyH'), pEl = document.getElementById('jyP'), openEl = document.getElementById('jyOpen');
+    const path = [N.phone, N.lb, N.gate, N.kafka, N.worker, N.pg, N.idx];
+    const lerp = (a,b,t) => a + (b-a)*t, ease = t => t < .5 ? 4*t*t*t : 1 - Math.pow(-2*t+2, 3)/2;
+    function build(){ const r = cv.getBoundingClientRect(), d = Math.min(devicePixelRatio||1, 2); W = r.width; H = r.height; if (!W) return; cv.width = Math.round(W*d); cv.height = Math.round(H*d);
+      bg = Array.from({length:800}, () => ({t:Math.random(), lane:Math.floor(Math.random()*7)-3, v:0.04 + Math.random()*0.08})); }
+    function camAt(p){ let i = 0; while (i < STOPS.length-1 && p > STOPS[i+1].at) i++; const a = STOPS[i], b = STOPS[Math.min(i+1, STOPS.length-1)];
+      const t = b.at === a.at ? 0 : ease(Math.min(1, Math.max(0, (p - a.at)/(b.at - a.at))));
+      return {x:lerp(a.cam.x,b.cam.x,t), y:lerp(a.cam.y,b.cam.y,t), z:Math.exp(lerp(Math.log(a.cam.z), Math.log(b.cam.z), t)), i: t > .5 ? Math.min(i+1, STOPS.length-1) : i}; }
+    function onPath(p){ const seg = Math.min(path.length-2, Math.floor(p*(path.length-1))), t = p*(path.length-1) - seg, a = path[seg], b = path[seg+1]; return {x:lerp(a.x,b.x,t), y:lerp(a.y,b.y,t)}; }
+    function node(n, hot, z){ const w = 180, h = 62; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(n.x-w/2, n.y-h/2, w, h, 14) : ctx.rect(n.x-w/2, n.y-h/2, w, h);
+      ctx.fillStyle = C.bg2; ctx.fill(); ctx.lineWidth = 2/z*1.2; ctx.strokeStyle = hot ? C.event : C.line; ctx.stroke();
+      ctx.fillStyle = hot ? C.ink : C.soft; ctx.font = '600 14px '+MONO; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(n.l, n.x, n.y - 14); }
+    function draw(p, now){
+      const d = Math.min(devicePixelRatio||1, 2); ctx.setTransform(d,0,0,d,0,0); ctx.clearRect(0,0,W,H);
+      const c = camAt(p), z = c.z * Math.min(W, H) / 700;
+      ctx.save(); ctx.translate(W/2, H/2); ctx.scale(z, z); ctx.translate(-c.x, -c.y);
+      const show = Math.max(0, Math.min(1, (0.9 - c.z)/0.5));
+      if (show > 0){ ctx.globalAlpha = show; ctx.fillStyle = C.event; for (const e of bg){ e.t = (e.t + e.v*(reduce.matches ? 0 : 0.016)) % 1; const pt = onPath(e.t); ctx.fillRect(pt.x-3, pt.y + e.lane*26 - 3, 6, 6); } ctx.globalAlpha = 1; }
+      ctx.lineWidth = 2/z; ctx.strokeStyle = C.line;
+      [[N.phone,N.lb],[N.lb,N.gate],[N.gate,N.kafka],[N.kafka,N.worker],[N.worker,N.pg],[N.worker,N.ch],[N.pg,N.idx]].forEach(([a,b]) => { ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.bezierCurveTo((a.x+b.x)/2, a.y, (a.x+b.x)/2, b.y, b.x, b.y); ctx.stroke(); });
+      for (let k=-6;k<=6;k++){ ctx.fillStyle = k === 0 ? C.event : C.bg2; ctx.fillRect(N.kafka.x + k*24 - 10, N.kafka.y + 70, 20, 14); }
+      ctx.fillStyle = C.soft; ctx.font = '500 10px '+MONO; ctx.textAlign = 'center'; ctx.fillText('offset 48,213', N.kafka.x, N.kafka.y + 104);
+      ['A','B','C'].forEach((zn,i) => { const x = N.lb.x - 84 + i*84; ctx.setLineDash([6/z, 6/z]); ctx.strokeStyle = C.line; ctx.strokeRect(x - 36, N.lb.y + 60, 72, 50); ctx.setLineDash([]);
+        ctx.beginPath(); ctx.arc(x, N.lb.y + 85, 9, 0, 7); ctx.strokeStyle = C.worker; ctx.lineWidth = 2/z; ctx.stroke(); ctx.fillStyle = C.faint; ctx.font = '500 10px '+MONO; ctx.fillText('zone '+zn, x, N.lb.y + 124); });
+      ['token','role','input'].forEach((g,i) => { const x = N.gate.x - 70 + i*70; ctx.strokeStyle = C.ok; ctx.lineWidth = 2/z; ctx.strokeRect(x - 26, N.gate.y + 60, 52, 26); ctx.fillStyle = C.soft; ctx.font = '500 10px '+MONO; ctx.fillText(g + ' ✓', x, N.gate.y + 74); });
+      const at = c.i;
+      [[N.phone,0],[N.lb,1],[N.gate,2],[N.kafka,3],[N.worker,4],[N.pg,5],[N.ch,5],[N.idx,6]].forEach(([n,k]) => node(n, at === k || at === 7, z));
+      const ep = Math.min(1, p / 0.86), pt0 = onPath(ep), pt = {x:pt0.x, y:pt0.y + 14}, pulse = 1 + 0.25*Math.sin(now/180);
+      const g = ctx.createRadialGradient(pt.x, pt.y, 0, pt.x, pt.y, 26*pulse); g.addColorStop(0, 'rgba(255,181,71,.75)'); g.addColorStop(1, 'rgba(255,181,71,0)');
+      ctx.fillStyle = g; ctx.beginPath(); ctx.arc(pt.x, pt.y, 26*pulse, 0, 7); ctx.fill(); ctx.fillStyle = C.event; ctx.beginPath(); ctx.arc(pt.x, pt.y, 7, 0, 7); ctx.fill(); ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(pt.x, pt.y, 3.5, 0, 7); ctx.fill();
+      if (at === 5){ const t = Math.min(1, Math.max(0, (ep - 0.72) * 7)); ctx.fillStyle = C.worker; ctx.beginPath(); ctx.arc(lerp(N.worker.x, N.ch.x, t), lerp(N.worker.y, N.ch.y, t) + 14, 6, 0, 7); ctx.fill(); }
+      ctx.restore();
+      if (at !== cur){ cur = at; const s = STOPS[cur]; capEl.style.opacity = 0;
+        setTimeout(() => { nEl.textContent = s.n; hEl.textContent = s.h; pEl.textContent = s.p;
+          if (s.open){ openEl.hidden = false; openEl.textContent = s.open[1] + ' →'; openEl.dataset.p = s.open[0]; } else openEl.hidden = true;
+          capEl.style.opacity = 1; }, reduce.matches ? 0 : 160);
+        prog.querySelectorAll('i').forEach((el,k) => el.classList.toggle('on', k === cur)); if (cur > 0) sfx('tick'); }
+    }
+    openEl.addEventListener('click', e => { e.preventDefault(); const id = openEl.dataset.p, b = document.querySelector(`[aria-controls="${id}"]`); if (b && b.getAttribute('aria-expanded') !== 'true') b.click(); if (b) b.scrollIntoView({behavior: reduce.matches ? 'auto' : 'smooth', block:'start'}); });
+    const progress = () => { const r = sec.getBoundingClientRect(), stick = sec.querySelector('.jy-stick'), top = parseFloat(getComputedStyle(stick).top) || 62, total = Math.max(1, sec.offsetHeight - stick.offsetHeight); return Math.min(1, Math.max(0, (top - r.top) / total)); };
+    new ResizeObserver(build).observe(cv);
+    new IntersectionObserver(es => es.forEach(e => on = e.isIntersecting), {threshold:0}).observe(sec);
+    const loop = now => { if (on && W) draw(progress(), now); requestAnimationFrame(loop); }; requestAnimationFrame(loop);
+  })();
+
+  /* ===== GitStream: the flow into two stores ===== */
+  (() => {
+    const cv = document.getElementById('gfCv'); if (!cv) return;
+    const ctx = cv.getContext('2d'), tele = document.getElementById('gfTele'); let W = 0, H = 0, on = false;
+    let parts = [], acc = 0, written = 0, pgRows = [], chCols = [0,0,0,0,0], mode = null, modeT = 0, offset = 48200, log = 'Every event is written twice: once as a row, once into columns.';
+    const COLS = ['time','user','event','amount','region'];
+    function size(){ const r = cv.getBoundingClientRect(), d = Math.min(devicePixelRatio||1, 2); W = r.width; H = r.height; if (!W) return; cv.width = Math.round(W*d); cv.height = Math.round(H*d); ctx.setTransform(d,0,0,d,0,0); }
+    const L = () => { const mob = W < 560; return mob
+      ? {kx:W*0.13, wx:W*0.42, pg:{x:W*0.60, y:H*0.08, w:W*0.37, h:H*0.40}, ch:{x:W*0.60, y:H*0.54, w:W*0.37, h:H*0.40}, ky:H*0.5}
+      : {kx:W*0.08, wx:W*0.30, pg:{x:W*0.44, y:H*0.10, w:W*0.24, h:H*0.38}, ch:{x:W*0.44, y:H*0.54, w:W*0.24, h:H*0.38}, ky:H*0.5}; };
+    function pill(text, x, y, col){ ctx.font = '600 11px '+MONO; const w = ctx.measureText(text).width + 14; ctx.fillStyle = C.bg; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(x - w/2, y - 10, w, 20, 10) : ctx.rect(x-w/2, y-10, w, 20); ctx.fill(); ctx.strokeStyle = col || C.line; ctx.lineWidth = 1.2; ctx.stroke(); ctx.fillStyle = col || C.soft; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(text, x, y + .5); }
+    function frame(dt, now){
+      ctx.clearRect(0,0,W,H); const g = L(), move = reduce.matches ? 0.2 : 1;
+      acc += dt*14*move; while (acc > 1){ acc--; parts.push({x:g.kx + 18, y:g.ky + (Math.random()-.5)*20, stage:0, t:0, off:++offset}); }
+      // kafka log tape
+      for (let k=0;k<9;k++){ const y = g.ky - 4*24 + k*24; ctx.fillStyle = k === 4 ? C.event : C.bg2; ctx.fillRect(g.kx - 16, y - 9, 32, 18); if (k !== 4){ ctx.strokeStyle = C.line; ctx.lineWidth = 1; ctx.strokeRect(g.kx - 16, y - 9, 32, 18); } }
+      pill('Kafka', g.kx, g.ky - 4*24 - 26, C.soft);
+      // worker
+      ctx.beginPath(); ctx.arc(g.wx, g.ky, 22, 0, 7); ctx.fillStyle = C.bg; ctx.fill(); ctx.lineWidth = 2.5; ctx.strokeStyle = C.worker; ctx.stroke(); ctx.fillStyle = C.worker; ctx.font = '600 12px '+MONO; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('Go', g.wx, g.ky + .5);
+      pill('worker pool', g.wx, g.ky - 40, C.soft);
+      // links
+      ctx.strokeStyle = C.line; ctx.lineWidth = 1.5;
+      const pgIn = {x:g.pg.x, y:g.pg.y + g.pg.h/2}, chIn = {x:g.ch.x, y:g.ch.y + g.ch.h/2};
+      [[g.kx+18,g.ky,g.wx-22,g.ky],[g.wx+22,g.ky,pgIn.x,pgIn.y],[g.wx+22,g.ky,chIn.x,chIn.y]].forEach(([a,b,c,d]) => { ctx.beginPath(); ctx.moveTo(a,b); ctx.bezierCurveTo((a+c)/2,b,(a+c)/2,d,c,d); ctx.stroke(); });
+      // particles: kafka -> worker -> both stores
+      const bez = (a,b,c,d,t) => { const u = 1-t, mx = (a+c)/2; return {x: u*u*u*a + 3*u*u*t*mx + 3*u*t*t*mx + t*t*t*c, y: u*u*u*b + 3*u*u*t*b + 3*u*t*t*d + t*t*t*d}; };
+      for (let i=parts.length-1;i>=0;i--){ const p = parts[i]; p.t += dt*(p.stage ? 1.1 : 1.4)*move;
+        if (p.stage === 0){ const q = bez(g.kx+18, p.y, g.wx-22, g.ky, Math.min(1,p.t)); ctx.fillStyle = C.event; ctx.beginPath(); ctx.arc(q.x, q.y, 3.2, 0, 7); ctx.fill();
+          if (p.t >= 1){ parts.splice(i,1); parts.push({stage:1, to:'pg', t:0, off:p.off}, {stage:1, to:'ch', t:0, off:p.off}); } continue; }
+        const tgt = p.to === 'pg' ? pgIn : chIn, q = bez(g.wx+22, g.ky, tgt.x, tgt.y, Math.min(1,p.t));
+        ctx.fillStyle = p.to === 'pg' ? C.worker : C.event; ctx.beginPath(); ctx.arc(q.x, q.y, 3, 0, 7); ctx.fill();
+        if (p.t >= 1){ parts.splice(i,1);
+          if (p.to === 'pg'){ pgRows.push({off:p.off, a:1}); if (pgRows.length > 9) pgRows.shift(); written++; }
+          else { chCols = chCols.map(v => Math.min(1, v + 0.012 + Math.random()*0.01)); } } }
+      // PostgreSQL: rows
+      const P = g.pg; ctx.strokeStyle = C.line; ctx.lineWidth = 1.2; ctx.strokeRect(P.x, P.y, P.w, P.h);
+      pill('PostgreSQL · rows', P.x + P.w/2, P.y - 2, C.worker);
+      const rh = (P.h - 20) / 9;
+      pgRows.forEach((r,i) => { r.a = Math.max(0, r.a - dt*1.5); const y = P.y + 12 + i*rh, hot = mode === 'look' && r === pgRows[Math.floor(pgRows.length/2)];
+        ctx.fillStyle = hot ? C.worker : C.bg2; ctx.globalAlpha = hot ? 1 : 0.7 + 0.3*r.a; ctx.fillRect(P.x + 8, y, P.w - 16, rh - 4); ctx.globalAlpha = 1;
+        ctx.fillStyle = hot ? C.bg : C.soft; ctx.font = '500 10px '+MONO; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText('offset ' + r.off.toLocaleString() + (W < 560 ? '' : '  · user · amount · region'), P.x + 14, y + (rh-4)/2); });
+      // ClickHouse: columns
+      const Q = g.ch; ctx.strokeStyle = C.line; ctx.strokeRect(Q.x, Q.y, Q.w, Q.h);
+      pill('ClickHouse · columns', Q.x + Q.w/2, Q.y - 2, C.event);
+      const cw = (Q.w - 16) / COLS.length;
+      COLS.forEach((c,i) => { const x = Q.x + 8 + i*cw, h = (Q.h - 40) * (0.15 + 0.85*chCols[i]), hot = mode === 'sum' && i === 3, dim = mode === 'sum' && i !== 3;
+        ctx.globalAlpha = dim ? 0.18 : (hot ? 1 : 0.45); ctx.fillStyle = C.event; ctx.fillRect(x + 3, Q.y + Q.h - 20 - h, cw - 6, h);
+        if (hot){ const sweep = Math.min(1, (now - modeT)/900); ctx.fillStyle = 'rgba(255,255,255,.35)'; ctx.fillRect(x + 3, Q.y + Q.h - 20 - h*sweep, cw - 6, 3); }
+        ctx.globalAlpha = 1; ctx.fillStyle = hot ? C.ink : C.faint; ctx.font = '500 10px '+MONO; ctx.textAlign = 'center'; ctx.fillText(W < 560 && !hot ? c[0] : c, x + cw/2, Q.y + Q.h - 9); });
+      if (chCols[0] > 0.95) chCols = chCols.map(v => v*0.6);
+      if (mode && now - modeT > 3200) mode = null;
+    }
+    function teleDraw(){ tele.innerHTML = `<div class="row">events written <b>${written.toLocaleString()}</b></div><div class="row">row store <b>PostgreSQL</b></div><div class="row">column store <b>ClickHouse</b></div><div class="row">lost events <b class="good">0</b></div><div class="log">${log}</div>`; }
+    document.getElementById('gfLook').addEventListener('click', () => { mode = 'look'; modeT = performance.now(); log = 'Looking up one event: PostgreSQL jumps straight to that row through its index.'; sfx('tick'); teleDraw(); });
+    document.getElementById('gfSum').addEventListener('click', () => { mode = 'sum'; modeT = performance.now(); log = 'Adding up the last hour: ClickHouse reads only the “amount” column, so millions of rows sum fast.'; sfx('tick'); teleDraw(); });
+    new ResizeObserver(size).observe(cv); new IntersectionObserver(es => es.forEach(e => on = e.isIntersecting), {threshold:0.02}).observe(cv);
+    let last = performance.now(), tA = 1; const loop = now => { const dt = Math.min(.05,(now-last)/1000); last = now; if (on && W){ frame(dt, now); tA += dt; if (tA > .25){ tA = 0; teleDraw(); } } requestAnimationFrame(loop); }; requestAnimationFrame(loop);
+  })();
+
+  /* ===== spectacle: GitStream, the Kafka log in 3D ===== */
+  (() => {
+    const cv = document.getElementById('gsCv'); if (!cv) return;
+    const ctx = cv.getContext('2d'), tele = document.getElementById('gsTele'); let W = 0, H = 0, on = false, ang = -0.55, baseAng = -0.55, dragging = false, lx = 0;
+    const tracks = [-2.6, 0, 2.6], wk = tracks.map(() => ({down:false, at:0, h:1, glow:0}));
+    let cubes = [], acc = 0, rate = 9, spikeUntil = 0, committed = 0, replayed = 0, offset = 48200, log = 'Three partitions, three workers. Every event is committed in order.';
+    const lerp = (a,b,t) => a + (b-a)*t;
+    function size(){ const r = cv.getBoundingClientRect(), d = Math.min(devicePixelRatio||1, 2); W = r.width; H = r.height; if (!W) return; cv.width = Math.round(W*d); cv.height = Math.round(H*d); ctx.setTransform(d,0,0,d,0,0); }
+    const K = () => W < 560 ? W/17.5 : Math.min(W*0.8, H*1.45) / 22;
+    function iso(x, y, z){ const c = Math.cos(ang), s = Math.sin(ang), rx = x*c - y*s, ry = x*s + y*c, k = K(); return {X: W*(W < 1100 ? 0.58 : 0.52) + rx*k, Y: H*0.56 + ry*k*0.5 - z*k}; }
+    function box(x, y, w, d, h, top, side, front, z0){ z0 = z0 || 0; const p = [iso(x-w/2,y-d/2,z0), iso(x+w/2,y-d/2,z0), iso(x+w/2,y+d/2,z0), iso(x-w/2,y+d/2,z0)], q = [iso(x-w/2,y-d/2,z0+h), iso(x+w/2,y-d/2,z0+h), iso(x+w/2,y+d/2,z0+h), iso(x-w/2,y+d/2,z0+h)];
+      const f = (a, col) => { ctx.beginPath(); ctx.moveTo(a[0].X,a[0].Y); for (let i=1;i<a.length;i++) ctx.lineTo(a[i].X,a[i].Y); ctx.closePath(); ctx.fillStyle = col; ctx.fill(); };
+      f([p[1],p[2],q[2],q[1]], side); f([p[2],p[3],q[3],q[2]], front); f([q[0],q[1],q[2],q[3]], top); }
+    const dark = () => C.bg.toLowerCase() === '#0f1420';
+    const pill = (t,x,y,col) => { ctx.font='600 11px '+MONO; const w=ctx.measureText(t).width+14; ctx.fillStyle=C.bg; ctx.beginPath(); ctx.roundRect?ctx.roundRect(x-w/2,y-10,w,20,10):ctx.rect(x-w/2,y-10,w,20); ctx.fill(); ctx.strokeStyle=col||C.line; ctx.lineWidth=1.2; ctx.stroke(); ctx.fillStyle=col||C.soft; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText(t,x,y+.5); };
+    const codeLines = [...(document.getElementById('gsCode') || {children:[]}).children], cmEl = document.getElementById('gsCm'); let hlUntil = 0, lastFlash = 0;
+    const flash = (ix, ms) => { hlUntil = performance.now() + ms; codeLines.forEach((l,i) => l.classList.toggle('hl', ix.includes(i))); };
+    function frame(dt, now){
+      ctx.clearRect(0,0,W,H); ang = baseAng + ((dragging || reduce.matches) ? 0 : 0.2*Math.sin(now/5200));
+      if (hlUntil && now > hlUntil){ hlUntil = 0; codeLines.forEach(l => l.classList.remove('hl')); }
+      const D = dark(), belt = D ? '#18223a' : '#d9e0ea', beltEdge = D ? '#25314f' : '#c3ccda', side = D ? '#1b2a46' : '#b9c6d8', front = D ? '#22355a' : '#cdd7e4';
+      const r = now < spikeUntil ? rate*3 : rate; acc += dt*r;
+      while (acc > 1){ acc--; const t = Math.floor(Math.random()*3); cubes.push({t, y:-8.5, v:3.6 + Math.random()*0.8, off: ++offset, replay:false}); }
+      // belts
+      tracks.forEach((x,i) => { const a = iso(x-0.7,-9,0), b = iso(x+0.7,-9,0), c = iso(x+0.7,4.6,0), d = iso(x-0.7,4.6,0); ctx.beginPath(); ctx.moveTo(a.X,a.Y); ctx.lineTo(b.X,b.Y); ctx.lineTo(c.X,c.Y); ctx.lineTo(d.X,d.Y); ctx.closePath(); ctx.fillStyle = belt; ctx.fill(); ctx.strokeStyle = beltEdge; ctx.lineWidth = 1; ctx.stroke();
+        for (let m=0;m<14;m++){ const yy = -9 + ((m + (reduce.matches ? 0 : now/700)) % 14) * (13.6/14); const p1 = iso(x-0.7, yy, 0.01), p2 = iso(x+0.7, yy, 0.01); ctx.beginPath(); ctx.moveTo(p1.X,p1.Y); ctx.lineTo(p2.X,p2.Y); ctx.strokeStyle = beltEdge; ctx.stroke(); }
+        });
+      box(0, -10.4, 8.4, 1.6, 1.4, D ? '#2a3654' : '#c3ccda', D ? '#1b2440' : '#aeb9cb', D ? '#222d4a' : '#b8c3d4');
+      tracks.forEach((x,i) => { const lp = iso(x, -8.2, 0.05); pill('P'+(i+1), lp.X, lp.Y, C.soft); });
+      const kf = iso(0, -10.4, 2.4); pill('Kafka', kf.X, kf.Y, C.event);
+      // cubes move, wait at a crashed worker, never vanish
+      cubes.sort((a,b) => a.y - b.y);
+      for (let i=cubes.length-1;i>=0;i--){ const c = cubes[i], w = wk[c.t]; const ahead = cubes.filter(o => o !== c && o.t === c.t && o.y > c.y).reduce((m,o) => Math.min(m, o.y), 99);
+        const stopAt = w.down ? 3.6 : 99, lim = Math.min(stopAt, ahead - 0.8);
+        c.y = Math.min(lim, c.y + c.v*dt*(reduce.matches ? 0.3 : 1));
+        if (!w.down && c.y >= 4.2){ cubes.splice(i,1); committed++; w.glow = 1; w.n = (w.n||0) + 1;
+          if (c.t === 1){ if (cmEl) cmEl.textContent = c.off.toLocaleString(); if (now - lastFlash > 500 && (!hlUntil || now > hlUntil)){ lastFlash = now; flash([0,1,2,3,4,6], 420); } } } }
+      // draw cubes back to front
+      [...cubes].sort((a,b) => (a.y*Math.cos(ang) + tracks[a.t]*Math.sin(ang)) - (b.y*Math.cos(ang) + tracks[b.t]*Math.sin(ang))).forEach(c => {
+        const col = c.replay ? C.worker : C.event, waiting = wk[c.t].down && c.y > 2;
+        box(tracks[c.t], c.y, 0.62, 0.62, 0.55, waiting ? C.fail : col, D ? '#7a4d12' : '#e4b062', D ? '#9a6418' : '#efc684', 0.02); });
+      // workers
+      wk.forEach((w,i) => { w.h += ((w.down ? 0.15 : 1) - w.h)*Math.min(1, dt*5); w.glow = Math.max(0, w.glow - dt*3);
+        if (w.down && now - w.at > 2400){ w.down = false; const n = 3; for (let k=0;k<n;k++) cubes.push({t:i, y:3.2 - k*0.9, v:2.4, off:offset - k, replay:true}); replayed += n; log = `Worker ${i+1} restarted from its last committed offset. ${n} events ran again. None were lost.`; sfx('up'); flash([10], 1400); }
+        const top = w.down ? C.fail : (D ? `rgba(110,231,249,${0.3 + 0.6*w.glow})` : `rgba(10,143,168,${0.3 + 0.55*w.glow})`);
+        box(tracks[i], 6, 1.5, 1.5, 3*w.h + 0.05, top, w.down ? (D ? '#2a1418' : '#e9c4c4') : side, w.down ? (D ? '#331a20' : '#f0d0d0') : front);
+        const lab = iso(tracks[i], 8.2, 0); pill(w.down ? 'W'+(i+1)+' down' : 'W'+(i+1)+' · '+(w.n||0), lab.X, lab.Y, w.down ? C.fail : C.worker); });
+    }
+    function teleDraw(){ const waiting = cubes.filter(c => wk[c.t].down && c.y > 2).length;
+      tele.innerHTML = `<div class="row">committed <b>${committed.toLocaleString()}</b></div><div class="row">waiting for a worker <b class="${waiting?'bad':''}">${waiting}</b></div><div class="row">replayed after a crash <b>${replayed}</b></div><div class="row">lost events <b class="good">0</b></div><div class="log">${log}</div>`; }
+    cv.addEventListener('pointerdown', e => { dragging = true; lx = e.clientX; try { cv.setPointerCapture(e.pointerId); } catch(_){} cv.style.cursor = 'grabbing'; });
+    cv.addEventListener('pointermove', e => { if (!dragging) return; baseAng += (e.clientX - lx)*0.008; lx = e.clientX; });
+    const end = () => { dragging = false; cv.style.cursor = 'grab'; }; cv.addEventListener('pointerup', end); cv.addEventListener('pointercancel', end);
+    document.getElementById('gsCrash').addEventListener('click', () => { const w = wk[1]; if (w.down) return; w.down = true; w.at = performance.now(); log = 'Worker 2 crashed. Its events wait on the belt instead of disappearing.'; sfx('down'); flash([9,10], 2300); teleDraw(); });
+    document.getElementById('gsSpike').addEventListener('click', () => { spikeUntil = performance.now() + 3500; log = 'Traffic tripled. The belts fill up, and the workers keep pulling at their own pace.'; sfx('tick'); teleDraw(); });
+    new ResizeObserver(size).observe(cv); new IntersectionObserver(es => es.forEach(e => on = e.isIntersecting), {threshold:0.02}).observe(cv);
+    let last = performance.now(), tAcc = 1; const loop = now => { const dt = Math.min(.05, (now-last)/1000); last = now; if (on && W){ frame(dt, now); tAcc += dt; if (tAcc > .25){ tAcc = 0; teleDraw(); } } requestAnimationFrame(loop); }; requestAnimationFrame(loop);
+  })();
+
+  /* ===== spectacle 3: the data center, whole system ===== */
+  (() => {
+    const cv = document.getElementById('dcCv'); if (!cv) return;
+    const ctx = cv.getContext('2d'), tele = document.getElementById('dcTele'); let W = 0, H = 0, on = false, ang = 0.32, dragging = false, lx = 0;
+    const SLOTS = [[-0.8,-0.8],[0.8,-0.8],[-0.8,0.8],[0.8,0.8],[-0.8,2.4],[0.8,2.4]];
+    const mk = (k, extra) => ({h: extra ? 0 : 1, x:SLOTS[k][0], y:SLOTS[k][1], load:0, v:1, st: extra ? 'boot' : 'ok', t:performance.now(), extra:!!extra, gone:false});
+    const zones = ['A','B','C'].map((n,i) => ({n, x:(i-1)*5.2, up:true, servers:[0,1,2,3].map(k => mk(k))}));
+    let beams = [], db = [], mail = [], acc = 0, accDb = 0, accMail = 0, failed = 0, win = [], log = 'All three zones healthy. Drag to orbit the whole system.';
+    let deploying = false, nextV = 2, dq = [];
+    const lerp = (a,b,t) => a + (b-a)*t, VCOL = () => [C.worker, C.ok, '#a78bfa', C.event];
+    const newest = () => Math.max(...zones.flatMap(z => z.servers.map(s => s.v)));
+    const withA = (hex, a) => { const h = hex.replace('#',''); if (h.length !== 6) return hex; const n = parseInt(h,16); return `rgba(${n>>16&255},${n>>8&255},${n&255},${a})`; };
+    function size(){ const r = cv.getBoundingClientRect(), d = Math.min(devicePixelRatio||1, 2); W = r.width; H = r.height; if (!W) return; cv.width = Math.round(W*d); cv.height = Math.round(H*d); ctx.setTransform(d,0,0,d,0,0); }
+    const K = () => W < 560 ? W/20.5 : Math.min(W*0.62, H*1.3)/24;
+    function iso(x, y, z){ const c = Math.cos(ang), s = Math.sin(ang), rx = x*c - y*s, ry = x*s + y*c, k = K(); return {X: (W < 560 ? W*0.42 : W*0.36) + rx*k, Y: H*(W < 560 ? 0.54 : 0.60) + ry*k*0.55 - z*k}; }
+    function quad(x0,y0,x1,y1,fill,stroke,dash){ const a = iso(x0,y0,0), b = iso(x1,y0,0), c = iso(x1,y1,0), d = iso(x0,y1,0); ctx.beginPath(); ctx.moveTo(a.X,a.Y); ctx.lineTo(b.X,b.Y); ctx.lineTo(c.X,c.Y); ctx.lineTo(d.X,d.Y); ctx.closePath(); if (fill){ ctx.fillStyle = fill; ctx.fill(); } if (stroke){ ctx.strokeStyle = stroke; ctx.lineWidth = 1.3; if (dash) ctx.setLineDash(dash); ctx.stroke(); ctx.setLineDash([]); } }
+    function box(x, y, w, d, h, top, side, front){ const p = [iso(x-w/2,y-d/2,0), iso(x+w/2,y-d/2,0), iso(x+w/2,y+d/2,0), iso(x-w/2,y+d/2,0)], q = [iso(x-w/2,y-d/2,h), iso(x+w/2,y-d/2,h), iso(x+w/2,y+d/2,h), iso(x-w/2,y+d/2,h)];
+      const f = (a, col) => { ctx.beginPath(); ctx.moveTo(a[0].X,a[0].Y); for (let i=1;i<a.length;i++) ctx.lineTo(a[i].X,a[i].Y); ctx.closePath(); ctx.fillStyle = col; ctx.fill(); };
+      f([p[1],p[2],q[2],q[1]], side); f([p[2],p[3],q[3],q[2]], front); f([q[0],q[1],q[2],q[3]], top); }
+    function pill(t, x, y, col){ ctx.font = '600 11px '+MONO; const w = ctx.measureText(t).width + 14; ctx.fillStyle = C.bg; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(x-w/2, y-10, w, 20, 10) : ctx.rect(x-w/2, y-10, w, 20); ctx.fill(); ctx.strokeStyle = col || C.line; ctx.lineWidth = 1.2; ctx.stroke(); ctx.fillStyle = col || C.soft; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(t, x, y + .5); }
+    const dark = () => C.bg.toLowerCase() === '#0f1420';
+    const RDS = [0, 7.4], LB = [0, -6.8]; let SNS = [10.6, -1.2], LAM = [10.6, 2.4], MAIL = [10.6, 5.8];
+    function liveServers(){ const out = []; zones.forEach(z => { if (z.up) z.servers.forEach(s => { if (s.st === 'ok' && !s.gone) out.push([z,s]); }); }); return out; }
+    function frame(dt, now){
+      ctx.clearRect(0,0,W,H);
+      if (W < 560){ SNS = [8.6, -1.2]; LAM = [8.6, 2.2]; MAIL = [8.6, 5.4]; } else { SNS = [10.6, -1.2]; LAM = [10.6, 2.4]; MAIL = [10.6, 5.8]; }
+      const D = dark(), grid = D ? '#151d30' : '#dfe5ee', zUp = D ? '#16213a' : '#e2e8f1', zDown = D ? '#2a1418' : '#f6dede', sideUp = D ? '#1b2a46' : '#b9c6d8', frontUp = D ? '#22355a' : '#cdd7e4', sideDn = D ? '#2a1418' : '#e9c4c4', frontDn = D ? '#331a20' : '#f0d0d0';
+      ctx.strokeStyle = grid; ctx.lineWidth = 1;
+      for (let i=-12;i<=13;i++){ let a = iso(i,-10,0), b = iso(i,10,0); ctx.beginPath(); ctx.moveTo(a.X,a.Y); ctx.lineTo(b.X,b.Y); ctx.stroke(); a = iso(-12,i,0); b = iso(13,i,0); if (i <= 10){ ctx.beginPath(); ctx.moveTo(a.X,a.Y); ctx.lineTo(b.X,b.Y); ctx.stroke(); } }
+      // VPC and Auto Scaling group outlines
+      quad(-8.4, -3.2, 8.4, 9.0, null, C.worker, [8,6]); const vp = iso(-8.4, 9.0, 0); pill('VPC', vp.X, vp.Y, C.worker);
+      quad(-7.7, -2.5, 7.7, 3.8, null, C.event, [3,5]);
+      // rolling deploy and scaling bookkeeping
+      zones.forEach(z => z.servers.forEach(s => { if (s.st === 'boot' && now - s.t > 900 && !deploying) s.st = 'ok'; }));
+      zones.forEach(z => { z.servers = z.servers.filter(s => !(s.gone && s.h < 0.03)); });
+      if (deploying){ const cur = dq[0];
+        if (!cur){ const left = []; zones.forEach(z => { if (z.up) z.servers.forEach(s => { if (!s.gone && s.v !== nextV && s.st === 'ok') left.push([z,s]); }); });
+          if (left.length) dq = left; else { deploying = false; log = zones.every(z => z.up) ? `Version ${nextV} is live everywhere. Failed requests during the rollout: 0.` : `Version ${nextV} is live on every healthy server. Zones that come back start on it.`; nextV++; dcD.disabled = false; dcD.textContent = `Deploy version ${nextV}`; sfx('ok'); } }
+        else { const [z,sv] = cur; if (!z.up || sv.gone){ dq.shift(); }
+          else if (sv.st === 'ok' && sv.v !== nextV){ sv.st = 'drain'; sv.t = now; }
+          else if (sv.st === 'drain' && now - sv.t > 450){ sv.st = 'boot'; sv.v = nextV; sv.t = now; }
+          else if (sv.st === 'boot' && now - sv.t > 800){ sv.st = 'ok'; dq.shift(); }
+          else if (sv.st === 'ok' && sv.v === nextV) dq.shift(); } }
+      // traffic
+      const live = liveServers(); acc += dt*36; accDb += dt*12; accMail += dt*1.6;
+      while (acc > 1){ acc--; if (!live.length){ failed++; continue; } const [z,s] = live[Math.floor(Math.random()*live.length)]; beams.push({z, s, t:0}); }
+      while (accDb > 1){ accDb--; if (live.length){ const [z,s] = live[Math.floor(Math.random()*live.length)]; db.push({x:z.x + s.x, y:s.y, t:0}); } }
+      while (accMail > 1){ accMail--; if (live.length){ const [z,s] = live[Math.floor(Math.random()*live.length)]; mail.push({x:z.x + s.x, y:s.y, t:0}); } }
+      // zone platforms
+      zones.forEach(z => { quad(z.x-2.1, -2.1, z.x+2.1, 3.3, z.up ? zUp : zDown, z.up ? C.line : C.fail, [5,5]);
+        const lab = iso(z.x, -2.9, 0); pill('zone '+z.n+(z.up ? '' : ' · down'), lab.X, lab.Y, z.up ? C.soft : C.fail); });
+      // RDS, SNS, Lambda, email, load balancer (drawn back to front by depth)
+      const objs = [];
+      zones.forEach(z => z.servers.forEach(s => objs.push({kind:'srv', z, s, d:(z.x+s.x)*Math.sin(ang) + s.y*Math.cos(ang)})));
+      [[RDS,'rds'],[SNS,'sns'],[LAM,'lam'],[MAIL,'mail']].forEach(([p,k]) => objs.push({kind:k, p, d:p[0]*Math.sin(ang) + p[1]*Math.cos(ang)}));
+      objs.sort((a,b) => a.d - b.d).forEach(o => {
+        if (o.kind === 'srv'){ const {z,s} = o; s.h += (((z.up && !s.gone) ? 1 : 0.06) - s.h) * Math.min(1, dt*4); s.load = Math.max(0, s.load - dt*2);
+          const glow = z.up ? Math.min(1, s.load) : 0, h0 = 2.2*s.h + 0.05, vc = VCOL()[(s.v-1) % 4];
+          const top = !z.up ? (D ? '#3a1c22' : '#e6b3b3') : s.st === 'drain' ? (D ? '#2b3550' : '#c9d1dd') : s.st === 'boot' ? C.event : withA(vc, 0.3 + 0.55*glow);
+          box(z.x + s.x, s.y, 1.1, 1.1, h0, top, z.up ? sideUp : sideDn, z.up ? frontUp : frontDn);
+          if (z.up && s.h > 0.5){ const tp = iso(z.x + s.x, s.y, h0 + 0.02); ctx.fillStyle = s.st === 'drain' ? C.faint : C.ink; ctx.font = '600 9px '+MONO; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(s.st === 'drain' ? '…' : 'v'+s.v, tp.X, tp.Y); } }
+        else if (o.kind === 'rds'){ box(RDS[0], RDS[1], 3, 1.8, 1.5, withA(C.ok, 0.55), sideUp, frontUp); const t = iso(RDS[0], RDS[1], 2.4); pill('PostgreSQL · RDS · KMS', t.X, t.Y, C.ok); }
+        else if (o.kind === 'sns'){ box(SNS[0], SNS[1], 1.4, 1.4, 1.1, withA(C.event, 0.6), sideUp, frontUp); const t = iso(SNS[0], SNS[1], 2.0); pill('SNS', t.X, t.Y, C.event); }
+        else if (o.kind === 'lam'){ box(LAM[0], LAM[1], 1.4, 1.4, 1.1, withA(C.event, 0.6), sideUp, frontUp); const t = iso(LAM[0], LAM[1], 2.0); pill('Lambda', t.X, t.Y, C.event); }
+        else if (o.kind === 'mail'){ if (W >= 560){ const t = iso(MAIL[0], MAIL[1], 0.5); pill('verification email', t.X, t.Y, C.soft); } }
+      });
+      const asgN = liveServers().length;
+      // load balancer
+      const lbTop = iso(LB[0], LB[1], 3.0), lbBot = iso(LB[0], LB[1], 0);
+      ctx.strokeStyle = C.event; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(lbBot.X, lbBot.Y); ctx.lineTo(lbTop.X, lbTop.Y); ctx.stroke(); ctx.fillStyle = C.event; ctx.beginPath(); ctx.arc(lbTop.X, lbTop.Y, 6, 0, 7); ctx.fill();
+      pill('load balancer', lbTop.X, lbTop.Y - 18, C.event);
+      { const down = zones.some(z => !z.up), mobS = W < 560, x0 = mobS ? 12 : 18, y0 = mobS ? 14 : 104, pl = (t, y, col) => { ctx.font = '600 11px '+MONO; const w = ctx.measureText(t).width + 14; ctx.fillStyle = C.bg; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(x0, y-10, w, 20, 10) : ctx.rect(x0, y-10, w, 20); ctx.fill(); ctx.strokeStyle = col; ctx.lineWidth = 1.2; ctx.stroke(); ctx.fillStyle = col; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText(t, x0 + 7, y + .5); };
+        pl(`Auto Scaling group · ${liveServers().length} healthy`, y0 + 26, C.event);
+        pl(down ? 'CloudWatch · alarm raised' : 'CloudWatch · all healthy', y0, down ? C.fail : C.ok);
+        if (deploying) pl(`GitHub Actions → new image v${nextV}`, y0 + 52, C.ok); }
+      // beams, db queries, async email
+      for (let k=beams.length-1;k>=0;k--){ const b = beams[k]; b.t += dt*1.4; if (!b.z.up || b.s.gone){ beams.splice(k,1); continue; }
+        const tgt = iso(b.z.x + b.s.x, b.s.y, 2.2*b.s.h + 0.3), t = Math.min(1, b.t);
+        ctx.fillStyle = C.event; ctx.globalAlpha = .9; ctx.beginPath(); ctx.arc(lerp(lbTop.X, tgt.X, t), lerp(lbTop.Y, tgt.Y, t) - Math.sin(t*Math.PI)*36, 2.3, 0, 7); ctx.fill(); ctx.globalAlpha = 1;
+        if (b.t >= 1){ b.s.load = Math.min(1.4, b.s.load + 0.35); win.push(now); beams.splice(k,1); } }
+      for (let k=db.length-1;k>=0;k--){ const q = db[k]; q.t += dt*0.9; const a = iso(q.x, q.y, 0.4), b = iso(RDS[0], RDS[1], 1.5), t = Math.min(1, q.t); ctx.fillStyle = C.ok; ctx.beginPath(); ctx.arc(lerp(a.X,b.X,t), lerp(a.Y,b.Y,t), 2, 0, 7); ctx.fill(); if (q.t >= 1) db.splice(k,1); }
+      for (let k=mail.length-1;k>=0;k--){ const m = mail[k]; m.t += dt*0.7; const pts = [iso(m.x, m.y, 0.6), iso(SNS[0], SNS[1], 1.1), iso(LAM[0], LAM[1], 1.1), iso(MAIL[0], MAIL[1], 0.5)], f = Math.min(2.999, m.t*3), i = Math.floor(f), t = f - i;
+        ctx.fillStyle = C.event; ctx.beginPath(); ctx.arc(lerp(pts[i].X, pts[i+1].X, t), lerp(pts[i].Y, pts[i+1].Y, t), 2.4, 0, 7); ctx.fill(); if (m.t >= 1) mail.splice(k,1); }
+      while (win.length && now - win[0] > 1000) win.shift();
+    }
+    function teleDraw(){ const upZ = zones.filter(z => z.up).length, vs = {}; let healthy = 0, total = 0;
+      zones.forEach(z => z.servers.forEach(s => { if (s.gone) return; total++; if (z.up){ vs[s.v] = (vs[s.v]||0) + 1; if (s.st === 'ok') healthy++; } }));
+      tele.innerHTML = `<div class="row">requests per second <b>${win.length}</b></div><div class="row">zones up <b class="${upZ<3?'bad':''}">${upZ} of 3</b></div><div class="row">healthy servers <b class="${healthy<12?'bad':''}">${healthy} of 12 wanted</b></div><div class="row">versions running <b>${Object.keys(vs).sort().map(v => 'v'+v+' × '+vs[v]).join(', ')}</b></div><div class="row">failed requests <b class="good">${failed}</b></div><div class="log">${log}</div>`; }
+    cv.addEventListener('pointerdown', e => { dragging = true; lx = e.clientX; try { cv.setPointerCapture(e.pointerId); } catch(_){} cv.style.cursor = 'grabbing'; });
+    cv.addEventListener('pointermove', e => { if (!dragging) return; ang += (e.clientX - lx)*0.008; lx = e.clientX; });
+    const end = () => { dragging = false; cv.style.cursor = 'grab'; }; cv.addEventListener('pointerup', end); cv.addEventListener('pointercancel', end);
+    function scaleOut(){ const ups = zones.filter(z => z.up); let added = 0;
+      ups.forEach(z => { while (z.servers.filter(s => !s.gone).length < 6 && added < 4){ const used = z.servers.filter(s => !s.gone).length; const s = mk(used, true); s.v = deploying ? nextV : newest(); z.servers.push(s); added++; } });
+      return added; }
+    function scaleIn(){ zones.forEach(z => z.servers.forEach(s => { if (s.extra) s.gone = true; })); }
+    const toggle = (i, btn) => { const z = zones[i], upNow = zones.filter(q => q.up).length;
+      if (z.up && upNow < 2){ log = 'At least one zone has to stay up.'; teleDraw(); return; }
+      z.up = !z.up; btn.textContent = (z.up ? 'Take zone ' : 'Bring zone ') + z.n + (z.up ? ' down' : ' back');
+      if (z.up){ const nv = deploying ? nextV : newest(); z.servers.forEach(sv => { if (!sv.extra){ sv.v = nv; sv.st = 'ok'; } }); scaleIn(); log = `Zone ${z.n} is back. Its servers passed their health checks, and the extra servers were scaled in.`; sfx('up'); }
+      else { sfx('down'); log = `Zone ${z.n} is down. The load balancer stopped sending it traffic, and CloudWatch raised an alarm.`;
+        setTimeout(() => { if (z.up) return; const n = scaleOut(); if (n){ log = `Zone ${z.n} is down. Auto Scaling launched ${n} replacement servers in the other zones.`; teleDraw(); } }, 900); }
+      teleDraw(); };
+    document.getElementById('dcA').addEventListener('click', e => toggle(0, e.currentTarget));
+    document.getElementById('dcB').addEventListener('click', e => toggle(1, e.currentTarget));
+    const dcD = document.getElementById('dcD');
+    dcD.addEventListener('click', () => { if (deploying) return; deploying = true; dq = []; zones.forEach(z => { if (z.up) z.servers.forEach(s => { if (!s.gone) dq.push([z,s]); }); }); dcD.disabled = true; log = `GitHub Actions built a new image. Rolling out version ${nextV}, one server at a time.`; sfx('tick'); teleDraw(); });
+    new ResizeObserver(size).observe(cv); new IntersectionObserver(es => es.forEach(e => on = e.isIntersecting), {threshold:0.02}).observe(cv);
+    let last = performance.now(), tAcc = 1; const loop = now => { const dt = Math.min(.05, (now-last)/1000); last = now; if (on && W){ frame(dt, now); tAcc += dt; if (tAcc > .25){ tAcc = 0; teleDraw(); } } requestAnimationFrame(loop); }; requestAnimationFrame(loop);
+  })();
+
   /* ---------- case study accordion ---------- */
-  const sizeMap = {'p-gitstream':L, 'p-ik':R, 'p-cn':A, 'p-hc':Hc, 'p-cg':G};
+  const sizeMap = {'p-gitstream':(typeof L !== 'undefined' ? L : null), 'p-ik':R, 'p-cn':(typeof A !== 'undefined' ? A : null), 'p-hc':Hc, 'p-cg':G};
   document.querySelectorAll('.ph').forEach(b => b.addEventListener('click', () => {
     const open = b.getAttribute('aria-expanded') === 'true', id=b.getAttribute('aria-controls');
     b.setAttribute('aria-expanded', String(!open));
