@@ -71,8 +71,9 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid var(-
 .btn.main{background:var(--ink);color:var(--bg)}
 .hint{position:absolute;left:50%;top:18px;transform:translateX(-50%);font-size:14px;color:var(--soft);background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:7px 14px;white-space:nowrap;pointer-events:none;backdrop-filter:blur(10px)}
 .tele{position:absolute;right:clamp(18px,4vw,48px);bottom:clamp(28px,7vh,64px);background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:14px 16px;min-width:270px;max-width:320px;backdrop-filter:blur(12px);font-family:var(--mono);font-size:12.5px;color:var(--soft)}
-.tele .row{display:flex;justify-content:space-between;gap:20px;padding:3px 0}
-.tele .row b{color:var(--ink);font-weight:600;font-size:14px}
+.tele .row{display:grid;grid-template-columns:auto minmax(0,1fr);column-gap:16px;align-items:baseline;padding:4px 0;border-bottom:1px dashed color-mix(in srgb,var(--line) 70%,transparent)}
+.tele .row:last-of-type{border-bottom:0}
+.tele .row b{color:var(--ink);font-weight:600;font-size:14px;text-align:right;font-variant-numeric:tabular-nums;overflow-wrap:break-word}
 .tele .row b.good{color:var(--ok)} .tele .row b.bad{color:var(--fail)}
 .tele .log{margin-top:8px;padding-top:8px;border-top:1px solid var(--line);font-size:12px;line-height:1.5;min-height:36px}
 .tele .note{margin-top:8px;font-size:11px;color:var(--faint)}
@@ -913,9 +914,9 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
       const pad = Math.max(18, W*0.04);
       let fs = Math.min((ow-2*pad)/(mob?5.1:4.6), oh/2.25);
       o.font = `800 ${fs}px "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif`;
-      o.textBaseline='middle'; o.fillStyle='#000';
-      lines.forEach((l,i) => o.fillText(l, pad, oh*0.27 + i*fs*0.98));
-      const d=o.getImageData(0,0,ow,oh).data, gap=mob?5:6, pts=[], oy=H*(mob?0.14:0.06);
+      o.textBaseline='middle'; o.textAlign='center'; o.fillStyle='#000';
+      lines.forEach((l,i) => o.fillText(l, ow/2, oh/2 + (i - 0.5)*fs*0.98));
+      const d=o.getImageData(0,0,ow,oh).data, gap=mob?5:6, pts=[], oy=Math.max(0, (H - oh)/2);
       for (let y=0;y<oh;y+=gap) for (let x=0;x<ow;x+=gap) if (d[(y*ow+x)*4+3]>128) pts.push({hx:x, hy:oy+y, x:x, y:oy+y, vx:0, vy:0});
       this.pts=pts; this.lastBreak=performance.now(); this.rec=null;
     },
@@ -1015,13 +1016,18 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
     zones:[], reqs:[], acc:0, win:[], errors:0, log:'All zones healthy. Traffic is spread across every instance.', deploying:false, dq:[], dt0:0, rr:0,
     setup(){
       const W=this.W, H=this.H, mob=W<560;
-      const zw = Math.min(260, (W-80)/3);
-      this.lb = {x:W*(mob?0.5:0.40), y:H*0.20};
-      const x0 = this.lb.x - zw*1.5 - 16;
+      const avail = mob ? W - 24 : Math.max(300, W - 350);
+      const zw = Math.min(240, (avail - 48) / 3);
+      const x0 = 12 + Math.max(0, (avail - (3*zw + 32)) / 2);
+      this.lb = {x: x0 + 1.5*zw + 16, y: H*(mob?0.20:0.26)};
       if (!this.zones.length){ this.zones = ['A','B','C'].map((n,i) => ({n, up:true, inst:[{v:1,st:'ok'},{v:1,st:'ok'}]})); }
       this.zones.forEach((z,i) => { z.x = x0 + i*(zw+16); z.y=H*0.42; z.w=zw; z.h=H*0.40; });
     },
-    instPos(z,j){ const n=z.inst.length, gap=z.w/(n+1); return {x:z.x+gap*(j+1), y:z.y+z.h*0.58}; },
+    instPos(z,j){ const n=z.inst.length, gap=z.w/(n+1);
+      if (gap >= 40) return {x:z.x+gap*(j+1), y:z.y+z.h*0.58};
+      const top=z.y+(z.w<130?56:34), span=Math.max(0, z.y+z.h-18-top); return {x:z.x+z.w/2, y: n===1 ? top+span/2 : top+span*j/(n-1)}; },
+    instR(z){ const n=z.inst.length, gap=z.w/(n+1); if (gap >= 40) return Math.min(18, gap*0.42);
+      const top=z.y+(z.w<130?56:34), span=Math.max(0, z.y+z.h-18-top); return Math.max(8, Math.min(15, z.w*0.3, n>1 ? (span/(n-1))*0.44 : 15)); },
     healthy(){ const h=[]; this.zones.forEach(z => { if (!z.up) return; z.inst.forEach((s,j)=>{ if (s.st==='ok') h.push([z,j]); }); }); return h; },
     toggleZone(){ const z=this.zones[0];
       if (z.up){ z.up=false; sfx('down'); this.log='Zone A is down. Its instances failed health checks, so the load balancer stopped sending them traffic. Auto Scaling is adding capacity in B and C.';
@@ -1066,11 +1072,11 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
       // zones
       this.zones.forEach(z => {
         ctx.setLineDash([5,5]); ctx.strokeStyle = z.up ? C.line : C.fail; ctx.lineWidth=1.5; ctx.strokeRect(z.x,z.y,z.w,z.h); ctx.setLineDash([]);
-        ctx.fillStyle = z.up ? C.soft : C.fail; ctx.textAlign='left'; ctx.fillText('Zone '+z.n+(z.up?'':' · down'), z.x+10, z.y+16);
+        ctx.fillStyle = z.up ? C.soft : C.fail; ctx.textAlign='left'; if (z.w < 130){ ctx.fillText('Zone '+z.n, z.x+8, z.y+16); if (!z.up) ctx.fillText('down', z.x+8, z.y+31); } else ctx.fillText('Zone '+z.n+(z.up?'':' · down'), z.x+10, z.y+16);
         z.inst.forEach((s,j) => { const p=this.instPos(z,j);
           let col = C.worker; if (!z.up) col=C.fail; else if (s.st==='drain') col=C.faint; else if (s.st==='boot') col=C.event;
-          ctx.beginPath(); ctx.arc(p.x,p.y,18,0,Math.PI*2); ctx.fillStyle=C.bg2; ctx.fill(); ctx.lineWidth=2.5; ctx.strokeStyle=col; ctx.stroke();
-          ctx.fillStyle=col; ctx.textAlign='center'; ctx.fillText('v'+s.v, p.x, p.y);
+          const rr=this.instR(z); ctx.beginPath(); ctx.arc(p.x,p.y,rr,0,Math.PI*2); ctx.fillStyle=C.bg2; ctx.fill(); ctx.lineWidth=rr<12?2:2.5; ctx.strokeStyle=col; ctx.stroke();
+          ctx.fillStyle=col; ctx.textAlign='center'; ctx.font=(rr<12?'600 9.5px ':'500 12px ')+MONO; ctx.fillText('v'+s.v, p.x, p.y); ctx.font='500 12px '+MONO;
           if (z.w/(z.inst.length+1) > 46){ ctx.fillStyle=C.faint; ctx.fillText(!z.up?'failed':(s.st==='ok'?'healthy':(s.st==='drain'?'draining':'starting')), p.x, p.y+32); } });
       });
       // requests
