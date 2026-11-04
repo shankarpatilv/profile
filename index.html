@@ -85,7 +85,7 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid var(-
 }
 
 /* sections */
-section.s{padding:clamp(72px,11vw,140px) 0}
+section.s{padding:clamp(44px,6vw,84px) 0}
 .sh{display:flex;align-items:baseline;justify-content:space-between;gap:20px;margin-bottom:clamp(28px,4vw,48px)}
 .sh h2{font-weight:800;font-size:clamp(34px,4.6vw,64px);line-height:1;letter-spacing:-.04em;margin:0}
 .sh p{margin:0;color:var(--soft);max-width:40ch;font-size:16px}
@@ -116,7 +116,7 @@ section.s{padding:clamp(72px,11vw,140px) 0}
 @media (max-width:560px){.case{grid-template-columns:1fr}.demo canvas{height:420px}.demo .tele{left:12px;right:12px;bottom:12px;top:auto;max-width:none}.demo .tele .log{display:none}.demo .ctl{left:12px;right:12px;top:12px;justify-content:space-between}}
 
 /* heal */
-.heal{position:relative;height:min(78svh,720px);min-height:460px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);overflow:hidden}
+.heal{position:relative;height:clamp(340px,58vh,540px);min-height:0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);overflow:hidden}
 .heal canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:pan-y;cursor:crosshair}
 .heal .cap{position:absolute;left:clamp(18px,4vw,48px);bottom:clamp(22px,5vh,44px);max-width:46ch;color:var(--soft);font-size:16px;pointer-events:none}
 .heal .cap b{color:var(--ink);font-weight:600}
@@ -172,7 +172,7 @@ section.s{padding:clamp(72px,11vw,140px) 0}
 .stk .r div span{position:relative}
 .stk .r div span[data-used]{cursor:default}
 .stk .r div span[data-used]:hover,.stk .r div span[data-used]:focus{border-color:var(--ink);outline:none}
-.stk .r div span.use{display:none;position:absolute;left:50%;bottom:calc(100% + 8px);transform:translate(-50%,4px);background:var(--ink);color:var(--bg);border:0;border-radius:8px;font-family:var(--mono);font-size:11.5px;line-height:1.4;white-space:nowrap;padding:5px 9px;opacity:0!important;pointer-events:none;transition:opacity .15s,transform .15s;z-index:5}
+.stk .r div span.use{display:none;position:absolute;left:50%;bottom:calc(100% + 8px);transform:translate(-50%,4px);background:var(--ink);color:var(--bg);border:0;border-radius:8px;font-family:var(--mono);font-size:11.5px;line-height:1.4;white-space:normal;width:max-content;max-width:min(260px,calc(100vw - 40px));padding:5px 9px;opacity:0!important;pointer-events:none;transition:opacity .15s,transform .15s;z-index:5}
 .stk .r div span.use.l{left:0;transform:translate(0,4px)} .stk .r div span.use.r{left:auto;right:0;transform:translate(0,4px)}
 .stk .r div span[data-used]:hover span.use,.stk .r div span[data-used]:focus span.use{display:block;opacity:1!important;transform:translate(-50%,0)}
 .stk .r div span[data-used]:hover span.use.l,.stk .r div span[data-used]:focus span.use.l,.stk .r div span[data-used]:hover span.use.r,.stk .r div span[data-used]:focus span.use.r{transform:none}
@@ -189,6 +189,7 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
 </style>
 <style>
 /* v2 additions */
+@media (max-width:760px){.heal{height:300px}}
 /* phone hero: headline first, then the motion */
 @media (max-width:760px){
   .hero{height:auto;min-height:0;display:flex;flex-direction:column;padding:28px 0 22px}
@@ -270,8 +271,8 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
 .dec.scr{font-family:var(--mono);font-weight:600;letter-spacing:-.02em}
 
 /* hero, split with a card */
-.hero3{border-bottom:1px solid var(--line);padding:clamp(36px,8vh,88px) 0}
-.hsplit{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:clamp(28px,4vw,64px);align-items:center;min-height:calc(100svh - 62px - 2*clamp(36px,8vh,88px) - env(safe-area-inset-top,0px))}
+.hero3{border-bottom:1px solid var(--line);padding:clamp(28px,6vh,64px) 0}
+.hsplit{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:clamp(28px,4vw,64px);align-items:center;min-height:min(calc(100svh - 62px - 2*clamp(28px,6vh,64px) - env(safe-area-inset-top,0px)), 620px)}
 .hsplit .hcopy{grid-area:auto;align-self:center}
 .hsplit .hcopy h1{font-size:clamp(40px,4.6vw,70px)}
 .hcard{background:var(--panel);border:1px solid var(--line);border-radius:24px;padding:16px;box-shadow:0 20px 50px rgba(15,20,32,.07)}
@@ -444,7 +445,6 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
               <p>Releases roll out one copy at a time, so a working version is always online. The whole setup is written as code, so it can be rebuilt on either cloud instead of clicked together by hand.</p>
               <p>Slow tasks like sending verification emails moved to background jobs, which cut response times by <b><span data-count="35">35</span>%</b>.</p>
               <p class="cost"><b>What it costs:</b> spare capacity you pay for and hope never to use, and skipping shortcuts that only work on one cloud.</p>
-              <p>Below, take a zone down or ship a new version, and watch the failed requests.</p>
             </div>
           </div>
           <div class="demo">
@@ -474,11 +474,10 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
               <p>My fix keeps a small ledger for each stream and only moves the “done” marker forward once <b>everything before it</b> has finished. And when the database slows down, workers simply take less, so the slowdown travels back to the source instead of piling up in memory.</p>
               <p class="cost"><b>What it costs:</b> after a crash, a few events can be processed twice. A repeat is easy to handle. A gap is not.</p>
               <p>Results land in two databases on purpose: one that is quick at finding a single record, and one that is quick at adding up millions. That split made analytics queries <b>10 to <span data-count="100" data-from="10">100</span> times faster</b>.</p>
-              <p>Try it below: drag the load up and watch the queue fill.</p>
             </div>
           </div>
           <div class="cr" id="crDemo">
-            <div class="cr-head"><b>The commit rule, running</b><span>The code on the right is what decides what’s safe to commit.</span></div>
+            <div class="cr-head"><b>The commit rule, running</b></div>
             <div class="cr-grid">
               <div class="cr-panel">
                 <div class="cr-ptr"><span>Offsets in one partition</span><span>a.committed <b id="crCm">0</b></span></div>
@@ -520,7 +519,6 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
               <p>Give it a job description and a company’s values, and it drafts the questions you’re likely to get. For each one, it pulls the closest pieces of your notes and writes a <span class="gterm" tabindex="0" data-g="star">STAR answer</span> (situation, task, action, result), <b>naming the note it came from</b>.</p>
               <p class="cost"><b>What it costs:</b> when none of your notes fit a question, it says so instead of making up a story. A confident fake answer is worse than none.</p>
               <p>Each step is an explicit, testable workflow rather than a free-roaming AI agent, and your private notes stay out of version control.</p>
-              <p>Pick a question below. The last one has no story behind it.</p>
             </div>
           </div>
           <div class="demo rag">
@@ -550,7 +548,6 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
               <p>Logins use <span class="gterm" tabindex="0" data-g="jwt">signed tokens</span>, and every account has a role: people see only their own activity, and only admins can review safety reports. Every input is cleaned, so a hidden script can’t slip into a report, and strict browser <span class="gterm" tabindex="0" data-g="hdr">security headers</span> block common attacks.</p>
               <p>On the data side, better indexes and leaner database queries made the app respond faster.</p>
               <p class="cost"><b>What it costs:</b> a few more checks on every request. For safety reports, that’s the right trade.</p>
-              <p>Send a request below and watch which check lets it through or stops it.</p>
             </div>
           </div>
           <div class="demo cg">
@@ -580,7 +577,6 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
               <p>Repeat reads are cheap too. If a client already has the latest version of a record, the server just replies “nothing changed” instead of fetching it again.</p>
               <p>Every request needs a valid login token and has to match a strict format before it is accepted, so bad data never gets in.</p>
               <p class="cost"><b>What it costs:</b> search can trail a fresh save by a moment, which is fine for this kind of data.</p>
-              <p>Switch between the old and new save path below and compare the timing.</p>
             </div>
           </div>
           <div class="demo hc">
@@ -596,7 +592,7 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
 
   <section class="s td" id="tradeoffs" aria-labelledby="td-h" style="padding-top:0">
     <div class="wrap">
-      <div class="sh"><h2 id="td-h" class="dec">Every design is a trade‑off</h2><p>Drag the dial away from my choice to see what would break. It snaps back.</p></div>
+      <div class="sh"><h2 id="td-h" class="dec">Every design is a trade‑off</h2></div>
       <div class="td-card">
         <div class="td-tabs" id="tdTabs" role="group" aria-label="Choose a project"></div>
         <div class="td-ends"><span id="tdL"></span><span id="tdR"></span></div>
@@ -613,7 +609,7 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
 
   <section class="s" id="experience" aria-labelledby="xp-h">
     <div class="wrap">
-      <div class="sh"><h2 id="xp-h" class="dec">Experience</h2><p>Where these habits came from.</p></div>
+      <div class="sh"><h2 id="xp-h" class="dec">Experience</h2></div>
       <article class="xp">
         <div class="when">2021 to 2023</div>
         <div>
@@ -675,7 +671,7 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
 
   <section class="s" id="stack" aria-labelledby="stk-h" style="padding-top:0">
     <div class="wrap">
-      <div class="sh"><h2 id="stk-h" class="dec">Stack</h2><p>What I reach for, by layer.</p></div>
+      <div class="sh"><h2 id="stk-h" class="dec">Stack</h2></div>
       <div class="stk">
         <div class="r"><b>Languages</b><div><span>Python</span><span>Java</span><span>Go</span><span>TypeScript</span><span>JavaScript</span><span>SQL</span><span>Kotlin</span><span>C#</span></div></div>
         <div class="r"><b>Backend</b><div><span>Spring Boot</span><span>FastAPI</span><span>Node.js</span><span>.NET Core</span><span>Django</span></div></div>
@@ -699,7 +695,7 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
     </div>
   </section>
 
-  <section class="s ct" id="contact" aria-labelledby="ct-h" style="padding-top:clamp(40px,6vw,80px)">
+  <section class="s ct" id="contact" aria-labelledby="ct-h" style="padding-top:clamp(12px,2vw,24px)">
     <div class="wrap">
       <h2 id="ct-h" aria-label="Hiring for backend, front end, full-stack, infra or AI?">Hiring for <span class="slotw" id="slotw" aria-hidden="true"><span class="role" id="role">backend</span>?</span></h2>
       <p class="ct-sub">One engineer for the front end, the APIs, the data, the cloud and the AI.</p>
@@ -780,7 +776,7 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
   /* ---------- hero: pipeline in a card ---------- */
   const streamTele = document.getElementById('streamTele');
   const S = Stage(document.getElementById('streamCv'), {
-    workers:[], parts:[], acc:0, win:[], rebal:0, log:'All workers healthy. Resize the window and the pipeline scales to fit.',
+    workers:[], parts:[], acc:0, win:[], rebal:0, log:'All workers healthy.',
     setup(){
       const W=this.W, H=this.H, mob=W<520, n=Math.max(3, Math.min(8, Math.floor(W/100)));
       this.fs = mob?11:12.5;
@@ -862,13 +858,18 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
     setup(){ this.q=[]; this.parts=[]; this.out=[]; this.dlq=[]; const mob=this.W<560;
       this.qx=this.W*(mob?0.46:0.48); this.qy=this.H*(mob?0.30:0.24); this.qh=this.H*(mob?0.34:0.50); this.b0=this.H*(mob?0.30:0.24); this.b1=this.H*(mob?0.64:0.74); this.dy=this.H*(mob?0.70:0.84); },
     step(dt, now){
-      const load=+loadR.value, offered=10*load, capacity=46;
+      const load=+loadR.value, offered=10*load, capacity=46, gate=this.qx-30;
+      // events waiting at the gate go first, in order, as soon as there is room
+      for (let k=0;k<this.parts.length;k++){ const p=this.parts[k]; if (p.wait && this.q.length < this.cap){ this.parts.splice(k,1); k--; this.q.push({poison:p.poison, tries:0}); } }
+      const waiting = this.parts.reduce((n,p) => n + (p.wait ? 1 : 0), 0);
       this.full = this.q.length >= this.cap;
-      const admit = this.full ? Math.min(offered, capacity) : offered;
+      // backpressure: once a line forms at the gate, the producer waits instead of sending more
+      const admit = waiting >= 16 ? 0 : offered;
       this.acc += dt*admit;
       const sp = Math.max(160, this.W*0.2);
       while (this.acc > 1){ this.acc--; this.parts.push({x:-10, y:this.b0+Math.random()*(this.b1-this.b0), v:sp*(0.8+Math.random()*0.4), poison:Math.random()<0.03}); }
-      for (let k=this.parts.length-1;k>=0;k--){ const p=this.parts[k]; p.x+=p.v*dt; if (p.x >= this.qx-30){ this.parts.splice(k,1); this.q.push({poison:p.poison, tries:0}); } }
+      for (let k=this.parts.length-1;k>=0;k--){ const p=this.parts[k]; if (p.wait) continue; p.x+=p.v*dt;
+        if (p.x >= gate){ if (this.q.length < this.cap){ this.parts.splice(k,1); this.q.push({poison:p.poison, tries:0}); } else { p.wait=true; p.x = gate - 6 - Math.random()*46; } } }
       this.drain += dt*capacity;
       while (this.drain > 1 && this.q.length){ this.drain--; const m=this.q.shift();
         if (m.poison){ m.tries++; if (m.tries<3) this.q.push(m); else { this.dlq.push({x:this.qx+40, v:120}); this.toDLQ++; this.log='A message failed 3 retries and went to the dead-letter queue. Nothing was dropped.'; } }
@@ -877,8 +878,8 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
       while (this.win.length && now-this.win[0] > 1000) this.win.shift();
       this.out.forEach(o => o.x += o.v*dt); this.out = this.out.filter(o => o.x < this.W+20);
       this.dlq.forEach(o => o.x += o.v*dt); this.dlq = this.dlq.filter(o => o.x < this.W+20);
-      if (this.log.indexOf('dead-letter')===-1){ this.log = this.full ? 'The queue is full. Backpressure slows the producer to what the workers can drain.' : 'Workers keep up. Drag the slider to add load.'; }
-      else if (Math.random() < dt*0.25) this.log = this.full ? 'The queue is full. Backpressure slows the producer to what the workers can drain.' : 'Workers keep up. Drag the slider to add load.';
+      if (this.log.indexOf('dead-letter')===-1){ this.log = this.full ? 'The queue is full, so the producer waits for room instead of piling up more. Nothing is dropped.' : 'Workers keep up. Drag the slider to add load.'; }
+      else if (Math.random() < dt*0.25) this.log = this.full ? 'The queue is full, so the producer waits for room instead of piling up more. Nothing is dropped.' : 'Workers keep up. Drag the slider to add load.';
     },
     render(){
       const {ctx,W} = this, cw=44, slot=this.qh/this.cap;
@@ -1024,9 +1025,9 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
     healthy(){ const h=[]; this.zones.forEach(z => { if (!z.up) return; z.inst.forEach((s,j)=>{ if (s.st==='ok') h.push([z,j]); }); }); return h; },
     toggleZone(){ const z=this.zones[0];
       if (z.up){ z.up=false; sfx('down'); this.log='Zone A is down. Its instances failed health checks, so the load balancer stopped sending them traffic. Auto Scaling is adding capacity in B and C.';
-        setTimeout(() => { this.zones[1].inst.push({v:this.zones[1].inst[0].v, st:'boot', t:performance.now()}); this.zones[2].inst.push({v:this.zones[2].inst[0].v, st:'boot', t:performance.now()}); A.nudge(); }, 900);
+        setTimeout(() => { if (this.zones[0].up) return; const nv = this.deploying ? this.nextV : Math.max(...this.zones.flatMap(q=>q.inst.map(s=>s.v))); this.zones[1].inst.push({v:nv, st:'boot', t:performance.now()}); this.zones[2].inst.push({v:nv, st:'boot', t:performance.now()}); A.nudge(); }, 900);
         azDown.textContent='Bring zone A back'; }
-      else { z.up=true; sfx('up'); z.inst.forEach(s=>s.st='ok'); this.zones.forEach((zz,i)=>{ if (i>0 && zz.inst.length>2) zz.inst.splice(2); }); this.log='Zone A is back. Extra capacity in B and C was scaled in again.'; azDown.textContent='Take zone A down'; }
+      else { z.up=true; sfx('up'); const newest = this.deploying ? this.nextV : Math.max(...this.zones.filter(q=>q!==z).flatMap(q=>q.inst.map(s=>s.v))); z.inst.forEach(s=>{ s.st='ok'; s.v=newest; }); this.zones.forEach((zz,i)=>{ if (i>0 && zz.inst.length>2) zz.inst.splice(2); }); this.log='Zone A is back. Extra capacity in B and C was scaled in again.'; azDown.textContent='Take zone A down'; }
     },
     deploy(){
       if (this.deploying) return;
@@ -1041,15 +1042,17 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
       for (let k=this.reqs.length-1;k>=0;k--){ const r=this.reqs[k]; r.t+=dt*1.6; if (r.t>=1){ this.reqs.splice(k,1); this.win.push(now); } }
       while (this.win.length && now-this.win[0]>1000) this.win.shift();
       // boot finish
-      this.zones.forEach(z => z.inst.forEach(s => { if (s.st==='boot' && now-s.t>1400){ s.st='ok'; if (!this.deploying) this.log = this.zones[0].up ? this.log : 'Replacement instances passed their health checks and joined the pool. No requests failed.'; } }));
+      this.zones.forEach(z => z.inst.forEach(s => { if (s.st==='boot' && now-s.t>900){ s.st='ok'; if (!this.deploying) this.log = this.zones[0].up ? this.log : 'Replacement instances passed their health checks and joined the pool. No requests failed.'; } }));
       // rolling deploy
       if (this.deploying){
         const cur = this.dq[0];
-        if (!cur){ this.deploying=false; sfx('ok'); azDeploy.disabled=false; azDeploy.textContent=`Deploy version ${this.nextV+1}`; this.log=`Version ${this.nextV} is live everywhere. Errors during the rollout: 0.`; }
+        if (!cur){ const left=[]; this.zones.forEach(z => { if (z.up) z.inst.forEach((s,j) => { if (s.v!==this.nextV && s.st==='ok') left.push([z,j]); }); });
+          if (left.length){ this.dq = left; }
+          else { this.deploying=false; sfx('ok'); azDeploy.disabled=false; azDeploy.textContent=`Deploy version ${this.nextV+1}`; this.log = this.zones[0].up ? `Version ${this.nextV} is live everywhere. Errors during the rollout: 0.` : `Version ${this.nextV} is live on every healthy instance. Zone A will start on it when it’s back. Errors: 0.`; } }
         else { const [z,j]=cur, s=z.inst[j];
           if (!s){ this.dq.shift(); }
           else if (s.st==='ok' && s.v!==this.nextV){ s.st='drain'; s.t=now; }
-          else if (s.st==='drain' && now-s.t>700){ s.st='boot'; s.v=this.nextV; s.t=now; }
+          else if (s.st==='drain' && now-s.t>450){ s.st='boot'; s.v=this.nextV; s.t=now; }
           else if (s.st==='ok' && s.v===this.nextV){ this.dq.shift(); } }
       }
     },
@@ -1302,11 +1305,12 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
       cmEl.textContent = committed; dEl.textContent = done.size ? 'map['+[...done].sort((a,b)=>a-b).map(o => o+':true').join(' ')+']' : 'map[]'; };
     const hl = ix => lines.forEach((l,i) => l.classList.toggle('hl', ix.includes(i)));
     const wait = ms => new Promise(r => setTimeout(r, rm ? 0 : ms*speed));
-    async function complete(o){ busy = true;
-      st[o] = 'done'; done.add(o); hl([0,1]); draw(); await wait(380); hl([2]); await wait(320);
-      while (done.has(committed+1)){ committed++; done.delete(committed); st[committed] = 'idle'; hl([3,4]); draw(); await wait(260); hl([2]); await wait(160); }
+    let epoch = 0;
+    async function complete(o){ busy = true; const my = epoch;
+      st[o] = 'done'; done.add(o); hl([0,1]); draw(); await wait(380); if (my !== epoch) return; hl([2]); await wait(320); if (my !== epoch) return;
+      while (done.has(committed+1)){ committed++; done.delete(committed); st[committed] = 'idle'; hl([3,4]); draw(); await wait(260); if (my !== epoch) return; hl([2]); await wait(160); if (my !== epoch) return; }
       hl([6]); draw(); lg.textContent = done.size ? `Offset ${o} finished, but ${committed+1} is still running, so the commit stays at ${committed}.` : `Committed up to ${committed}. Everything before it is done.`;
-      await wait(420); hl([]); busy = false; }
+      await wait(420); if (my !== epoch) return; hl([]); busy = false; }
     async function tick(){
       if (!on){ running = false; return; } running = true;
       while (flying.length < 3 && next <= N){ if (st[next] !== 'rep') st[next] = 'fly'; flying.push({o:next, left:500 + Math.random()*1600}); next++; }
@@ -1316,7 +1320,7 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
       timer = setTimeout(tick, rm ? 600 : 220*speed);
     }
     document.getElementById('crCrash').addEventListener('click', async () => {
-      clearTimeout(timer); sfx('down'); hl([9,10]); const lost = flying.length, redo = done.size;
+      epoch++; clearTimeout(timer); sfx('down'); hl([9,10]); const lost = flying.length, redo = done.size;
       flying.forEach(f => st[f.o] = 'idle'); done.forEach(o => st[o] = 'idle'); flying = []; done = new Set();
       for (let o = committed+1; o < next; o++) st[o] = 'rep'; next = committed + 1; draw();
       lg.textContent = `Crashed with ${lost} running and ${redo} finished but not committed. Restarting from offset ${committed+1}: ${lost+redo} events will run again, and none are lost.`;
@@ -1345,14 +1349,15 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
     };
     const pop = document.createElement('div'); pop.className = 'gpop'; pop.id = 'gpop'; pop.setAttribute('role','tooltip'); document.body.appendChild(pop);
     let cur = null;
-    const show = t => { const g = G[t.dataset.g]; if (!g) return; pop.innerHTML = `<b>${g[0]}</b>${g[1]}<em>${g[2]}</em>`;
+    let openedAt = 0, shownY = 0, lastType = 'mouse';
+    const show = t => { const g = G[t.dataset.g]; if (!g) return; openedAt = performance.now(); shownY = scrollY; pop.innerHTML = `<b>${g[0]}</b>${g[1]}<em>${g[2]}</em>`;
       const r = t.getBoundingClientRect(), w = Math.min(320, innerWidth*0.86); let x = r.left + scrollX; if (x + w > scrollX + innerWidth - 12) x = scrollX + innerWidth - 12 - w;
       pop.style.left = Math.max(scrollX + 12, x) + 'px'; pop.style.top = (r.bottom + scrollY + 8) + 'px'; pop.classList.add('on'); cur = t; };
     const hide = () => { pop.classList.remove('on'); cur = null; };
     document.querySelectorAll('.gterm').forEach(t => { t.setAttribute('aria-describedby','gpop');
-      t.addEventListener('mouseenter', () => show(t)); t.addEventListener('mouseleave', hide); t.addEventListener('focus', () => show(t)); t.addEventListener('blur', hide);
-      t.addEventListener('click', e => { e.stopPropagation(); cur === t ? hide() : show(t); }); });
-    document.addEventListener('click', hide); addEventListener('scroll', () => { if (cur) hide(); }, {passive:true});
+      t.addEventListener('pointerdown', e => { lastType = e.pointerType; }); t.addEventListener('mouseenter', () => { if (lastType !== 'touch') show(t); }); t.addEventListener('mouseleave', () => { if (lastType !== 'touch') hide(); }); t.addEventListener('focus', () => show(t)); t.addEventListener('blur', () => { if (lastType !== 'touch') hide(); });
+      t.addEventListener('click', e => { e.stopPropagation(); (cur === t && performance.now() - openedAt > 450) ? hide() : show(t); }); });
+    document.addEventListener('click', hide); addEventListener('scroll', () => { if (cur && Math.abs(scrollY - shownY) > 60) hide(); }, {passive:true});
   })();
 
   /* ---------- incident replay ---------- */
