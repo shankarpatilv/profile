@@ -156,7 +156,32 @@ section.s{padding:clamp(72px,11vw,140px) 0}
 @media (max-width:860px){.wr{grid-template-columns:1fr}}
 
 /* contact */
-.ct h2{font-weight:800;font-size:clamp(44px,7.4vw,108px);line-height:.92;letter-spacing:-.05em;margin:0 0 26px;max-width:14ch}
+.ct h2{font-weight:800;font-size:clamp(44px,7.4vw,108px);line-height:.92;letter-spacing:-.05em;margin:0 0 26px;max-width:14ch;min-height:1.84em}
+.ct h2 .role{color:var(--event)}
+.ct h2 .slotw{display:inline-block;white-space:nowrap;text-align:left}
+.ct .ct-sub{color:var(--soft);font-size:clamp(16px,1.5vw,20px);line-height:1.5;margin:-6px auto 26px;max-width:46ch}
+.ct .wrap{text-align:center}
+.ct h2{margin-left:auto;margin-right:auto;white-space:nowrap;max-width:none;min-height:0;font-size:clamp(24px,6.6vw,96px)}
+.ct .prompt{justify-content:center}
+.ct h2 .role.scr,.nav .me.scr{font-family:var(--mono);font-weight:600;letter-spacing:-.03em}
+.nav .me{display:inline-block;min-width:12ch}
+.story p b,.xp p b{background:linear-gradient(var(--mark),var(--mark)) no-repeat 0 88%/0% 42%;transition:background-size .8s cubic-bezier(.2,.8,.2,1)}
+.story p.mk b,.xp p.mk b{background-size:100% 42%}
+.story p.mk b:nth-of-type(2),.xp p.mk b:nth-of-type(2){transition-delay:.25s}
+.story p.cost b{background:none}
+.stk .r div span{position:relative}
+.stk .r div span[data-used]{cursor:default}
+.stk .r div span[data-used]:hover,.stk .r div span[data-used]:focus{border-color:var(--ink);outline:none}
+.stk .r div span.use{display:none;position:absolute;left:50%;bottom:calc(100% + 8px);transform:translate(-50%,4px);background:var(--ink);color:var(--bg);border:0;border-radius:8px;font-family:var(--mono);font-size:11.5px;line-height:1.4;white-space:nowrap;padding:5px 9px;opacity:0!important;pointer-events:none;transition:opacity .15s,transform .15s;z-index:5}
+.stk .r div span.use.l{left:0;transform:translate(0,4px)} .stk .r div span.use.r{left:auto;right:0;transform:translate(0,4px)}
+.stk .r div span[data-used]:hover span.use,.stk .r div span[data-used]:focus span.use{display:block;opacity:1!important;transform:translate(-50%,0)}
+.stk .r div span[data-used]:hover span.use.l,.stk .r div span[data-used]:focus span.use.l,.stk .r div span[data-used]:hover span.use.r,.stk .r div span[data-used]:focus span.use.r{transform:none}
+.stk .r div span.on::before{content:"✓ "}
+.stk .r div span.use::before{content:none!important}
+:root{--mark:rgba(201,122,10,.22)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--mark:rgba(255,181,71,.24)}}
+:root[data-theme="dark"]{--mark:rgba(255,181,71,.24)}
+@media (prefers-reduced-motion: reduce){.story p b,.xp p b{transition:none}}
 .ct .mail{font-size:clamp(20px,2.4vw,30px);font-weight:600;letter-spacing:-.01em;text-decoration:none;border-bottom:2px solid var(--event)}
 .ct .more{display:flex;gap:22px;margin-top:28px;flex-wrap:wrap;font-size:16px}
 .ct .more a{color:var(--soft);text-decoration:none;border-bottom:1px solid var(--line)}
@@ -241,6 +266,9 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
   .hstats{margin-top:6px}
 }
 
+/* decoding headings */
+.dec.scr{font-family:var(--mono);font-weight:600;letter-spacing:-.02em}
+
 /* hero, split with a card */
 .hero3{border-bottom:1px solid var(--line);padding:clamp(36px,8vh,88px) 0}
 .hsplit{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:clamp(28px,4vw,64px);align-items:center;min-height:calc(100svh - 62px - 2*clamp(36px,8vh,88px) - env(safe-area-inset-top,0px))}
@@ -266,6 +294,60 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
   .hcv{height:330px}
   .hnums{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
+
+/* small effects */
+.hero3 h1 .up{white-space:nowrap}
+.hero3 h1 .up .ch{display:inline-block;transform-origin:50% 100%}
+.hero3 h1.go .up .ch{animation:fallrise 1.1s cubic-bezier(.2,.9,.3,1.25) both}
+@keyframes fallrise{0%{transform:none}30%{transform:translateY(.42em) rotate(var(--r))}55%{transform:translateY(.42em) rotate(var(--r))}100%{transform:none}}
+.stk.wait .r div span{opacity:.22;transition:opacity .25s}
+.stk .r div span.on{opacity:1}
+.stk .r div span.on::before{content:"✓ ";color:var(--ok);font-family:var(--mono);font-size:12px}
+.stklog{font-family:var(--mono);font-size:12.5px;color:var(--faint);margin-top:14px;min-height:20px}
+.prompt{display:flex;flex-wrap:wrap;align-items:baseline;gap:0 12px}
+.prompt .pfx{font-family:var(--mono);font-weight:600;font-size:clamp(16px,1.8vw,22px);color:var(--event)}
+.prompt .cur{display:inline-block;width:.5em;height:1.05em;background:var(--ink);align-self:center;margin-left:-6px;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.proj{border-top:0;position:relative}
+.proj::before{content:"";position:absolute;left:0;right:0;top:0;height:1.5px;background:var(--ink);transform-origin:left}
+.proj.wait::before{transform:scaleX(0);transition:transform 1.1s cubic-bezier(.2,.8,.2,1)}
+.proj.wait.drawn::before{transform:scaleX(1)}
+.pb.reveal .story p{animation:rvl .55s cubic-bezier(.2,.8,.2,1) both}
+@keyframes rvl{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion: reduce){.hero3 h1.go .up .ch,.pb.reveal .story p,.prompt .cur{animation:none}.proj.wait::before{transition:none}}
+
+/* commit rule demo */
+.ph .t{min-width:0;overflow-wrap:break-word}
+.cr{margin-top:30px}
+.cr-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.cr-head b{font-weight:700;font-size:20px;letter-spacing:-.01em}
+.cr-head span{font-size:14.5px;color:var(--soft)}
+.cr-grid{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:16px}
+.cr-panel{background:var(--bg2);border:1px solid var(--line);border-radius:20px;padding:16px}
+.cr-offs{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:6px;margin:8px 0 18px}
+.cr-off{position:relative;aspect-ratio:1.25;border:1.5px solid var(--line);border-radius:9px;display:grid;place-items:center;font-family:var(--mono);font-size:12.5px;color:var(--faint);background:var(--bg);transition:background .2s,border-color .2s,color .2s}
+.cr-off.fly{border-color:var(--event);color:var(--event)}
+.cr-off.done{border-color:var(--worker);color:var(--worker)}
+.cr-off.com{border-color:var(--ok);background:var(--ok);color:var(--bg)}
+.cr-off.rep::after{content:"again";position:absolute;bottom:-15px;font-size:9.5px;color:var(--event)}
+.cr-ptr{font-family:var(--mono);font-size:12.5px;color:var(--soft);display:flex;gap:16px;flex-wrap:wrap}
+.cr-ptr b{color:var(--ink)} .cr-ptr i{font-style:normal}
+.cr-ctl{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+.cr-log{font-family:var(--mono);font-size:12px;line-height:1.5;color:var(--soft);margin-top:10px;min-height:38px}
+.cr-code{background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:12px 0;font-family:var(--mono);font-size:13px;line-height:1.75;overflow:auto}
+.cr-code div{padding:0 14px;white-space:pre;border-left:3px solid transparent;transition:background .15s}
+.cr-code div.hl{background:var(--mark);border-left-color:var(--event)}
+.cr-code .k{color:var(--worker)} .cr-code .c{color:var(--faint)}
+.cr-vars{margin-top:10px;font-family:var(--mono);font-size:12.5px;color:var(--soft)} .cr-vars b{color:var(--ink)}
+@media (max-width:860px){.cr-grid{grid-template-columns:minmax(0,1fr)}.cr-code{font-size:12px}}
+/* jargon popovers */
+.gterm{text-decoration:underline dotted;text-decoration-color:var(--faint);text-underline-offset:4px;cursor:help;border-radius:3px}
+.gterm:hover,.gterm:focus{text-decoration-color:var(--event);outline:none}
+.gpop{position:absolute;z-index:30;width:min(320px,86vw);background:var(--bg);border:1px solid var(--line);border-radius:14px;box-shadow:0 18px 40px rgba(15,20,32,.16);padding:12px 14px;font-size:14.5px;line-height:1.55;color:var(--soft);opacity:0;transform:translateY(4px);transition:opacity .15s,transform .15s;pointer-events:none}
+.gpop.on{opacity:1;transform:none}
+.gpop b{display:block;color:var(--ink);font-size:15px;margin-bottom:4px}
+.gpop em{display:block;font-style:normal;font-family:var(--mono);font-size:11.5px;color:var(--faint);margin-top:8px}
+@media (prefers-reduced-motion: reduce){.cr-off,.cr-code div,.gpop{transition:none}}
 </style>
 
 </head>
@@ -273,7 +355,7 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
 
 <header class="nav">
   <div class="wrap">
-    <a class="me" href="#top">Vivek Shankar Patil</a>
+    <a class="me" id="meName" href="#top" aria-label="Vivek Shankar Patil, back to top">Vivek Shankar Patil</a>
     <a class="l" href="#work">Work</a>
     <a class="l" href="#experience">Experience</a>
     <a class="cv" href="#contact">Contact</a>
@@ -284,7 +366,7 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
   <section class="hero3" aria-label="Introduction">
     <div class="wrap hsplit">
       <div class="hcopy">
-        <h1>I build systems that get back up.</h1>
+        <h1 id="heroH" aria-label="I build systems that get back up.">I build systems that get <span class="up">back up</span>.</h1>
         <p>Full-stack, backend, distributed systems and AI, built to survive the bad day. Previously at <b>Amazon</b> and <b>Collabera Digital</b>.</p>
         <div class="cta"><a class="btn main" href="#work">See the work</a><a class="btn" href="#contact">Get in touch</a></div>
       </div>
@@ -298,7 +380,7 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
 
   <section class="s" id="work" aria-labelledby="work-h">
     <div class="wrap">
-      <div class="sh"><h2 id="work-h">Selected work</h2></div>
+      <div class="sh"><h2 id="work-h" class="dec">Selected work</h2></div>
 
       <!-- Cloud-Native -->
       <div class="proj">
@@ -311,12 +393,12 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
           <div class="story">
             <div>
               <p class="pull">Outages and releases should be boring.</p>
-              <p>Cloud providers split each region into separate data centers called availability zones. The app runs copies in several of them, on AWS or Azure, behind a load balancer that only sends visitors to copies that pass a health check.</p>
+              <p>Cloud providers split each region into separate data centers called <span class="gterm" tabindex="0" data-g="az">availability zones</span>. The app runs copies in several of them, on AWS or Azure, behind a <span class="gterm" tabindex="0" data-g="lb">load balancer</span> that only sends visitors to copies that pass a <span class="gterm" tabindex="0" data-g="hc">health check</span>.</p>
               <p>If a whole zone fails, the other copies keep serving while new ones start automatically.</p>
             </div>
             <div>
               <p>Releases roll out one copy at a time, so a working version is always online. The whole setup is written as code, so it can be rebuilt on either cloud instead of clicked together by hand.</p>
-              <p>Slow tasks like sending verification emails moved to background jobs, which cut response times by <b>35%</b>.</p>
+              <p>Slow tasks like sending verification emails moved to background jobs, which cut response times by <b><span data-count="35">35</span>%</b>.</p>
               <p class="cost"><b>What it costs:</b> spare capacity you pay for and hope never to use, and skipping shortcuts that only work on one cloud.</p>
               <p>Below, take a zone down or ship a new version, and watch the failed requests.</p>
             </div>
@@ -334,21 +416,37 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
       <div class="proj">
         <button class="ph" aria-expanded="false" aria-controls="p-gitstream">
           <span class="t">GitStream<small>Turns a live stream of events into analytics, without losing a single one.</small></span>
-          <span class="r"><b>10 to 100× faster</b>analytics queries</span>
+          <span class="r"><b>10 to <span data-count="100" data-from="10">100</span>× faster</b>analytics queries</span>
           <span class="x" aria-hidden="true">+</span>
         </button>
         <div class="pb" id="p-gitstream" hidden>
           <div class="story">
             <div>
               <p class="pull">Many workers, one rule: never lose an event.</p>
-              <p>Think of every click, order or log line as an event. Events arrive in order through Kafka, a queue built for heavy streams, and a pool of workers handles them in parallel to keep up.</p>
+              <p>Think of every click, order or log line as an event. Events arrive in order through <span class="gterm" tabindex="0" data-g="kafka">Kafka</span>, a queue built for heavy streams, and a pool of workers handles them in parallel to keep up.</p>
               <p>The catch is that parallel workers finish out of order. If the system marks “everything up to 500 is done” while event 497 is still running, and that worker crashes, event 497 is gone and nobody notices.</p>
             </div>
             <div>
               <p>My fix keeps a small ledger for each stream and only moves the “done” marker forward once <b>everything before it</b> has finished. And when the database slows down, workers simply take less, so the slowdown travels back to the source instead of piling up in memory.</p>
               <p class="cost"><b>What it costs:</b> after a crash, a few events can be processed twice. A repeat is easy to handle. A gap is not.</p>
-              <p>Results land in two databases on purpose: one that is quick at finding a single record, and one that is quick at adding up millions. That split made analytics queries <b>10 to 100 times faster</b>.</p>
+              <p>Results land in two databases on purpose: one that is quick at finding a single record, and one that is quick at adding up millions. That split made analytics queries <b>10 to <span data-count="100" data-from="10">100</span> times faster</b>.</p>
               <p>Try it below: drag the load up and watch the queue fill.</p>
+            </div>
+          </div>
+          <div class="cr" id="crDemo">
+            <div class="cr-head"><b>The commit rule, running</b><span>The code on the right is what decides what’s safe to commit.</span></div>
+            <div class="cr-grid">
+              <div class="cr-panel">
+                <div class="cr-ptr"><span>Offsets in one partition</span><span>a.committed <b id="crCm">0</b></span></div>
+                <div class="cr-offs" id="crOffs"></div>
+                <div class="cr-ptr"><span><i style="color:var(--event)">■</i> running</span><span><i style="color:var(--worker)">■</i> finished</span><span><i style="color:var(--ok)">■</i> committed</span></div>
+                <div class="cr-ctl"><button class="chip" id="crCrash">Crash a worker</button><button class="chip" id="crSlow">Slow down</button></div>
+                <div class="cr-log" id="crLog" aria-live="polite">Three workers take offsets in order, but finish whenever they finish.</div>
+              </div>
+              <div class="cr-panel">
+                <div class="cr-code" id="crCode"><div><span class="k">func</span> (a *Accountant) Complete(off <span class="k">int64</span>) {</div><div>    a.done[off] = <span class="k">true</span></div><div>    <span class="k">for</span> a.done[a.committed+1] {</div><div>        a.committed++</div><div>        <span class="k">delete</span>(a.done, a.committed)</div><div>    }</div><div>    a.commit(a.committed) <span class="c">// only contiguous work</span></div><div>}</div><div> </div><div><span class="k">func</span> (a *Accountant) OnCrash() {</div><div>    a.restartFrom(a.committed + 1) <span class="c">// repeats, never gaps</span></div><div>}</div></div>
+                <div class="cr-vars">a.done = <b id="crDone">map[]</b></div>
+              </div>
             </div>
           </div>
           <div class="demo">
@@ -372,10 +470,10 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
             <div>
               <p class="pull">You already have the stories. They’re just scattered.</p>
               <p>Behavioral questions like “tell me about a hard bug” need real examples. Most people have them, buried in old notes, tickets and memory, and dig them up again before every interview.</p>
-              <p>With InterviewKit, you write short notes about past projects once. It breaks them into small pieces and stores them so they can be searched by meaning, not just by keywords.</p>
+              <p>With InterviewKit, you write short notes about past projects once. It breaks them into small pieces and stores them so they can be searched <span class="gterm" tabindex="0" data-g="sem">by meaning</span>, not just by keywords.</p>
             </div>
             <div>
-              <p>Give it a job description and a company’s values, and it drafts the questions you’re likely to get. For each one, it pulls the closest pieces of your notes and writes a STAR answer (situation, task, action, result), <b>naming the note it came from</b>.</p>
+              <p>Give it a job description and a company’s values, and it drafts the questions you’re likely to get. For each one, it pulls the closest pieces of your notes and writes a <span class="gterm" tabindex="0" data-g="star">STAR answer</span> (situation, task, action, result), <b>naming the note it came from</b>.</p>
               <p class="cost"><b>What it costs:</b> when none of your notes fit a question, it says so instead of making up a story. A confident fake answer is worse than none.</p>
               <p>Each step is an explicit, testable workflow rather than a free-roaming AI agent, and your private notes stay out of version control.</p>
               <p>Pick a question below. The last one has no story behind it.</p>
@@ -405,7 +503,7 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
               <p>My part focused on keeping it secure and fast. Every request passes a series of checks before it can touch any data.</p>
             </div>
             <div>
-              <p>Logins use signed tokens, and every account has a role: people see only their own activity, and only admins can review safety reports. Every input is cleaned, so a hidden script can’t slip into a report, and strict browser security headers block common attacks.</p>
+              <p>Logins use <span class="gterm" tabindex="0" data-g="jwt">signed tokens</span>, and every account has a role: people see only their own activity, and only admins can review safety reports. Every input is cleaned, so a hidden script can’t slip into a report, and strict browser <span class="gterm" tabindex="0" data-g="hdr">security headers</span> block common attacks.</p>
               <p>On the data side, better indexes and leaner database queries made the app respond faster.</p>
               <p class="cost"><b>What it costs:</b> a few more checks on every request. For safety reports, that’s the right trade.</p>
               <p>Send a request below and watch which check lets it through or stops it.</p>
@@ -424,15 +522,15 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
       <div class="proj">
         <button class="ph" aria-expanded="false" aria-controls="p-hc">
           <span class="t">Healthcare Data Service<small>A health records API that answers as soon as the data is safe, without waiting on search.</small></span>
-          <span class="r"><b>60% faster</b>saves</span>
+          <span class="r"><b><span data-count="60">60</span>% faster</b>saves</span>
           <span class="x" aria-hidden="true">+</span>
         </button>
         <div class="pb" id="p-hc" hidden>
           <div class="story">
             <div>
               <p class="pull">Saving a record shouldn’t wait for search to catch up.</p>
-              <p>Every record also has to show up in search. Updating the search index takes time, and the service used to make every save wait for it before answering.</p>
-              <p>Now the save goes straight to storage, and a separate background worker updates search a moment later. Saves got <b>60% faster</b>.</p>
+              <p>Every record also has to show up in search. Updating the <span class="gterm" tabindex="0" data-g="idx">search index</span> takes time, and the service used to make every save wait for it before answering.</p>
+              <p>Now the save goes straight to storage, and a separate background worker updates search a moment later. Saves got <b><span data-count="60">60</span>% faster</b>.</p>
             </div>
             <div>
               <p>Repeat reads are cheap too. If a client already has the latest version of a record, the server just replies “nothing changed” instead of fetching it again.</p>
@@ -454,12 +552,12 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
 
   <section class="heal" aria-label="An interactive headline">
     <canvas id="healCv" aria-label="The words Break it, it heals, drawn with points. Move through them and they return to place."></canvas>
-    <p class="cap">Most of my work repairs itself when it fails.</p>
+    <p class="cap">My systems heal themselves.</p>
   </section>
 
   <section class="s" id="experience" aria-labelledby="xp-h">
     <div class="wrap">
-      <div class="sh"><h2 id="xp-h">Experience</h2><p>Where these habits came from.</p></div>
+      <div class="sh"><h2 id="xp-h" class="dec">Experience</h2><p>Where these habits came from.</p></div>
       <article class="xp">
         <div class="when">2021 to 2023</div>
         <div>
@@ -467,10 +565,10 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
           <div class="role">Software Engineer (Analyst, then Associate Data Engineer), Bangalore</div>
           <p class="lead">Two years, two roles: first building across the stack, then keeping a bank’s data moving.</p>
           <p>In my first year, I built full-stack apps and quick proofs of concept for client projects, owning features from the front end to the back end, and kept our cloud services healthy and locked down. I also built a sentiment-analysis system end to end, from raw data to the dashboard.</p>
-          <p>Then I moved to data pipelines for an enterprise banking client, including a large core-banking migration. The jobs were high-volume with tight processing windows, so most days were about speed and reliability: finding out why something failed in production, tuning it, and getting it done on time.</p>
+          <p>Then I moved to <span class="gterm" tabindex="0" data-g="dp">data pipelines</span> for an enterprise banking client, including a large core-banking migration. The jobs were high-volume with tight processing windows, so most days were about speed and reliability: finding out why something failed in production, tuning it, and getting it done on time.</p>
           <p>The failure I still remember happened only at peak load. It wasn’t a logic bug; the job was running out of memory. After that, I added the monitoring, alerts and docs the team leaned on to catch problems early.</p>
           <p>Along the way, I was named <b>Best Talent</b> for 2021 to 2022.</p>
-          <div class="tags"><span>TypeScript</span><span>C#</span><span>Java</span><span>Python</span><span>SQL</span><span>AWS</span></div>
+          <div class="tags"><span>React</span><span>TypeScript</span><span>Angular</span><span>C#</span><span>.NET Core</span><span>Java</span><span>Python</span><span>SQL</span><span>AWS</span></div>
         </div>
       </article>
       <article class="xp">
@@ -479,9 +577,9 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
           <h3>Amazon</h3>
           <div class="role">Software Development Engineer Intern, Arlington, VA</div>
           <p class="lead">A summer of taking fuzzy problems all the way to production, and learning to design for the bad day first.</p>
-          <p>I owned an event-driven system from the first design to the deploy. Most of the real work was about what happens when things go wrong: catching duplicates, retrying failures safely, and watching it closely enough to spot trouble early.</p>
-          <p>The hardest problem was rate limiting, and more code wasn’t the answer. Changing the architecture was: letting pressure flow back to the source and capping how much runs at once kept it steady under load.</p>
-          <p>I also worked on LLM-powered systems, where the real challenge was trust. Guardrails and an evaluation setup turned the output into something you could check, not just hope was right.</p>
+          <p>I owned an <span class="gterm" tabindex="0" data-g="ed">event-driven</span> system from the first design to the deploy. Most of the real work was about what happens when things go wrong: catching duplicates, retrying failures safely, and watching it closely enough to spot trouble early.</p>
+          <p>The hardest problem was <span class="gterm" tabindex="0" data-g="rl">rate limiting</span>, and more code wasn’t the answer. Changing the architecture was: letting pressure flow back to the source and capping how much runs at once kept it steady under load.</p>
+          <p>I also worked on LLM-powered systems, where the real challenge was trust. <span class="gterm" tabindex="0" data-g="gr">Guardrails</span> and an evaluation setup turned the output into something you could check, not just hope was right.</p>
           <div class="tags"><span>Python</span><span>Kotlin</span><span>AWS</span><span>DynamoDB</span><span>SQS</span><span>CloudWatch</span><span>LLMs</span><span>CI/CD</span></div>
         </div>
       </article>
@@ -491,7 +589,7 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
           <h3>bigonotes</h3>
           <div class="role">Creator and Engineer</div>
           <p class="lead">A free study site for CS students and early-career engineers, built from what my own interviews tested.</p>
-          <p>Every interview showed me a gap. I wrote each one up in plain English, and those write-ups grew into 261 free notes across 48 topics, from DSA and CS concepts to system design and cloud. No account needed.</p>
+          <p>Every interview showed me a gap. I wrote each one up in plain English, and those write-ups grew into <span data-count="261">261</span> free notes across <span data-count="48">48</span> topics, from DSA and CS concepts to system design and cloud. No account needed.</p>
           <p>I built and run the whole thing myself: the design, the content pipeline, search and every deploy. <a href="https://bigonotes.com" target="_blank" rel="noopener noreferrer">Visit bigonotes.com</a></p>
           <div class="tags"><span>Next.js</span><span>React</span><span>TypeScript</span><span>Tailwind CSS</span><span>Python</span><span>Pagefind</span><span>Playwright</span><span>Vercel</span></div>
         </div>
@@ -505,14 +603,14 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
 
   <section class="s" id="stack" aria-labelledby="stk-h" style="padding-top:0">
     <div class="wrap">
-      <div class="sh"><h2 id="stk-h">Stack</h2><p>What I reach for, by layer.</p></div>
+      <div class="sh"><h2 id="stk-h" class="dec">Stack</h2><p>What I reach for, by layer.</p></div>
       <div class="stk">
         <div class="r"><b>Languages</b><div><span>Python</span><span>Java</span><span>Go</span><span>TypeScript</span><span>JavaScript</span><span>SQL</span><span>Kotlin</span><span>C#</span></div></div>
         <div class="r"><b>Backend</b><div><span>Spring Boot</span><span>FastAPI</span><span>Node.js</span><span>.NET Core</span><span>Django</span></div></div>
         <div class="r"><b>Frontend</b><div><span>React</span><span>Next.js</span><span>Redux</span><span>Angular</span><span>Tailwind CSS</span></div></div>
         <div class="r"><b>Data and streaming</b><div><span>PostgreSQL</span><span>MySQL</span><span>MongoDB</span><span>Redis</span><span>Elasticsearch</span><span>ClickHouse</span><span>Kafka</span></div></div>
-        <div class="r"><b>Cloud and DevOps</b><div><span>AWS</span><span>Azure</span><span>Docker</span><span>Kubernetes</span><span>Terraform</span><span>GitHub Actions</span><span>Linux</span></div></div>
-        <div class="r"><b>AI</b><div><span>LangGraph</span><span>LangChain</span><span>pgvector</span><span>MCP</span><span>RAG</span></div></div>
+        <div class="r"><b>Cloud and DevOps</b><div><span>AWS</span><span>Azure</span><span>Docker</span><span>Kubernetes</span><span>Terraform</span><span>Git</span><span>Linux</span></div></div>
+        <div class="r"><b>AI</b><div><span>LangGraph</span><span>LangChain</span><span>pgvector</span><span>LLMs</span><span>MCP</span><span>RAG</span></div></div>
       </div>
     </div>
   </section>
@@ -520,8 +618,9 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
 
   <section class="s ct" id="contact" aria-labelledby="ct-h" style="padding-top:clamp(40px,6vw,80px)">
     <div class="wrap">
-      <h2 id="ct-h">Hiring for backend, infra, full-stack or AI?</h2>
-      <a class="mail" href="mailto:patilshankarvivek@gmail.com">patilshankarvivek@gmail.com</a>
+      <h2 id="ct-h" aria-label="Hiring for backend, front end, full-stack, infra or AI?">Hiring for <span class="slotw" id="slotw" aria-hidden="true"><span class="role" id="role">backend</span>?</span></h2>
+      <p class="ct-sub">One engineer for the front end, the APIs, the data, the cloud and the AI.</p>
+      <div class="prompt"><span class="pfx" aria-hidden="true">$ mail</span><a class="mail" id="mailA" href="mailto:patilshankarvivek@gmail.com" aria-label="patilshankarvivek@gmail.com">patilshankarvivek@gmail.com</a><span class="cur" aria-hidden="true"></span></div>
     </div>
   </section>
 </main>
@@ -582,18 +681,22 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
   /* ---------- hero: pipeline in a card ---------- */
   const streamTele = document.getElementById('streamTele');
   const S = Stage(document.getElementById('streamCv'), {
-    workers:[], parts:[], acc:0, win:[], rebal:0, log:'All workers healthy.',
+    workers:[], parts:[], acc:0, win:[], rebal:0, log:'All workers healthy. Resize the window and the pipeline scales to fit.',
     setup(){
-      const W=this.W, H=this.H, mob=W<520, n=mob?4:6;
+      const W=this.W, H=this.H, mob=W<520, n=Math.max(3, Math.min(8, Math.floor(W/100)));
       this.fs = mob?11:12.5;
       this.kw = mob?64:86; this.sw = mob?92:124;
       this.kx = this.kw/2 + 4; this.ky = H/2;
       this.x0 = this.kx + this.kw/2; this.laneStart = this.x0 + (mob?40:70);
       this.wx = W*(mob?0.50:0.52);
       this.sx = W - this.sw/2 - 4; this.x1 = this.sx - this.sw/2;
-      const top=H*0.10, bot=H*0.90;
-      this.workers=[]; this.parts=[];
-      for (let i=0;i<n;i++) this.workers.push({i, y: top+(bot-top)*i/(n-1), alive:true, deadAt:0});
+      const top=H*0.10, bot=H*0.90, before=this.workers.length;
+      if (!before){ for (let i=0;i<n;i++) this.workers.push({i, y:0, ty:0, a:1, alive:true, deadAt:0}); }
+      else if (n > before){ for (let i=before;i<n;i++) this.workers.push({i, y:this.workers[before-1].y, ty:0, a:0, alive:true, deadAt:0});
+        this.log=`Scaled out to ${n} workers to fit the new size. New workers joined once they were healthy.`; }
+      else if (n < before){ this.workers.length = n; this.parts.forEach(q => { if (q.lane>=n) q.lane%=n; if (q.route>=n) q.route%=n; });
+        this.log=`Scaled in to ${n} workers. Their events moved to the others, and none were dropped.`; }
+      this.workers.forEach((w,i) => { w.ty = top+(bot-top)*i/(n-1); if (!before || reduce.matches){ w.y = w.ty; w.a = 1; } });
       this.sinks=[{n:'PostgreSQL', y:H*0.30},{n:'ClickHouse', y:H*0.70}];
     },
     sinkOf(i){ return i < this.workers.length/2 ? this.sinks[0] : this.sinks[1]; },
@@ -613,6 +716,7 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
       const sp = Math.max(110, this.W*0.24);
       this.acc += dt*(this.W<520?20:32);
       while (this.acc > 1){ this.acc--; const l=Math.floor(Math.random()*this.workers.length); this.parts.push({lane:l, route:l, x:this.x0, v:sp*(0.75+Math.random()*0.5), c:false}); }
+      this.workers.forEach(w => { w.y += (w.ty - w.y)*Math.min(1, dt*6); w.a += (1 - w.a)*Math.min(1, dt*3); });
       this.workers.forEach(w => { if (!w.alive && now-w.deadAt > 3200){ w.alive=true; this.log=`Worker ${w.i+1} restarted and took its events back.`; } });
       for (let k=this.parts.length-1;k>=0;k--){ const p=this.parts[k]; p.x += p.v*dt;
         if (p.x > this.wx-64 && p.x < this.wx-56){ const w=this.workers[p.lane]; p.route = w.alive ? p.lane : this.alive(p.lane); }
@@ -630,10 +734,11 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
       this.workers.forEach(w => { ctx.beginPath(); for (let x=this.x0; x<=this.x1; x+=8){ const y=this.yAt(w.i,w.i,x); x===this.x0?ctx.moveTo(x,y):ctx.lineTo(x,y); } ctx.stroke(); });
       this.parts.forEach(p => { const y=this.yAt(p.lane,p.route,p.x); ctx.fillStyle=(p.route!==p.lane && p.x>this.wx-60)?C.worker:C.event; ctx.globalAlpha=.9; ctx.beginPath(); ctx.arc(p.x,y,2.5,0,Math.PI*2); ctx.fill(); });
       ctx.globalAlpha=1;
-      this.workers.forEach(w => { const hov=this.hover===w;
+      this.workers.forEach(w => { const hov=this.hover===w; ctx.globalAlpha=w.a;
         ctx.beginPath(); ctx.arc(this.wx,w.y,hov?17:14,0,Math.PI*2); ctx.fillStyle=C.bg; ctx.fill(); ctx.lineWidth=2.5; ctx.strokeStyle=w.alive?C.worker:C.fail; ctx.stroke();
         ctx.fillStyle=w.alive?C.worker:C.fail; ctx.font='600 11px '+MONO; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText(w.alive?String(w.i+1):'×', this.wx, w.y+.5);
         if (!w.alive){ const t=Math.max(0,3.2-(now-w.deadAt)/1000).toFixed(1)+' s'; ctx.fillStyle=C.soft; ctx.font='500 10.5px '+MONO; if (this.W<520){ ctx.textAlign='center'; ctx.fillText(t, this.wx, w.y-24); } else { ctx.textAlign='left'; ctx.fillText('restarts in '+t, this.wx+22, w.y+.5); } } });
+      ctx.globalAlpha=1;
       ctx.fillStyle=C.faint; ctx.font='500 11px '+MONO; ctx.textAlign='center'; ctx.fillText('workers', this.wx, this.workers[0].y-26);
       this.box(this.kx, this.ky, this.kw, 'Kafka');
       this.sinks.forEach(s => this.box(this.sx, s.y, this.sw, s.n));
@@ -972,12 +1077,191 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
     cgQs.appendChild(b); });
   cgTele.innerHTML='<div class="log">Pick a request. Each check either lets it through or stops it.</div>';
 
+  /* ---------- headings decode the first time they appear ---------- */
+  (() => {
+    const glyphs = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#%&*+=<>/';
+    const rnd = () => glyphs[Math.floor(Math.random()*glyphs.length)];
+    function decode(el){
+      if (el.dataset.done) return; el.dataset.done = '1';
+      const final = el.textContent;
+      if (reduce.matches) return;
+      el.setAttribute('aria-label', final);
+      el.classList.add('scr');
+      let f = 0; const total = 24;
+      el.textContent = final.replace(/\S/g, rnd);
+      const tick = () => { f++; const n = Math.floor(final.length * f / total);
+        el.textContent = final.split('').map((c,i) => (i < n || c === ' ') ? c : rnd()).join('');
+        if (f < total) requestAnimationFrame(tick); else { el.textContent = final; el.classList.remove('scr'); el.removeAttribute('aria-label'); } };
+      requestAnimationFrame(tick);
+    }
+    const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting){ decode(e.target); io.unobserve(e.target); } }), {threshold:0.6});
+    document.querySelectorAll('h2.dec').forEach(h => io.observe(h));
+  })();
+
+  /* ---------- small effects ---------- */
+  (() => {
+    const rm = reduce.matches;
+    const seen = (el, fn, th) => { const o = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting){ o.unobserve(e.target); fn(e.target); } }), {threshold: th || 0.5}); o.observe(el); };
+
+    // 1. "back up" tips over and gets back up
+    const hh = document.getElementById('heroH');
+    if (hh){ const up = hh.querySelector('.up');
+      up.innerHTML = up.textContent.split('').map((c,i) => c === ' ' ? ' ' : `<span class="ch" aria-hidden="true" style="--r:${((i*37)%24)-12}deg;animation-delay:${(i*0.05).toFixed(2)}s">${c}</span>`).join('');
+      if (!rm){ const go = () => setTimeout(() => hh.classList.add('go'), 350); (document.fonts && document.fonts.ready) ? document.fonts.ready.then(go) : go(); } }
+
+    // 2. numbers count up the first time they appear
+    document.querySelectorAll('[data-count]').forEach(el => {
+      const to = +el.dataset.count, from = +(el.dataset.from || 0);
+      if (rm) return;
+      el.textContent = from;
+      seen(el, () => { const t0 = performance.now(), dur = 1100;
+        const tick = now => { const p = Math.min(1, (now - t0)/dur), e = 1 - Math.pow(1-p, 3); el.textContent = Math.round(from + (to-from)*e); if (p < 1) requestAnimationFrame(tick); };
+        requestAnimationFrame(tick); }, 1);
+    });
+
+    // 3. the stack installs itself
+    const stk = document.querySelector('.stk');
+    if (stk){ const chips = [...stk.querySelectorAll('.r div span')];
+      const lg = document.createElement('div'); lg.className = 'stklog'; lg.setAttribute('aria-hidden','true'); stk.after(lg);
+      if (rm){ lg.textContent = `added ${chips.length} packages`; }
+      else { stk.classList.add('wait');
+        seen(stk, () => { chips.forEach((c,i) => setTimeout(() => { c.classList.add('on'); lg.textContent = `installing ${(c.firstChild ? c.firstChild.textContent : c.textContent).trim().toLowerCase().replace(/[^a-z0-9#.]+/g,'-')}…`;
+          if (i === chips.length-1) setTimeout(() => { lg.textContent = `added ${chips.length} packages in ${(chips.length*0.045).toFixed(1)} s`; }, 220); }, i*45)); }, 0.3); } }
+
+    // 4. the email types like a prompt
+    const ma = document.getElementById('mailA');
+    if (ma && !rm){ const full = ma.textContent; ma.textContent = '';
+      seen(ma.parentElement, () => { let i = 0; const step = () => { ma.textContent = full.slice(0, ++i); if (i < full.length) setTimeout(step, 40 + Math.random()*40); }; step(); }, 0.6); }
+
+    // 5. project dividers draw themselves
+    if (!rm) document.querySelectorAll('.proj').forEach(pj => { pj.classList.add('wait'); seen(pj, () => pj.classList.add('drawn'), 0.2); });
+
+    // 7. case studies reveal line by line when they open
+    window.__revealCase = pb => { if (rm || !pb) return; pb.querySelectorAll('.story p').forEach((q,i) => q.style.animationDelay = (i*0.08)+'s'); pb.classList.remove('reveal'); void pb.offsetWidth; pb.classList.add('reveal'); };
+    const firstOpen = document.querySelector('.ph[aria-expanded="true"]');
+    if (firstOpen){ const pb = document.getElementById(firstOpen.getAttribute('aria-controls')); if (pb && !rm){ pb.querySelectorAll('.story p').forEach(q => q.style.opacity = 0); seen(pb, () => { pb.querySelectorAll('.story p').forEach(q => q.style.opacity = ''); window.__revealCase(pb); }, 0.15); } }
+  })();
+
+  /* ---------- A, E, D, F ---------- */
+  (() => {
+    const rm = reduce.matches;
+    const G = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#%&*+=<>/';
+    const rnd = () => G[Math.floor(Math.random()*G.length)];
+    function decodeTo(el, text, frames, done){
+      if (rm){ el.textContent = text; done && done(); return; }
+      const len = Math.max(el.textContent.length, text.length); let f = 0; el.classList.add('scr');
+      const tick = () => { f++; const n = Math.floor(len*f/frames); let out = '';
+        for (let i=0;i<len;i++) out += i < n ? (text[i] || '') : (text[i] === ' ' ? ' ' : rnd());
+        el.textContent = out; if (f < frames) requestAnimationFrame(tick); else { el.textContent = text; el.classList.remove('scr'); done && done(); } };
+      requestAnimationFrame(tick);
+    }
+
+    // A. the hiring line cycles its roles while it is on screen
+    const role = document.getElementById('role'), slotw = document.getElementById('slotw');
+    const roles = ['backend','front end','full-stack','infra','AI'];
+    if (role && slotw){ const fitSlot = () => { const keep = role.textContent; slotw.style.width = 'auto'; let w = 0;
+        roles.forEach(r => { role.textContent = r; w = Math.max(w, slotw.getBoundingClientRect().width); }); role.textContent = keep; slotw.style.width = Math.ceil(w) + 'px'; };
+      fitSlot(); addEventListener('resize', fitSlot); if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitSlot); }
+    if (role && !rm){ let i = 0, t = null, on = false;
+      const next = () => { t = setTimeout(() => { if (!on) return; i = (i+1) % roles.length; decodeTo(role, roles[i], 18, next); }, 1800); };
+      new IntersectionObserver(es => es.forEach(e => { on = e.isIntersecting; clearTimeout(t); if (on) next(); }), {threshold:0.4}).observe(role); }
+
+    // E. bold phrases get a marker sweep as their paragraph appears
+    const mo = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting){ e.target.classList.add('mk'); mo.unobserve(e.target); } }), {threshold:0.6});
+    document.querySelectorAll('.story p, .xp p').forEach(p => { if (p.querySelector('b') && !p.classList.contains('cost')) { if (rm) p.classList.add('mk'); else mo.observe(p); } });
+
+    // D. stack chips show where they are used
+    const USED = {'Python':'InterviewKit, Healthcare, Collabera, Amazon','Java':'Cloud-Native, Collabera','Go':'GitStream','TypeScript':'ChildGuard, bigonotes, Collabera','JavaScript':'ChildGuard, Collabera','SQL':'GitStream, Collabera','Kotlin':'Amazon','C#':'Collabera',
+      'Spring Boot':'Cloud-Native','FastAPI':'Healthcare','Node.js':'ChildGuard','.NET Core':'Collabera',
+      'React':'ChildGuard, bigonotes, Collabera','Next.js':'bigonotes','Redux':'ChildGuard, Collabera','Angular':'Collabera','Tailwind CSS':'bigonotes',
+      'PostgreSQL':'GitStream, InterviewKit, Cloud-Native','MongoDB':'ChildGuard','Redis':'Healthcare','Elasticsearch':'Healthcare','ClickHouse':'GitStream','Kafka':'GitStream',
+      'AWS':'Cloud-Native, Amazon, Collabera','Azure':'Cloud-Native','Docker':'GitStream, InterviewKit, Cloud-Native','Terraform':'Cloud-Native','Git':'every project on this page','Linux':'Amazon, Collabera, Cloud-Native','Kubernetes':'Northeastern','Django':'Northeastern',
+      'LangGraph':'InterviewKit','LangChain':'InterviewKit','pgvector':'InterviewKit','RAG':'InterviewKit','MCP':'Amazon','LLMs':'Amazon, InterviewKit'};
+    document.querySelectorAll('.stk .r div span').forEach(c => { const k = c.textContent.trim(); if (!USED[k]) return;
+      c.dataset.used = '1'; c.tabIndex = 0; c.setAttribute('aria-label', `${k}, used in ${USED[k]}`);
+      const u = document.createElement('span'); u.className = 'use'; u.setAttribute('aria-hidden','true'); u.textContent = 'Used in ' + USED[k]; c.appendChild(u);
+      const place = () => { u.classList.remove('l','r'); const r = u.getBoundingClientRect(); if (r.left < 8) u.classList.add('l'); else if (r.right > innerWidth - 8) u.classList.add('r'); };
+      c.addEventListener('mouseenter', place); c.addEventListener('focus', place); });
+
+    // F. the name in the nav decodes on hover
+    const me = document.getElementById('meName');
+    if (me && !rm){ const name = me.textContent; let busy = false;
+      const flip = () => { if (busy) return; busy = true; decodeTo(me, 'vivek@prod:~$', 14, () => setTimeout(() => decodeTo(me, name, 16, () => { busy = false; }), 700)); };
+      me.addEventListener('mouseenter', flip); me.addEventListener('focus', flip); }
+  })();
+
+  /* ---------- the commit rule, running ---------- */
+  (() => {
+    const root = document.getElementById('crDemo'); if (!root) return;
+    const rm = reduce.matches, N = 16, offs = document.getElementById('crOffs'), lines = [...document.getElementById('crCode').children];
+    const cmEl = document.getElementById('crCm'), dEl = document.getElementById('crDone'), lg = document.getElementById('crLog');
+    const boxes = Array.from({length:N}, (_,i) => { const d = document.createElement('div'); d.className = 'cr-off'; d.textContent = i+1; offs.appendChild(d); return d; });
+    let st, committed, done, next, flying, speed = 1, timer = null, busy = false, on = false, running = false;
+    const reset = () => { st = Array(N+1).fill('idle'); committed = 0; done = new Set(); next = 1; flying = []; draw(); };
+    const draw = () => { boxes.forEach((b,i) => { const o = i+1; b.className = 'cr-off' + (o<=committed?' com':'') + (st[o]==='fly'?' fly':'') + (st[o]==='done'?' done':'') + (st[o]==='rep'?' fly rep':''); });
+      cmEl.textContent = committed; dEl.textContent = done.size ? 'map['+[...done].sort((a,b)=>a-b).map(o => o+':true').join(' ')+']' : 'map[]'; };
+    const hl = ix => lines.forEach((l,i) => l.classList.toggle('hl', ix.includes(i)));
+    const wait = ms => new Promise(r => setTimeout(r, rm ? 0 : ms*speed));
+    async function complete(o){ busy = true;
+      st[o] = 'done'; done.add(o); hl([0,1]); draw(); await wait(380); hl([2]); await wait(320);
+      while (done.has(committed+1)){ committed++; done.delete(committed); st[committed] = 'idle'; hl([3,4]); draw(); await wait(260); hl([2]); await wait(160); }
+      hl([6]); draw(); lg.textContent = done.size ? `Offset ${o} finished, but ${committed+1} is still running, so the commit stays at ${committed}.` : `Committed up to ${committed}. Everything before it is done.`;
+      await wait(420); hl([]); busy = false; }
+    async function tick(){
+      if (!on){ running = false; return; } running = true;
+      while (flying.length < 3 && next <= N){ if (st[next] !== 'rep') st[next] = 'fly'; flying.push({o:next, left:500 + Math.random()*1600}); next++; }
+      draw();
+      if (!busy && flying.length){ flying.forEach(f => f.left -= 220); const ready = flying.find(f => f.left <= 0); if (ready){ flying = flying.filter(x => x !== ready); await complete(ready.o); } }
+      if (committed >= N){ lg.textContent = 'All 16 committed. Starting over.'; await wait(1400); reset(); }
+      timer = setTimeout(tick, rm ? 600 : 220*speed);
+    }
+    document.getElementById('crCrash').addEventListener('click', async () => {
+      clearTimeout(timer); hl([9,10]); const lost = flying.length, redo = done.size;
+      flying.forEach(f => st[f.o] = 'idle'); done.forEach(o => st[o] = 'idle'); flying = []; done = new Set();
+      for (let o = committed+1; o < next; o++) st[o] = 'rep'; next = committed + 1; draw();
+      lg.textContent = `Crashed with ${lost} running and ${redo} finished but not committed. Restarting from offset ${committed+1}: ${lost+redo} events will run again, and none are lost.`;
+      await wait(1400); hl([]); busy = false; if (on) tick(); });
+    document.getElementById('crSlow').addEventListener('click', e => { speed = speed === 1 ? 2.2 : 1; e.target.textContent = speed === 1 ? 'Slow down' : 'Normal speed'; });
+    reset();
+    new IntersectionObserver(es => es.forEach(e => { on = e.isIntersecting; if (on && !running){ clearTimeout(timer); tick(); } }), {threshold:0.2}).observe(root);
+  })();
+
+  /* ---------- jargon explains itself ---------- */
+  (() => {
+    const G = {
+      kafka:['Kafka','A system that stores streams of events in order, so many workers can read them reliably.','Used in GitStream'],
+      az:['Availability zone','A separate data center inside one cloud region. If one fails, the others keep running.','Used in Cloud-Native Platform'],
+      lb:['Load balancer','Spreads incoming traffic across several copies of an app, so no single copy is overwhelmed.','Used in Cloud-Native Platform'],
+      hc:['Health check','A quick test the load balancer runs to see whether a copy of the app can take traffic.','Used in Cloud-Native Platform'],
+      star:['STAR answer','A way to answer behavioral questions: Situation, Task, Action, Result.','Used in InterviewKit'],
+      sem:['Searching by meaning','Notes are turned into vectors, lists of numbers that capture meaning, so similar ideas match even with different words.','Used in InterviewKit'],
+      idx:['Search index','A structure that makes search fast. It has to be updated whenever the data changes.','Used in Healthcare Data Service'],
+      jwt:['Signed tokens','A login proof the server can check without a database lookup. Any tampering breaks the signature.','Used in ChildGuard and the Healthcare Data Service'],
+      hdr:['Security headers','Instructions sent to the browser that block common attacks, such as injected scripts.','Used in ChildGuard'],
+      ed:['Event-driven','Parts of a system react to events from a queue instead of calling each other directly.','Used at Amazon and in GitStream'],
+      rl:['Rate limiting','Capping how much work runs at once, so a sudden spike can’t overwhelm a service.','Used at Amazon'],
+      gr:['Guardrails','Checks around an AI model that catch bad or unsupported output before anyone relies on it.','Used at Amazon and in InterviewKit'],
+      dp:['Data pipelines','Jobs that move and transform data from one system to another, often on a schedule.','Used at Collabera Digital']
+    };
+    const pop = document.createElement('div'); pop.className = 'gpop'; pop.id = 'gpop'; pop.setAttribute('role','tooltip'); document.body.appendChild(pop);
+    let cur = null;
+    const show = t => { const g = G[t.dataset.g]; if (!g) return; pop.innerHTML = `<b>${g[0]}</b>${g[1]}<em>${g[2]}</em>`;
+      const r = t.getBoundingClientRect(), w = Math.min(320, innerWidth*0.86); let x = r.left + scrollX; if (x + w > scrollX + innerWidth - 12) x = scrollX + innerWidth - 12 - w;
+      pop.style.left = Math.max(scrollX + 12, x) + 'px'; pop.style.top = (r.bottom + scrollY + 8) + 'px'; pop.classList.add('on'); cur = t; };
+    const hide = () => { pop.classList.remove('on'); cur = null; };
+    document.querySelectorAll('.gterm').forEach(t => { t.setAttribute('aria-describedby','gpop');
+      t.addEventListener('mouseenter', () => show(t)); t.addEventListener('mouseleave', hide); t.addEventListener('focus', () => show(t)); t.addEventListener('blur', hide);
+      t.addEventListener('click', e => { e.stopPropagation(); cur === t ? hide() : show(t); }); });
+    document.addEventListener('click', hide); addEventListener('scroll', () => { if (cur) hide(); }, {passive:true});
+  })();
+
   /* ---------- case study accordion ---------- */
   const sizeMap = {'p-gitstream':L, 'p-ik':R, 'p-cn':A, 'p-hc':Hc, 'p-cg':G};
   document.querySelectorAll('.ph').forEach(b => b.addEventListener('click', () => {
     const open = b.getAttribute('aria-expanded') === 'true', id=b.getAttribute('aria-controls');
     b.setAttribute('aria-expanded', String(!open));
     document.getElementById(id).hidden = open;
+    if (!open && window.__revealCase) window.__revealCase(document.getElementById(id));
     if (!open && sizeMap[id]) requestAnimationFrame(() => { sizeMap[id].size(); sizeMap[id].kick(); });
   }));
 })();
