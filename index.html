@@ -213,6 +213,59 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
 .xp p b{color:var(--ink);font-weight:600}
 .xp .tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
 .xp .tags span{font-size:13px;border:1px solid var(--line);border-radius:999px;padding:3px 10px;color:var(--soft)}
+
+/* hero, vertical pipeline */
+.hero2{border-bottom:1px solid var(--line);padding:clamp(28px,6vh,64px) 0}
+.hin{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.05fr);grid-template-areas:"copy pipe" "stats pipe";column-gap:clamp(24px,4vw,64px);align-items:center;min-height:calc(100svh - 62px - 2*clamp(28px,6vh,64px) - env(safe-area-inset-top,0px))}
+.hcopy{grid-area:copy;align-self:end}
+.hcopy h1{font-weight:700;font-size:clamp(44px,5.4vw,82px);line-height:.98;letter-spacing:-.03em;margin:0 0 18px}
+.hcopy p{font-size:clamp(16px,1.3vw,18px);line-height:1.6;color:var(--soft);margin:0 0 24px;max-width:46ch}
+.hcopy p b{color:var(--ink);font-weight:600}
+.hcopy .cta{display:flex;gap:10px;flex-wrap:wrap}
+.hstats{grid-area:stats;align-self:start;margin-top:34px;padding-top:20px;border-top:1px solid var(--line)}
+.hstats .nums{display:flex;gap:clamp(22px,3vw,40px);flex-wrap:wrap}
+.hstats .nums div{font-family:var(--mono);font-size:12px;color:var(--soft)}
+.hstats .nums b{display:block;font-family:var(--display);font-weight:700;font-size:clamp(28px,2.6vw,36px);letter-spacing:-.02em;color:var(--ink);line-height:1.15;margin-top:2px}
+.hstats .nums b.good{color:var(--ok)} .hstats .nums b.bad{color:var(--fail)}
+.hstats .log{margin:12px 0 0;font-family:var(--mono);font-size:12px;line-height:1.55;color:var(--soft);min-height:38px;max-width:52ch}
+.hpipe{grid-area:pipe;position:relative;height:min(76svh,700px);min-height:500px}
+.hpipe canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:manipulation}
+.hhint{position:absolute;left:50%;top:60%;transform:translateX(-50%);font-size:11.5px;line-height:1.4;color:var(--soft);background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:3px 9px;white-space:nowrap;pointer-events:none}
+.hhint .tap{display:none}
+@media (hover:none){.hhint .tap{display:inline}.hhint .click{display:none}}
+@media (max-width:860px){
+  .hin{grid-template-columns:1fr;grid-template-areas:"copy" "pipe" "stats";min-height:0}
+  .hcopy{align-self:auto}
+  .hcopy h1{font-size:clamp(40px,11vw,60px)}
+  .hpipe{height:460px;min-height:0;margin-top:22px}
+  .hstats{margin-top:6px}
+}
+
+/* hero, split with a card */
+.hero3{border-bottom:1px solid var(--line);padding:clamp(36px,8vh,88px) 0}
+.hsplit{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:clamp(28px,4vw,64px);align-items:center;min-height:calc(100svh - 62px - 2*clamp(36px,8vh,88px) - env(safe-area-inset-top,0px))}
+.hsplit .hcopy{grid-area:auto;align-self:center}
+.hsplit .hcopy h1{font-size:clamp(40px,4.6vw,70px)}
+.hcard{background:var(--panel);border:1px solid var(--line);border-radius:24px;padding:16px;box-shadow:0 20px 50px rgba(15,20,32,.07)}
+.hcap{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:2px 6px 8px;font-size:13px;color:var(--soft)}
+.hcap b{color:var(--ink);font-weight:600}
+.hhint2 .tap{display:none}
+@media (hover:none){.hhint2 .tap{display:inline}.hhint2 .click{display:none}}
+.hcv{position:relative;height:clamp(300px,42vh,400px)}
+.hcv canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:manipulation}
+.hnums{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:8px}
+.hnums .n{background:var(--bg);border-radius:12px;padding:10px 12px;font-family:var(--mono);font-size:11.5px;color:var(--soft)}
+.hnums .n b{display:block;font-family:var(--display);font-weight:700;font-size:22px;letter-spacing:-.01em;color:var(--ink);margin-top:2px}
+.hnums .n b.good{color:var(--ok)} .hnums .n b.bad{color:var(--fail)}
+.hnums .lg{grid-column:1/-1;font-family:var(--mono);font-size:12px;line-height:1.5;color:var(--soft);padding:4px 6px 0;min-height:36px}
+@media (max-width:860px){
+  .hsplit{grid-template-columns:1fr;min-height:0}
+  .hsplit .hcopy h1{font-size:clamp(40px,11vw,60px)}
+  .hcard{padding:12px;border-radius:20px}
+  .hcap{flex-direction:column;align-items:flex-start;gap:2px}
+  .hcv{height:330px}
+  .hnums{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
 </style>
 
 </head>
@@ -228,14 +281,19 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
 </header>
 
 <main id="top">
-  <section class="hero" aria-label="Introduction">
-    <canvas id="streamCv" aria-label="A live simulation of an event pipeline. Click a worker to stop it and watch its work move to another worker."></canvas>
-    <div class="hint"><span class="click">Click</span><span class="tap">Tap</span> a worker to stop it</div>
-    <div class="copy">
-      <h1>I build systems that get back up.</h1>
-      <div class="cta"><a class="btn main" href="#work">See the work</a><a class="btn" href="#contact">Get in touch</a></div>
+  <section class="hero3" aria-label="Introduction">
+    <div class="wrap hsplit">
+      <div class="hcopy">
+        <h1>I build systems that get back up.</h1>
+        <p>Full-stack, backend, distributed systems and AI, built to survive the bad day. Previously at <b>Amazon</b> and <b>Collabera Digital</b>.</p>
+        <div class="cta"><a class="btn main" href="#work">See the work</a><a class="btn" href="#contact">Get in touch</a></div>
+      </div>
+      <div class="hcard">
+        <div class="hcap"><span><b>Live:</b> an event pipeline like GitStream</span><span class="hhint2"><span class="click">Click</span><span class="tap">Tap</span> a worker to stop it</span></div>
+        <div class="hcv"><canvas id="streamCv" aria-label="A live event pipeline: events flow from Kafka through six workers into PostgreSQL and ClickHouse. Click a worker to stop it and watch its work move to another worker."></canvas></div>
+        <div class="hnums" id="streamTele" aria-live="polite"></div>
+      </div>
     </div>
-    <div class="tele" id="streamTele" aria-live="polite"></div>
   </section>
 
   <section class="s" id="work" aria-labelledby="work-h">
@@ -521,68 +579,73 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
     return st;
   }
 
-  /* ---------- hero: stream ---------- */
+  /* ---------- hero: pipeline in a card ---------- */
   const streamTele = document.getElementById('streamTele');
   const S = Stage(document.getElementById('streamCv'), {
-    lanes:[], workers:[], parts:[], acc:0, win:[], rebal:0, log:'All workers healthy.',
+    workers:[], parts:[], acc:0, win:[], rebal:0, log:'All workers healthy.',
     setup(){
-      const mob = this.W < 760, n = mob ? 4 : 6;
-      let top = this.H*0.16, bot = this.H*0.84;
-      if (!mob){ const hr=this.canvas.getBoundingClientRect(), cp=this.canvas.parentElement.querySelector('.copy').getBoundingClientRect();
-        top = Math.max(this.H*0.46, cp.bottom - hr.top + 64); bot = Math.max(top + 160, this.H - 56); }
-      this.lanes = []; this.workers = []; this.parts = [];
-      for (let i=0;i<n;i++){ this.lanes.push({y: top + (bot-top)*(i/(n-1))}); this.workers.push({i, alive:true, deadAt:0, y:0}); }
-      this.wx = this.W*(mob?0.56:0.58);
-      if (mob){ this.sinkA = this.H*0.32; this.sinkB = this.H*0.68; }
-      else { this.sinkA = top + (bot-top)*0.22; this.sinkB = top + (bot-top)*0.78;
-        const hint=this.canvas.parentElement.querySelector('.hint'); if (hint){ hint.style.top = ((this.sinkA + this.sinkB)/2 - 14) + 'px'; } }
+      const W=this.W, H=this.H, mob=W<520, n=mob?4:6;
+      this.fs = mob?11:12.5;
+      this.kw = mob?64:86; this.sw = mob?92:124;
+      this.kx = this.kw/2 + 4; this.ky = H/2;
+      this.x0 = this.kx + this.kw/2; this.laneStart = this.x0 + (mob?40:70);
+      this.wx = W*(mob?0.50:0.52);
+      this.sx = W - this.sw/2 - 4; this.x1 = this.sx - this.sw/2;
+      const top=H*0.10, bot=H*0.90;
+      this.workers=[]; this.parts=[];
+      for (let i=0;i<n;i++) this.workers.push({i, y: top+(bot-top)*i/(n-1), alive:true, deadAt:0});
+      this.sinks=[{n:'PostgreSQL', y:H*0.30},{n:'ClickHouse', y:H*0.70}];
     },
-    laneY(i,x){ return this.lanes[i].y + Math.sin((x/this.W)*Math.PI*2 + i)*6; },
-    sinkY(i){ return i < this.lanes.length/2 ? this.sinkA : this.sinkB; },
+    sinkOf(i){ return i < this.workers.length/2 ? this.sinks[0] : this.sinks[1]; },
     alive(i){ let b=-1,d=1e9; this.workers.forEach(w => { if (w.alive && Math.abs(w.i-i)<d){ d=Math.abs(w.i-i); b=w.i; } }); return b; },
     kill(w){ if (!w.alive) return; if (this.workers.filter(v=>v.alive).length < 2){ this.log='At least one worker has to stay up. Wait for a restart.'; return; }
       w.alive=false; w.deadAt=performance.now(); this.rebal++; const to=this.alive(w.i);
-      this.log=`Worker ${w.i+1} stopped. Partition ${w.i+1} moved to worker ${to+1}. Only contiguous offsets were committed, so nothing was lost.`; },
+      this.log=`Worker ${w.i+1} stopped. Its events moved to worker ${to+1}, and only finished work is committed, so nothing was lost.`; },
+    sm(t){ t=Math.max(0,Math.min(1,t)); return t*t*(3-2*t); },
+    yAt(lane, route, x){
+      const yl=this.workers[lane].y, yr=this.workers[route].y, sy=this.sinkOf(route).y;
+      if (x < this.laneStart) return this.ky + (yl-this.ky)*this.sm((x-this.x0)/(this.laneStart-this.x0));
+      if (x < this.wx-60) return yl;
+      if (x < this.wx) return yl + (yr-yl)*this.sm((x-(this.wx-60))/60);
+      return yr + (sy-yr)*this.sm((x-this.wx)/(this.x1-this.wx));
+    },
     step(dt, now){
-      const sp = Math.max(140, this.W*0.16);
-      this.acc += dt*(this.W<760?22:36);
-      while (this.acc > 1){ this.acc--; const l=Math.floor(Math.random()*this.lanes.length); this.parts.push({lane:l, route:l, x:-10, v:sp*(0.75+Math.random()*0.5)}); }
-      this.workers.forEach(w => { if (!w.alive && now-w.deadAt > 3200){ w.alive=true; this.log=`Worker ${w.i+1} restarted and took partition ${w.i+1} back.`; } });
+      const sp = Math.max(110, this.W*0.24);
+      this.acc += dt*(this.W<520?20:32);
+      while (this.acc > 1){ this.acc--; const l=Math.floor(Math.random()*this.workers.length); this.parts.push({lane:l, route:l, x:this.x0, v:sp*(0.75+Math.random()*0.5), c:false}); }
+      this.workers.forEach(w => { if (!w.alive && now-w.deadAt > 3200){ w.alive=true; this.log=`Worker ${w.i+1} restarted and took its events back.`; } });
       for (let k=this.parts.length-1;k>=0;k--){ const p=this.parts[k]; p.x += p.v*dt;
-        if (p.x > this.wx-80 && p.x < this.wx-60){ const w=this.workers[p.lane]; p.route = w.alive ? p.lane : this.alive(p.lane); }
+        if (p.x > this.wx-64 && p.x < this.wx-56){ const w=this.workers[p.lane]; p.route = w.alive ? p.lane : this.alive(p.lane); }
         if (!p.c && p.x >= this.wx){ p.c=true; this.win.push(now); }
-        if (p.x > this.W+20) this.parts.splice(k,1); }
+        if (p.x > this.x1) this.parts.splice(k,1); }
       while (this.win.length && now-this.win[0] > 1000) this.win.shift();
     },
-    yFor(p){ const wx=this.wx;
-      if (p.x < wx-80) return this.laneY(p.lane,p.x);
-      if (p.x < wx){ const f=(p.x-(wx-80))/80, e=f*f*(3-2*f); return this.laneY(p.lane,p.x)*(1-e)+this.laneY(p.route,p.x)*e; }
-      const f=Math.min(1,(p.x-wx)/(this.W-wx)), e=f*f*(3-2*f); return this.laneY(p.route,p.x)*(1-e)+this.sinkY(p.route)*e; },
+    box(x,y,w,label){ const ctx=this.ctx, h=36;
+      ctx.beginPath(); ctx.roundRect ? ctx.roundRect(x-w/2,y-h/2,w,h,10) : ctx.rect(x-w/2,y-h/2,w,h);
+      ctx.fillStyle=C.bg; ctx.fill(); ctx.strokeStyle=C.ink; ctx.lineWidth=1.5; ctx.stroke();
+      ctx.fillStyle=C.ink; ctx.font='500 '+this.fs+'px '+MONO; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText(label, x, y+.5); },
     render(now){
-      const {ctx,W,H} = this, wx=this.wx;
-      ctx.lineWidth=1.2;
-      this.lanes.forEach((L,i) => { ctx.strokeStyle=C.lane; ctx.beginPath();
-        for (let x=0;x<=wx;x+=12){ const y=this.laneY(i,x); x?ctx.lineTo(x,y):ctx.moveTo(x,y); }
-        for (let x=wx;x<=W;x+=12){ const f=(x-wx)/(W-wx), e=f*f*(3-2*f); ctx.lineTo(x, this.laneY(i,x)*(1-e)+this.sinkY(i)*e); }
-        ctx.stroke(); });
-      this.parts.forEach(p => { const y=this.yFor(p); ctx.fillStyle = (p.route!==p.lane && p.x>wx-80) ? C.worker : C.event; ctx.globalAlpha=.9; ctx.beginPath(); ctx.arc(p.x,y,2.4,0,Math.PI*2); ctx.fill(); });
+      const ctx=this.ctx;
+      ctx.lineWidth=1.3; ctx.strokeStyle=C.lane;
+      this.workers.forEach(w => { ctx.beginPath(); for (let x=this.x0; x<=this.x1; x+=8){ const y=this.yAt(w.i,w.i,x); x===this.x0?ctx.moveTo(x,y):ctx.lineTo(x,y); } ctx.stroke(); });
+      this.parts.forEach(p => { const y=this.yAt(p.lane,p.route,p.x); ctx.fillStyle=(p.route!==p.lane && p.x>this.wx-60)?C.worker:C.event; ctx.globalAlpha=.9; ctx.beginPath(); ctx.arc(p.x,y,2.5,0,Math.PI*2); ctx.fill(); });
       ctx.globalAlpha=1;
-      this.workers.forEach(w => { const y=this.laneY(w.i,wx); w.y=y; const hov = this.hover===w;
-        ctx.beginPath(); ctx.arc(wx,y,hov?17:14,0,Math.PI*2); ctx.fillStyle=C.bg; ctx.fill(); ctx.lineWidth=2.5; ctx.strokeStyle=w.alive?C.worker:C.fail; ctx.stroke();
-        ctx.fillStyle=w.alive?C.worker:C.fail; ctx.font='600 11px '+MONO; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText(w.alive?String(w.i+1):'×', wx, y+.5);
-        if (!w.alive){ ctx.fillStyle=C.soft; ctx.textAlign='left'; ctx.fillText('restarts in '+Math.max(0,3.2-(now-w.deadAt)/1000).toFixed(1)+' s', wx+24, y); } });
-      ctx.fillStyle=C.soft; ctx.font='500 12px '+MONO; ctx.textBaseline='middle';
-      ctx.textAlign='right'; ctx.fillText('PostgreSQL', W-16, this.sinkA-14); ctx.fillText('ClickHouse', W-16, this.sinkB-14);
-      ctx.textAlign='left'; ctx.fillText('Kafka', 16, this.lanes[0].y-24);
+      this.workers.forEach(w => { const hov=this.hover===w;
+        ctx.beginPath(); ctx.arc(this.wx,w.y,hov?17:14,0,Math.PI*2); ctx.fillStyle=C.bg; ctx.fill(); ctx.lineWidth=2.5; ctx.strokeStyle=w.alive?C.worker:C.fail; ctx.stroke();
+        ctx.fillStyle=w.alive?C.worker:C.fail; ctx.font='600 11px '+MONO; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText(w.alive?String(w.i+1):'×', this.wx, w.y+.5);
+        if (!w.alive){ const t=Math.max(0,3.2-(now-w.deadAt)/1000).toFixed(1)+' s'; ctx.fillStyle=C.soft; ctx.font='500 10.5px '+MONO; if (this.W<520){ ctx.textAlign='center'; ctx.fillText(t, this.wx, w.y-24); } else { ctx.textAlign='left'; ctx.fillText('restarts in '+t, this.wx+22, w.y+.5); } } });
+      ctx.fillStyle=C.faint; ctx.font='500 11px '+MONO; ctx.textAlign='center'; ctx.fillText('workers', this.wx, this.workers[0].y-26);
+      this.box(this.kx, this.ky, this.kw, 'Kafka');
+      this.sinks.forEach(s => this.box(this.sx, s.y, this.sw, s.n));
     },
     tele(){
       const a=this.workers.filter(w=>w.alive).length;
-      streamTele.innerHTML = `<div class="row">events per second <b>${this.win.length}</b></div><div class="row">workers up <b class="${a<this.workers.length?'bad':''}">${a} of ${this.workers.length}</b></div><div class="row">rebalances <b>${this.rebal}</b></div><div class="row">lost events <b class="good">0</b></div><div class="log">${this.log}</div>`;
+      streamTele.innerHTML = `<div class="n">events / s<b>${this.win.length}</b></div><div class="n">workers up<b class="${a<this.workers.length?'bad':''}">${a} of ${this.workers.length}</b></div><div class="n">rebalances<b>${this.rebal}</b></div><div class="n">lost events<b class="good">0</b></div><div class="lg">${this.log}</div>`;
     }
   });
   const sc = S.canvas;
-  function workerAt(e){ const r=sc.getBoundingClientRect(), x=e.clientX-r.left, y=e.clientY-r.top; return S.workers.find(w => Math.hypot(x-S.wx, y-w.y) < 26); }
-  sc.addEventListener('pointermove', e => { const w=workerAt(e); S.hover=w||null; sc.style.cursor = w?'pointer':'default'; showTip(w ? (w.alive?`Worker ${w.i+1}, partition ${w.i+1}. Click to stop it.`:`Worker ${w.i+1} is restarting`) : '', e.clientX, e.clientY); if (paused) S.nudge(); });
+  function workerAt(e){ const r=sc.getBoundingClientRect(), x=e.clientX-r.left, y=e.clientY-r.top; return S.workers.find(w => Math.hypot(x-S.wx, y-w.y) < 24); }
+  sc.addEventListener('pointermove', e => { const w=workerAt(e); S.hover=w||null; sc.style.cursor = w?'pointer':'default'; showTip(w ? (w.alive?`Worker ${w.i+1}. Click to stop it.`:`Worker ${w.i+1} is restarting`) : '', e.clientX, e.clientY); if (paused) S.nudge(); });
   sc.addEventListener('pointerleave', () => { S.hover=null; showTip(''); });
   sc.addEventListener('pointerdown', e => { const w=workerAt(e); if (w){ S.kill(w); S.nudge(); } });
   document.addEventListener('keydown', e => { if ((e.key==='k'||e.key==='K') && S.visible && !/input|textarea/i.test(document.activeElement.tagName)){ const a=S.workers.filter(w=>w.alive); if (a.length>1){ S.kill(a[Math.floor(Math.random()*a.length)]); S.nudge(); } } });
