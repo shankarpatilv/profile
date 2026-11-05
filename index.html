@@ -358,7 +358,7 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
 .ir-head span{font-size:14.5px;color:var(--soft)}
 .ir-grid{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:14px}
 .ir-chart{background:var(--bg2);border:1px solid var(--line);border-radius:20px;padding:14px 16px}
-.ir-chart canvas{display:block;width:100%;height:230px}
+.ir-chart canvas{display:block;width:100%;height:300px}
 .ir-ctl{display:flex;gap:10px;align-items:center;margin-top:10px;flex-wrap:wrap}
 .ir-ctl input{flex:1;min-width:140px;accent-color:var(--event)}
 .ir-clock{font-family:var(--mono);font-size:12px;color:var(--soft);min-width:5ch}
@@ -449,6 +449,29 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
 
 /* phones: always show each demo's explanation line */
 @media (max-width:760px){.demo .tele .log{display:block!important;margin-top:8px;padding-top:8px}}
+
+/* ===== round 11: no overlays on any scene ===== */
+.demo{display:flex;flex-direction:column}
+.demo .ctl{order:0;position:relative!important;left:auto!important;right:auto!important;top:auto!important;margin:14px 14px 0;max-width:none!important;width:auto;align-self:flex-start;border-radius:14px}
+.demo canvas{order:1}
+.demo .tele,.demo .ans{order:2;position:relative!important;left:auto!important;right:auto!important;top:auto!important;bottom:auto!important;margin:0 14px 14px;max-width:none!important;width:auto!important;min-width:0}
+.demo .tele{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));column-gap:22px}
+.demo .tele .log{grid-column:1/-1;display:block!important}
+.demo .tele .row:last-of-type{border-bottom:1px dashed color-mix(in srgb,var(--line) 70%,transparent)}
+.demo.dc canvas{height:420px!important}
+.demo.gs3 canvas{height:470px!important;cursor:default}
+.demo.hc canvas{height:400px!important}
+.demo.rag canvas{height:380px!important}
+.demo.cg canvas{height:330px!important}
+.demo.dc canvas{cursor:default}
+@media (max-width:560px){.demo.dc canvas{height:400px!important}.demo.gs3 canvas{height:420px!important}.demo.hc canvas{height:420px!important}.demo.rag canvas{height:400px!important}.demo.cg canvas{height:360px!important}}
+
+.demo .tele{grid-template-columns:repeat(auto-fit,minmax(250px,1fr))!important}
+.demo .tele .row{display:flex!important;justify-content:space-between;gap:14px}
+.demo .tele .row b{white-space:nowrap;text-align:right}
+
+.demo.gs3{display:flex!important;flex-direction:column}
+.demo.gs3 canvas{width:100%}
 </style>
 
 </head>
@@ -527,19 +550,10 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
               <p>Results land in two databases on purpose: one that is quick at finding a single record, and one that is quick at adding up millions. That split made analytics queries <b>10 to <span data-count="100" data-from="10">100</span> times faster</b>.</p>
             </div>
           </div>
-          <div class="demo gsf">
-            <canvas id="gfCv" aria-label="Events flow from Kafka through a worker into PostgreSQL, drawn as rows, and ClickHouse, drawn as columns. Run a lookup or a sum to see which store answers which question."></canvas>
-            <div class="ctl"><div class="chips"><button class="chip" id="gfLook">Look up one event</button><button class="chip" id="gfSum">Add up the last hour</button></div></div>
-            <div class="tele" id="gfTele" aria-live="polite"></div>
-          </div>
           <div class="demo gs3">
-            <div class="gs-main"><canvas id="gsCv" aria-label="Three Kafka partitions shown as conveyor belts carrying events to three worker towers. Crash a worker and its events wait, then replay from the last committed offset. Drag to orbit."></canvas>
-            <div class="ctl"><div class="chips"><button class="chip" id="gsCrash">Crash worker 2</button><button class="chip" id="gsSpike">Spike traffic</button></div></div></div>
-            <div class="gs-side">
-              <div class="cr-code" id="gsCode"><div><span class="k">func</span> (a *Accountant) Complete(off <span class="k">int64</span>) {</div><div>    a.done[off] = <span class="k">true</span></div><div>    <span class="k">for</span> a.done[a.committed+1] {</div><div>        a.committed++</div><div>        <span class="k">delete</span>(a.done, a.committed)</div><div>    }</div><div>    a.commit(a.committed) <span class="c">// only contiguous work</span></div><div>}</div><div> </div><div><span class="k">func</span> (a *Accountant) OnCrash() {</div><div>    a.restartFrom(a.committed + 1) <span class="c">// repeats, never gaps</span></div><div>}</div></div>
-              <div class="cr-vars">partition 2 · a.committed = <b id="gsCm">—</b></div>
-              <div class="tele" id="gsTele" aria-live="polite"></div>
-            </div>
+            <div class="ctl"><div class="chips"><button class="chip" id="gsCrash">Crash worker 2</button><button class="chip" id="gsSpike">Spike traffic</button></div></div>
+            <canvas id="gsCv" aria-label="The whole GitStream flow in 3D: Kafka partitions carry events to three workers, which write each event to PostgreSQL as a row and to ClickHouse into columns. Crash a worker and its events wait, then replay."></canvas>
+            <div class="tele" id="gsTele" aria-live="polite"></div>
           </div>
           <div class="stack">Go, Kafka, PostgreSQL, ClickHouse, Prometheus, Docker</div>
         </div>
@@ -990,9 +1004,9 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
   /* ---------- InterviewKit: grounded or refuse ---------- */
   const ragAns = document.getElementById('ragAns'), ragQs = document.getElementById('ragQs');
   const CL = [
-    {name:'migration-memory-ceiling.md', cx:.16, cy:.56, notes:['## What broke','## How I found it','## The fix','## Logging and alerts','## The runbook','## What changed']},
-    {name:'throughput-partitions.md', cx:.44, cy:.62, notes:['## The slowdown','## Profiling','## Partitioning','## Trade-offs','## Results','## Lessons']},
-    {name:'customer-portal.md', cx:.27, cy:.83, notes:['## What I owned','## The front end','## API design','## Shipping it','## Feedback','## What I would change']}
+    {name:'migration-memory-ceiling.md', cx:.26, cy:.50, notes:['## What broke','## How I found it','## The fix','## Logging and alerts','## The runbook','## What changed']},
+    {name:'throughput-partitions.md', cx:.55, cy:.44, notes:['## The slowdown','## Profiling','## Partitioning','## Trade-offs','## Results','## Lessons']},
+    {name:'customer-portal.md', cx:.80, cy:.58, notes:['## What I owned','## The front end','## API design','## Shipping it','## Feedback','## What I would change']}
   ];
   const QS = [
     {q:'Tell me about a hard production issue.', c:0, a:'<b>Situation:</b> a large migration failed, but only at peak load. <b>Task:</b> find the cause. <b>Action:</b> traced it to a memory ceiling, not a logic bug, fixed it, then added logging, alerts and a runbook. <b>Result:</b> the next person on call had what they needed from day one.'},
@@ -1005,12 +1019,12 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
     dots:[], qi:-1, t:1, qx:0, qy:0, fromX:0, fromY:0, top:[], done:false,
     setup(){
       const W=this.W, H=this.H, mob=W<860;
-      const sx = mob ? W : W*0.62; this.sx = sx;
+      const sx = W; this.sx = sx;
       this.dots=[]; let seed=7; const rnd=()=>{ seed=(seed*9301+49297)%233280; return seed/233280; };
-      CL.forEach((c,ci) => { const cx=(mob?c.cx*1.55:c.cx)*W, cy=c.cy*H;
-        for (let k=0;k<18;k++){ const a=rnd()*Math.PI*2, r=Math.sqrt(rnd())*Math.min(W,H)*0.12;
+      CL.forEach((c,ci) => { const cx=c.cx*W, cy=c.cy*H;
+        for (let k=0;k<18;k++){ const a=rnd()*Math.PI*2, r=Math.sqrt(rnd())*Math.min(W,H)*0.17;
           this.dots.push({x:Math.min(sx-20,cx+Math.cos(a)*r), y:Math.max(30,Math.min(H-24,cy+Math.sin(a)*r*0.8)), c:ci, n:c.notes[k%c.notes.length]}); } });
-      this.centers = CL.map(c => ({x:Math.min(sx-40,(mob?c.cx*1.55:c.cx)*W), y:c.cy*H}));
+      this.centers = CL.map(c => ({x:Math.min(sx-40,c.cx*W), y:c.cy*H}));
       if (this.qi>=0) this.place(this.qi, true);
     },
     place(i, instant){
@@ -1036,7 +1050,7 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
       const ctx=this.ctx, W=this.W, H=this.H;
       if (!this._stars){ this._stars = Array.from({length:70}, () => ({x:Math.random(), y:Math.random(), r:Math.random()*1.2+0.3})); }
       if (!this._links){ this._links = []; this.dots.forEach((d,i) => { const near = this.dots.map((e,j) => ({j, dd: e.c===d.c && j!==i ? Math.hypot(e.x-d.x, e.y-d.y) : 1e9})).sort((a,b)=>a.dd-b.dd).slice(0,2); near.forEach(n => { if (n.dd < 1e8 && i < n.j) this._links.push([i,n.j]); }); }); }
-      const cx = (this.sx||W)/2, cy = H/2, a = reduce.matches ? 0 : 0.42*Math.sin(now/5200), ca = Math.cos(a), sa = Math.sin(a), Z = Math.min(W,H)*0.55, F = Math.min(W,H)*1.6;
+      const cx = (this.sx||W)/2, cy = H/2, a = 0, ca = Math.cos(a), sa = Math.sin(a), Z = Math.min(W,H)*0.55, F = Math.min(W,H)*1.6;
       const zOf = i => (((i*73)%100)/100 - 0.5) * Z;
       const proj = (x, y, z) => { const dx = x - cx, X = dx*ca + z*sa, D = -dx*sa + z*ca, s = F/(F + D); return {x: cx + X*s, y: cy + (y-cy)*s, s}; };
       ctx.fillStyle = C.faint; this._stars.forEach(st => { ctx.globalAlpha = .35; ctx.fillRect(st.x*W, st.y*H, st.r, st.r); }); ctx.globalAlpha = 1;
@@ -1046,7 +1060,7 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
       this.centers.forEach((c,i) => { const p = proj(c.x, c.y - Math.min(W,H)*0.15, 0); ctx.fillStyle = C.faint; ctx.fillText(CL[i].name, p.x, p.y); });
       const hit = new Set(this.done ? this.top.map(t=>t.d) : []);
       const order = this.dots.map((d,i) => i).sort((i,j) => P[j].s - P[i].s);
-      order.forEach(i => { const d = this.dots[i], p = P[i], h = hit.has(d), r = (h ? 4.2 : 2.6) * p.s;
+      order.forEach(i => { const d = this.dots[i], p = P[i], h = hit.has(d), r = (h ? 5.2 : 3.4) * p.s;
         if (h){ const g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, 16*p.s); g.addColorStop(0, 'rgba(110,231,249,.55)'); g.addColorStop(1, 'rgba(110,231,249,0)'); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(p.x, p.y, 16*p.s, 0, 7); ctx.fill(); }
         ctx.globalAlpha = h ? 1 : 0.35 + 0.5*Math.min(1, p.s - 0.6); ctx.fillStyle = h ? C.worker : C.soft; ctx.beginPath(); ctx.arc(p.x, p.y, r, 0, 7); ctx.fill(); });
       ctx.globalAlpha = 1;
@@ -1059,7 +1073,7 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
           ctx.setLineDash([]); }
         const g = ctx.createRadialGradient(q.x, q.y, 0, q.x, q.y, 22); g.addColorStop(0, 'rgba(255,181,71,.7)'); g.addColorStop(1, 'rgba(255,181,71,0)'); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(q.x, q.y, 22, 0, 7); ctx.fill();
         ctx.beginPath(); ctx.arc(q.x, q.y, 6, 0, 7); ctx.fillStyle = C.event; ctx.fill();
-        ctx.fillStyle = C.ink; ctx.font = '600 12px '+MONO; ctx.textAlign = 'left'; ctx.fillText('your question', q.x + 16, q.y - 16);
+        ctx.fillStyle = C.ink; ctx.font = '600 12px '+MONO; const qr = q.x > W - 130; ctx.textAlign = qr ? 'right' : 'left'; ctx.fillText('your question', q.x + (qr ? -16 : 16), q.y - 16);
       }
       // the system around the question: ingestion on the left, the LangGraph workflow along the bottom
       { const mobS = W < 560, sxw = this.sx || W;
@@ -1178,7 +1192,7 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
     reqs:[], jobs:[], acc:0, lat:[], reads:0, saved:0, log:'Each save answers right away. Search updates in the background.', flash:0,
     setup(){ const W=this.W, H=this.H, mob=W<560;
       this.n = { client:{x:Math.max(W*0.09,52),y:H*(mob?0.30:0.42),l:'Client'}, api:{x:W*(mob?0.47:0.27),y:H*(mob?0.30:0.42),l:'API'}, store:{x:W*(mob?0.78:0.46),y:H*(mob?0.20:0.26),l:'Redis'}, es:{x:W*(mob?0.74:0.46),y:H*(mob?0.42:0.62),l:'Elasticsearch'}, mq:{x:W*(mob?0.47:0.27),y:H*(mob?0.50:0.84),l:'RabbitMQ'} };
-      this.chart = {x:W*(mob?0.06:0.60), y:H*(mob?0.80:0.20), w:W*(mob?0.88:0.36), h:H*(mob?0.13:0.26)}; },
+      this.chart = {x:W*(mob?0.06:0.62), y:H*(mob?0.80:0.22), w:W*(mob?0.88:0.34), h:H*(mob?0.13:0.5)}; },
     step(dt, now){
       this.acc += dt*2.2;
       while (this.acc > 1){ this.acc--; const sync = hcMode==='sync'; const ms = sync ? 120+Math.random()*30 : 48+Math.random()*12;
@@ -1195,8 +1209,8 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
       const legs=[[n.client,n.api],[n.api,n.store],[n.store,n.api],[n.api,n.client]]; const f=t*legs.length, i=Math.min(legs.length-1,Math.floor(f)); return this.seg(legs[i][0],legs[i][1],f-i); },
     render(){
       const ctx=this.ctx, W=this.W, H=this.H, mob=W<560, D = C.bg.toLowerCase() === '#0f1420';
-      const ang = -0.62 + (reduce.matches ? 0 : 0.12*Math.sin(performance.now()/6000)), ca = Math.cos(ang), sa = Math.sin(ang);
-      const k = Math.min(W*(mob ? 1.05 : 0.58), H*1.25)/20, ox = mob ? W*0.5 : W*0.29, oy = mob ? H*0.36 : H*0.56;
+      const ang = -0.62, ca = Math.cos(ang), sa = Math.sin(ang);
+      const k = Math.min(W*(mob ? 1.05 : 0.58), H*1.25)/20, ox = mob ? W*0.5 : W*0.32, oy = mob ? H*0.40 : H*0.58;
       const iso = (x,y,z) => ({X: ox + (x*ca - y*sa)*k, Y: oy + (x*sa + y*ca)*k*0.5 - z*k});
       const box = (x,y,w,d,h,top,side,front) => { const p=[iso(x-w/2,y-d/2,0),iso(x+w/2,y-d/2,0),iso(x+w/2,y+d/2,0),iso(x-w/2,y+d/2,0)], q=[iso(x-w/2,y-d/2,h),iso(x+w/2,y-d/2,h),iso(x+w/2,y+d/2,h),iso(x-w/2,y+d/2,h)];
         const f=(a,c)=>{ ctx.beginPath(); ctx.moveTo(a[0].X,a[0].Y); for(let i=1;i<a.length;i++) ctx.lineTo(a[i].X,a[i].Y); ctx.closePath(); ctx.fillStyle=c; ctx.fill(); }; f([p[1],p[2],q[2],q[1]],side); f([p[2],p[3],q[3],q[2]],front); f([q[0],q[1],q[2],q[3]],top); };
@@ -1287,7 +1301,7 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
       { const sym = v => v===1?'✓':v===0?'✕':v===2?'–':v===3?'~':'·', colr = v => v===1?C.ok:v===0?C.fail:v===3?C.event:C.faint;
         ctx.font = '600 12px '+MONO; ctx.textBaseline = 'middle';
         labels.forEach((l,k) => { const v = this.ri >= 0 ? this.st[k] : -1, t = sym(v) + ' ' + l, tw = ctx.measureText(t).width + 16;
-          let x, y; if (mob){ x = 12 + (k%3)*((W-24)/3); y = H - 58 + Math.floor(k/3)*26; } else { x = 16; y = Math.max(H*0.32, 118) + k*30; }
+          let x, y; if (mob){ x = 12 + (k%3)*((W-24)/3); y = H - 58 + Math.floor(k/3)*26; } else { x = 16; y = 40 + k*36; }
           const bw2 = mob ? (W-24)/3 - 6 : tw; ctx.fillStyle = C.bg; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(x, y - 11, bw2, 22, 11) : ctx.rect(x, y-11, bw2, 22); ctx.fill(); ctx.strokeStyle = colr(v); ctx.lineWidth = 1.2; ctx.stroke();
           ctx.fillStyle = v===-1 ? C.soft : colr(v); ctx.textAlign = 'left'; ctx.font = (mob ? '600 10.5px ' : '600 12px ')+MONO; ctx.fillText(t, x + 8, y + .5); }); }
       if (this.ri >= 0){ const stopped = this.done && CGR[this.ri].code[0] !== '2', s = scaleAt(0.55), r = 9*s*1.6;
@@ -1492,22 +1506,37 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
     const mem = t => fixed ? Math.min(0.72, 0.3 + 0.42*load(t)) : Math.min(1, 0.22 + 0.95*load(t));
     function draw(){
       if (!W) return; const t = tl.value/100; cx.clearRect(0,0,W,H);
-      const L = 38, R = W-8, T = 12, B = H-24, X = v => L + (R-L)*v, Y = v => B - (B-T)*v;
-      cx.font = '500 11px '+MONO; cx.textBaseline = 'middle'; cx.lineWidth = 1; cx.strokeStyle = css('line'); cx.fillStyle = css('faint'); cx.textAlign = 'right';
-      [0, .5, 1].forEach(v => { cx.beginPath(); cx.moveTo(L, Y(v)); cx.lineTo(R, Y(v)); cx.stroke(); cx.fillText(Math.round(v*100)+'%', L-6, Y(v)); });
-      cx.setLineDash([5,5]); cx.strokeStyle = css('fail'); cx.beginPath(); cx.moveTo(L, Y(1)); cx.lineTo(R, Y(1)); cx.stroke();
-      if (fixed){ cx.strokeStyle = css('event'); cx.beginPath(); cx.moveTo(L, Y(.8)); cx.lineTo(R, Y(.8)); cx.stroke(); }
-      cx.setLineDash([]); cx.textAlign = 'left'; cx.fillStyle = css('fail'); cx.fillText('memory ceiling', L+6, Y(1)+12);
-      if (fixed){ cx.fillStyle = css('event'); cx.fillText('alert at 80%', L+6, Y(.8)+12); }
-      const line = (fn, col, w) => { cx.strokeStyle = col; cx.lineWidth = w; cx.beginPath(); for (let i=0;i<=200;i++){ const v = i/200; if (v > t) break; const x = X(v), y = Y(fn(v)); i ? cx.lineTo(x,y) : cx.moveTo(x,y); } cx.stroke(); };
-      line(load, css('faint'), 1.6); line(mem, fixed ? css('ok') : css('worker'), 2.6);
-      if (!fixed) for (let i=0;i<=200;i+=6){ const v = i/200; if (v > t) break; if (mem(v) >= 1){ cx.fillStyle = css('fail'); cx.beginPath(); cx.arc(X(v), Y(1), 4, 0, 7); cx.fill(); } }
-      const lx = X(Math.min(t, .06)) + 4;
-      cx.fillStyle = css('soft'); cx.fillText('load', lx, Y(load(Math.min(t,.06))) + 14);
-      cx.fillStyle = fixed ? css('ok') : css('worker'); cx.fillText('memory', lx, Y(mem(Math.min(t,.06))) - 12);
+      const D = css('bg').toLowerCase() === '#0f1420', mob = W < 560, k = Math.min(W*(mob ? 1.0 : 0.9), H*1.5)/(mob ? 15 : 17), ang = -0.6, ca = Math.cos(ang), sa = Math.sin(ang);
+      const ox = W*(mob ? 0.5 : 0.46), oy = H*0.66;
+      const iso = (x,y,z) => ({X: ox + (x*ca - y*sa)*k, Y: oy + (x*sa + y*ca)*k*0.5 - z*k});
+      const face = (a,c) => { cx.beginPath(); cx.moveTo(a[0].X,a[0].Y); for (let q=1;q<a.length;q++) cx.lineTo(a[q].X,a[q].Y); cx.closePath(); cx.fillStyle = c; cx.fill(); };
+      const box = (x,y,w,d,h,top,side,front,z0) => { z0 = z0||0; const p=[iso(x-w/2,y-d/2,z0),iso(x+w/2,y-d/2,z0),iso(x+w/2,y+d/2,z0),iso(x-w/2,y+d/2,z0)], q=[iso(x-w/2,y-d/2,z0+h),iso(x+w/2,y-d/2,z0+h),iso(x+w/2,y+d/2,z0+h),iso(x-w/2,y+d/2,z0+h)]; face([p[1],p[2],q[2],q[1]],side); face([p[2],p[3],q[3],q[2]],front); face([q[0],q[1],q[2],q[3]],top); };
+      const plane = (x,y,w,d,z,col) => face([iso(x-w/2,y-d/2,z),iso(x+w/2,y-d/2,z),iso(x+w/2,y+d/2,z),iso(x-w/2,y+d/2,z)], col);
+      const pill = (tx,x,y,col) => { cx.font='600 11px '+MONO; const w=cx.measureText(tx).width+14; cx.fillStyle=css('bg'); cx.beginPath(); cx.roundRect?cx.roundRect(x-w/2,y-10,w,20,10):cx.rect(x-w/2,y-10,w,20); cx.fill(); cx.strokeStyle=col; cx.lineWidth=1.2; cx.stroke(); cx.fillStyle=col; cx.textAlign='center'; cx.textBaseline='middle'; cx.fillText(tx,x,y+.5); };
+      const side = D ? '#1b2a46' : '#b9c6d8', front = D ? '#22355a' : '#cdd7e4', grid = D ? '#151d30' : '#dfe5ee';
+      cx.strokeStyle = grid; cx.lineWidth = 1; for (let g=-6; g<=6; g++){ let a=iso(g,-5,0), b=iso(g,5,0); cx.beginPath(); cx.moveTo(a.X,a.Y); cx.lineTo(b.X,b.Y); cx.stroke(); a=iso(-6,g*0.8,0); b=iso(6,g*0.8,0); cx.beginPath(); cx.moveTo(a.X,a.Y); cx.lineTo(b.X,b.Y); cx.stroke(); }
+      const L = load(t), M = mem(t), over = !fixed && M >= 1, Hm = 4.2;
+      // incoming load: a belt of jobs, denser as load climbs
+      const a0 = iso(-6, 0, 0), a1 = iso(-1.2, 0, 0); cx.strokeStyle = D ? '#22304d' : '#cfd7e3'; cx.lineWidth = 12; cx.lineCap = 'round'; cx.beginPath(); cx.moveTo(a0.X,a0.Y); cx.lineTo(a1.X,a1.Y); cx.stroke(); cx.lineCap = 'butt';
+      const nIn = Math.round(2 + L*9); for (let q=0;q<nIn;q++){ const x = -5.6 + q*(4.2/nIn); box(x, 0, 0.42, 0.42, 0.4, css('event'), D ? '#7a4d12' : '#e4b062', D ? '#9a6418' : '#efc684'); }
+      // the migration job server with its memory as a glass tank
+      box(0, 0, 2.2, 2.2, 0.3, D ? '#2b3a5e' : '#c3ccda', side, front);
+      const fillCol = over ? css('fail') : (fixed ? css('ok') : css('worker'));
+      box(0, 0, 1.9, 1.9, Math.max(0.05, Math.min(1, M))*Hm, fillCol, D ? 'rgba(27,42,70,.9)' : 'rgba(185,198,216,.95)', D ? 'rgba(34,53,90,.9)' : 'rgba(205,215,228,.95)', 0.3);
+      cx.globalAlpha = 0.18; plane(0,0,2.6,2.6, Hm + 0.3, css('fail')); cx.globalAlpha = 1;
+      cx.strokeStyle = css('fail'); cx.setLineDash([6,5]); cx.lineWidth = 1.5; const c0 = [iso(-1.3,-1.3,Hm+0.3), iso(1.3,-1.3,Hm+0.3), iso(1.3,1.3,Hm+0.3), iso(-1.3,1.3,Hm+0.3)]; cx.beginPath(); c0.forEach((p,q) => q ? cx.lineTo(p.X,p.Y) : cx.moveTo(p.X,p.Y)); cx.closePath(); cx.stroke(); cx.setLineDash([]);
+      if (fixed){ cx.globalAlpha = 0.18; plane(0,0,2.6,2.6, Hm*0.8 + 0.3, css('event')); cx.globalAlpha = 1; const al = iso(1.6, -1.3, Hm*0.8 + 0.3); pill('alert at 80%', al.X + 46, al.Y, css('event')); }
+      const cl = iso(1.6, -1.3, Hm + 0.3); pill('memory ceiling', cl.X + 52, cl.Y, css('fail'));
+      const tp = iso(0, 0, Math.min(1, M)*Hm + 0.3); pill('memory ' + Math.round(Math.min(1, M)*100) + '%', tp.X, tp.Y - 16, fillCol);
+      const jl = iso(0, 1.6, 0); pill('migration job', jl.X, jl.Y + 14, css('soft'));
+      const ll = iso(-4.4, 0.9, 0); pill('load ' + Math.round(L*100) + '%', ll.X, ll.Y + 14, css('event'));
+      // jobs that finish, or fail at the ceiling
+      const b0 = iso(1.2, 0, 0), b1 = iso(6, 0, 0); cx.strokeStyle = D ? '#22304d' : '#cfd7e3'; cx.lineWidth = 12; cx.lineCap = 'round'; cx.beginPath(); cx.moveTo(b0.X,b0.Y); cx.lineTo(b1.X,b1.Y); cx.stroke(); cx.lineCap = 'butt';
+      const nOut = Math.round(2 + L*7); for (let q=0;q<nOut;q++){ const x = 1.6 + q*(4.2/nOut), bad = over && q % 2 === 0; box(x, 0, 0.42, 0.42, 0.4, bad ? css('fail') : css('ok'), side, front); }
+      if (over){ const fl = iso(4, 0.9, 0); pill('jobs failing', fl.X, fl.Y + 14, css('fail')); }
       clock.textContent = t < .37 ? 'normal' : t < .52 ? 'peak' : t < .75 ? (fixed ? 'peak' : 'failure') : 'after';
       const lit = fixed ? [0, t >= .37 ? 1 : -1, t >= .3 ? 4 : -1] : [0, t >= .37 ? 1 : -1, t >= .52 ? 2 : -1, t >= .7 ? 3 : -1];
-      steps.forEach((s,i) => s.classList.toggle('on', lit.includes(i)));
+      steps.forEach((st,q) => st.classList.toggle('on', lit.includes(q)));
       if (!fixed && t >= .52 && !failedOnce && playing){ failedOnce = true; sfx('down'); }
     }
     new ResizeObserver(size).observe(cv);
@@ -1575,7 +1604,7 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
       {k:['collabera','bank','banking','analyst','data engineer','first job','india','bangalore'], a:'He spent two years at Collabera Digital in Bangalore, first as an Analyst and then as an Associate Data Engineer, and was named Best Talent for 2021 to 2022.', s:'Experience → Collabera Digital'},
       {k:['bigonotes','notes','writing','blog','teach','teaching'], a:'bigonotes.com is his free study site: 261 notes across 48 topics, built and run by him.', s:'Experience → bigonotes'},
       /* "does he do ..." */
-      {k:['front end','frontend','front-end','react','ui','user interface','web app','websites'], a:'Yes. React and TypeScript in ChildGuard, bit of Angular at Collabera, and Next.js for bigonotes.', s:'Stack · Experience'},
+      {k:['front end','frontend','front-end','react','ui','user interface','web app','websites'], a:'Yes. React and TypeScript at Collabera and in ChildGuard, Angular at Collabera, and Next.js for bigonotes.', s:'Stack · Experience'},
       {k:['backend','back end','back-end','api','apis','services','server'], a:'Yes, it’s the core of his work: Go, Java, Python and Node.js services, and event-driven systems at Amazon.', s:'Selected work · Stack'},
       {k:['full stack','full-stack','fullstack','end to end','end-to-end'], a:'Yes. At Collabera he owned features from the front end to the back end, and bigonotes is his alone, from design to deploys.', s:'Experience'},
       {k:['ai','llm','llms','rag','agent','agents','machine learning','genai','gen ai'], a:'Yes. He built InterviewKit, a RAG system that cites its sources, and worked on LLM systems with guardrails and evaluation at Amazon.', s:'Selected work → InterviewKit · Experience → Amazon'},
@@ -1601,7 +1630,7 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
   /* ===== spectacle 1: the headline is traffic ===== */
   (() => {
     const cv = document.getElementById('hxCv'); if (!cv) return;
-    const ctx = cv.getContext('2d'); let W = 0, H = 0, P = [], on = true;
+    const ctx = cv.getContext('2d'); let W = 0, H = 0, P = [], on = true; const hero = {buX:1e9, buY0:0, buY1:0, amp:0, t0:0};
     const mouse = {x:-9999, y:-9999, active:false}, hint = document.getElementById('hxHint');
     const DISPLAY = getComputedStyle(document.documentElement).getPropertyValue('--display').trim() || 'sans-serif';
     function build(){
@@ -1613,9 +1642,10 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
       fs = Math.min(fs * (W*0.9) / widest, H * (mob ? 0.17 : 0.22));
       o.font = `800 ${fs}px ${DISPLAY}`; o.textAlign = 'center'; o.textBaseline = 'middle'; o.fillStyle = '#000';
       const lh = fs*1.02, y0 = H*0.40 - (lines.length-1)*lh/2; lines.forEach((l,i) => o.fillText(l, W/2, y0 + i*lh));
-      const data = o.getImageData(0,0,off.width,off.height).data, step = mob ? 3 : 4, runs = [];
+      const data = o.getImageData(0,0,off.width,off.height).data, step = mob ? 4 : 6, runs = [];
       for (let y=0; y<off.height; y+=step){ let x0 = -1; for (let x=0; x<=off.width; x++){ const inside = x < off.width && data[(y*off.width+x)*4+3] > 128; if (inside && x0 < 0) x0 = x; if (!inside && x0 >= 0){ if (x - x0 > 3) runs.push({y, x0, x1:x}); x0 = -1; } } }
-      P = []; const per = mob ? 0.16 : 0.14;
+      P = []; const per = mob ? 0.14 : 0.11;
+      const last = lines[lines.length-1], pre = last.replace(/back up\.?$/, ''), wl = o.measureText(last).width, buX = W/2 - wl/2 + o.measureText(pre).width, buY = y0 + (lines.length-1)*lh; hero.buX = buX; hero.buY0 = buY - fs*0.6; hero.buY1 = buY + fs*0.6; hero.amp = fs*0.28; hero.t0 = performance.now();
       runs.forEach(rn => { const n = Math.max(1, Math.round((rn.x1 - rn.x0) * per)); for (let k=0;k<n;k++) P.push({r:rn, x: rn.x0 + Math.random()*(rn.x1-rn.x0), dy:0, vy:0, v:30 + Math.random()*55, hot:0}); });
     }
     function frame(dt){
@@ -1626,7 +1656,8 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
         if (mouse.active){ const dx = p.x - mouse.x, dyy = y - mouse.y, dd = Math.hypot(dx, dyy); if (dd < R){ p.vy += (dyy >= 0 ? 1 : -1) * (1 - dd/R) * 1800 * dt; p.hot = 1; } }
         p.vy += -p.dy*16*dt; p.vy *= Math.pow(0.02, dt); p.dy += p.vy*dt; p.hot = Math.max(0, p.hot - dt*1.4);
         ctx.fillStyle = p.hot > 0.05 ? C.worker : C.event; ctx.globalAlpha = 0.72 + 0.28*Math.min(1, p.v/80);
-        ctx.fillRect(p.x, p.r.y + p.dy, p.hot > 0.05 ? 3.4 : 2.6, 2.4);
+        const bu = p.x >= hero.buX && p.r.y >= hero.buY0 && p.r.y <= hero.buY1, bt = (performance.now() - hero.t0)/2400, bounce = (bu && bt < 1 && !reduce.matches) ? -hero.amp*Math.abs(Math.sin(bt*3*Math.PI))*(1 - bt*0.6) : 0;
+        ctx.fillRect(p.x - 0.5, p.r.y + p.dy + bounce, p.hot > 0.05 ? 5 : 4.2, 4);
       }
       ctx.globalAlpha = 1;
       if (mouse.active){ ctx.beginPath(); ctx.arc(mouse.x, mouse.y, R*0.45, 0, 7); ctx.strokeStyle = C.fail; ctx.globalAlpha = .6; ctx.setLineDash([4,6]); ctx.lineWidth = 1.5; ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1;
@@ -1765,11 +1796,11 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
     const cv = document.getElementById('gsCv'); if (!cv) return;
     const ctx = cv.getContext('2d'), tele = document.getElementById('gsTele'); let W = 0, H = 0, on = false, ang = -0.55, baseAng = -0.55, dragging = false, lx = 0;
     const tracks = [-2.6, 0, 2.6], wk = tracks.map(() => ({down:false, at:0, h:1, glow:0}));
-    let cubes = [], acc = 0, rate = 9, spikeUntil = 0, committed = 0, replayed = 0, offset = 48200, log = 'Three partitions, three workers. Every event is committed in order.';
+    let outs = [], pgRows = 0, chFill = [0.2,0.35,0.25,0.4,0.3], cubes = [], acc = 0, rate = 9, spikeUntil = 0, committed = 0, replayed = 0, offset = 48200, log = 'Three partitions, three workers. Every event is committed in order.';
     const lerp = (a,b,t) => a + (b-a)*t;
     function size(){ const r = cv.getBoundingClientRect(), d = Math.min(devicePixelRatio||1, 2); W = r.width; H = r.height; if (!W) return; cv.width = Math.round(W*d); cv.height = Math.round(H*d); ctx.setTransform(d,0,0,d,0,0); }
-    const K = () => W < 560 ? W/17.5 : Math.min(W*0.8, H*1.45) / 22;
-    function iso(x, y, z){ const c = Math.cos(ang), s = Math.sin(ang), rx = x*c - y*s, ry = x*s + y*c, k = K(); return {X: W*(W < 1100 ? 0.58 : 0.52) + rx*k, Y: H*0.56 + ry*k*0.5 - z*k}; }
+    const K = () => Math.min(W/(W < 560 ? 18.5 : 21), H/(W < 560 ? 15 : 17.5));
+    function iso(x, y, z){ const c = Math.cos(ang), s = Math.sin(ang), rx = x*c - y*s, ry = x*s + y*c, k = K(); return {X: W*0.5 + (rx - 0.7)*k, Y: H*0.5 + (ry - 0.4)*k*0.5 - z*k + k*0.5}; }
     function box(x, y, w, d, h, top, side, front, z0){ z0 = z0 || 0; const p = [iso(x-w/2,y-d/2,z0), iso(x+w/2,y-d/2,z0), iso(x+w/2,y+d/2,z0), iso(x-w/2,y+d/2,z0)], q = [iso(x-w/2,y-d/2,z0+h), iso(x+w/2,y-d/2,z0+h), iso(x+w/2,y+d/2,z0+h), iso(x-w/2,y+d/2,z0+h)];
       const f = (a, col) => { ctx.beginPath(); ctx.moveTo(a[0].X,a[0].Y); for (let i=1;i<a.length;i++) ctx.lineTo(a[i].X,a[i].Y); ctx.closePath(); ctx.fillStyle = col; ctx.fill(); };
       f([p[1],p[2],q[2],q[1]], side); f([p[2],p[3],q[3],q[2]], front); f([q[0],q[1],q[2],q[3]], top); }
@@ -1778,7 +1809,7 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
     const codeLines = [...(document.getElementById('gsCode') || {children:[]}).children], cmEl = document.getElementById('gsCm'); let hlUntil = 0, lastFlash = 0;
     const flash = (ix, ms) => { hlUntil = performance.now() + ms; codeLines.forEach((l,i) => l.classList.toggle('hl', ix.includes(i))); };
     function frame(dt, now){
-      ctx.clearRect(0,0,W,H); ang = baseAng + ((dragging || reduce.matches) ? 0 : 0.2*Math.sin(now/5200));
+      ctx.clearRect(0,0,W,H); ang = -0.5;
       if (hlUntil && now > hlUntil){ hlUntil = 0; codeLines.forEach(l => l.classList.remove('hl')); }
       const D = dark(), belt = D ? '#18223a' : '#d9e0ea', beltEdge = D ? '#25314f' : '#c3ccda', side = D ? '#1b2a46' : '#b9c6d8', front = D ? '#22355a' : '#cdd7e4';
       const r = now < spikeUntil ? rate*3 : rate; acc += dt*r;
@@ -1795,12 +1826,23 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
       for (let i=cubes.length-1;i>=0;i--){ const c = cubes[i], w = wk[c.t]; const ahead = cubes.filter(o => o !== c && o.t === c.t && o.y > c.y).reduce((m,o) => Math.min(m, o.y), 99);
         const stopAt = w.down ? 3.6 : 99, lim = Math.min(stopAt, ahead - 0.8);
         c.y = Math.min(lim, c.y + c.v*dt*(reduce.matches ? 0.3 : 1));
-        if (!w.down && c.y >= 4.2){ cubes.splice(i,1); committed++; w.glow = 1; w.n = (w.n||0) + 1;
+        if (!w.down && c.y >= 4.2){ cubes.splice(i,1); committed++; w.glow = 1; w.n = (w.n||0) + 1; outs.push({from:c.t, to:'pg', t:0}, {from:c.t, to:'ch', t:0});
           if (c.t === 1){ if (cmEl) cmEl.textContent = c.off.toLocaleString(); if (now - lastFlash > 500 && (!hlUntil || now > hlUntil)){ lastFlash = now; flash([0,1,2,3,4,6], 420); } } } }
       // draw cubes back to front
       [...cubes].sort((a,b) => (a.y*Math.cos(ang) + tracks[a.t]*Math.sin(ang)) - (b.y*Math.cos(ang) + tracks[b.t]*Math.sin(ang))).forEach(c => {
         const col = c.replay ? C.worker : C.event, waiting = wk[c.t].down && c.y > 2;
         box(tracks[c.t], c.y, 0.62, 0.62, 0.55, waiting ? C.fail : col, D ? '#7a4d12' : '#e4b062', D ? '#9a6418' : '#efc684', 0.02); });
+
+      // the two stores at the end of the flow
+      const PG = [-3.4, 11.2], CH = [3.4, 11.2];
+      box(PG[0], PG[1], 4.2, 2.4, 0.3, D ? '#22304d' : '#c3ccda', side, front);
+      const rows = Math.min(8, 2 + Math.floor(pgRows/3) % 7); for (let r=0;r<rows;r++) box(PG[0], PG[1] - 0.9 + r*0.0, 3.6, 0.5, 0.22, r === rows-1 ? C.worker : (D ? '#2f4a6e' : '#a9bdd3'), side, front, 0.3 + r*0.26);
+      box(CH[0], CH[1], 4.2, 2.4, 0.3, D ? '#22304d' : '#c3ccda', side, front);
+      chFill.forEach((f,q) => box(CH[0] - 1.6 + q*0.8, CH[1], 0.55, 0.9, 0.3 + f*2.4, C.event, D ? '#7a4d12' : '#e4b062', D ? '#9a6418' : '#efc684', 0.3));
+      for (let q=outs.length-1;q>=0;q--){ const o = outs[q]; o.t += dt*1.3; const a = iso(tracks[o.from], 6.8, 1.2), dst = o.to === 'pg' ? iso(PG[0], PG[1], 1.4) : iso(CH[0], CH[1], 1.6), t = Math.min(1, o.t);
+        ctx.fillStyle = o.to === 'pg' ? C.worker : C.event; ctx.beginPath(); ctx.arc(a.X + (dst.X-a.X)*t, a.Y + (dst.Y-a.Y)*t - Math.sin(t*Math.PI)*24, 3, 0, 7); ctx.fill();
+        if (o.t >= 1){ outs.splice(q,1); if (o.to === 'pg') pgRows++; else { const c2 = Math.floor(Math.random()*5); chFill[c2] = Math.min(1, chFill[c2] + 0.03); if (chFill.every(v => v > 0.95)) chFill = chFill.map(v => v*0.5); } } }
+      const pl = iso(PG[0], PG[1] + 1.9, 0), cl = iso(CH[0], CH[1] + 1.9, 0); pill('PostgreSQL · rows', pl.X, pl.Y + 14, C.worker); pill('ClickHouse · columns', cl.X, cl.Y + 14, C.event);
       // workers
       wk.forEach((w,i) => { w.h += ((w.down ? 0.15 : 1) - w.h)*Math.min(1, dt*5); w.glow = Math.max(0, w.glow - dt*3);
         if (w.down && now - w.at > 2400){ w.down = false; const n = 3; for (let k=0;k<n;k++) cubes.push({t:i, y:3.2 - k*0.9, v:2.4, off:offset - k, replay:true}); replayed += n; log = `Worker ${i+1} restarted from its last committed offset. ${n} events ran again. None were lost.`; sfx('up'); flash([10], 1400); }
@@ -1809,9 +1851,9 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
         const lab = iso(tracks[i], 8.2, 0); pill(w.down ? 'W'+(i+1)+' down' : 'W'+(i+1)+' · '+(w.n||0), lab.X, lab.Y, w.down ? C.fail : C.worker); });
     }
     function teleDraw(){ const waiting = cubes.filter(c => wk[c.t].down && c.y > 2).length;
-      tele.innerHTML = `<div class="row">committed <b>${committed.toLocaleString()}</b></div><div class="row">waiting for a worker <b class="${waiting?'bad':''}">${waiting}</b></div><div class="row">replayed after a crash <b>${replayed}</b></div><div class="row">lost events <b class="good">0</b></div><div class="log">${log}</div>`; }
+      tele.innerHTML = `<div class="row">written to both stores <b>${pgRows.toLocaleString()}</b></div><div class="row">committed <b>${committed.toLocaleString()}</b></div><div class="row">waiting for a worker <b class="${waiting?'bad':''}">${waiting}</b></div><div class="row">replayed after a crash <b>${replayed}</b></div><div class="row">lost events <b class="good">0</b></div><div class="log">${log}</div>`; }
     cv.addEventListener('pointerdown', e => { dragging = true; lx = e.clientX; try { cv.setPointerCapture(e.pointerId); } catch(_){} cv.style.cursor = 'grabbing'; });
-    cv.addEventListener('pointermove', e => { if (!dragging) return; baseAng += (e.clientX - lx)*0.008; lx = e.clientX; });
+    cv.addEventListener('pointermove', e => { if (!dragging) return;  lx = e.clientX; });
     const end = () => { dragging = false; cv.style.cursor = 'grab'; }; cv.addEventListener('pointerup', end); cv.addEventListener('pointercancel', end);
     document.getElementById('gsCrash').addEventListener('click', () => { const w = wk[1]; if (w.down) return; w.down = true; w.at = performance.now(); log = 'Worker 2 crashed. Its events wait on the belt instead of disappearing.'; sfx('down'); flash([9,10], 2300); teleDraw(); });
     document.getElementById('gsSpike').addEventListener('click', () => { spikeUntil = performance.now() + 3500; log = 'Traffic tripled. The belts fill up, and the workers keep pulling at their own pace.'; sfx('tick'); teleDraw(); });
@@ -1826,14 +1868,14 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
     const SLOTS = [[-0.8,-0.8],[0.8,-0.8],[-0.8,0.8],[0.8,0.8],[-0.8,2.4],[0.8,2.4]];
     const mk = (k, extra) => ({h: extra ? 0 : 1, x:SLOTS[k][0], y:SLOTS[k][1], load:0, v:1, st: extra ? 'boot' : 'ok', t:performance.now(), extra:!!extra, gone:false});
     const zones = ['A','B','C'].map((n,i) => ({n, x:(i-1)*5.2, up:true, servers:[0,1,2,3].map(k => mk(k))}));
-    let beams = [], db = [], mail = [], acc = 0, accDb = 0, accMail = 0, failed = 0, win = [], log = 'All three zones healthy. Drag to orbit the whole system.';
+    let beams = [], db = [], mail = [], acc = 0, accDb = 0, accMail = 0, failed = 0, win = [], log = 'All three zones healthy.';
     let deploying = false, nextV = 2, dq = [];
     const lerp = (a,b,t) => a + (b-a)*t, VCOL = () => [C.worker, C.ok, '#a78bfa', C.event];
     const newest = () => Math.max(...zones.flatMap(z => z.servers.map(s => s.v)));
     const withA = (hex, a) => { const h = hex.replace('#',''); if (h.length !== 6) return hex; const n = parseInt(h,16); return `rgba(${n>>16&255},${n>>8&255},${n&255},${a})`; };
     function size(){ const r = cv.getBoundingClientRect(), d = Math.min(devicePixelRatio||1, 2); W = r.width; H = r.height; if (!W) return; cv.width = Math.round(W*d); cv.height = Math.round(H*d); ctx.setTransform(d,0,0,d,0,0); }
     const K = () => W < 560 ? W/20.5 : Math.min(W*0.62, H*1.3)/24;
-    function iso(x, y, z){ const c = Math.cos(ang), s = Math.sin(ang), rx = x*c - y*s, ry = x*s + y*c, k = K(); return {X: (W < 560 ? W*0.42 : W*0.36) + rx*k, Y: H*(W < 560 ? 0.54 : 0.60) + ry*k*0.55 - z*k}; }
+    function iso(x, y, z){ const c = Math.cos(ang), s = Math.sin(ang), rx = x*c - y*s, ry = x*s + y*c, k = K(); return {X: (W < 560 ? W*0.42 : W*0.47) + rx*k, Y: H*(W < 560 ? 0.58 : 0.60) + ry*k*0.55 - z*k}; }
     function quad(x0,y0,x1,y1,fill,stroke,dash){ const a = iso(x0,y0,0), b = iso(x1,y0,0), c = iso(x1,y1,0), d = iso(x0,y1,0); ctx.beginPath(); ctx.moveTo(a.X,a.Y); ctx.lineTo(b.X,b.Y); ctx.lineTo(c.X,c.Y); ctx.lineTo(d.X,d.Y); ctx.closePath(); if (fill){ ctx.fillStyle = fill; ctx.fill(); } if (stroke){ ctx.strokeStyle = stroke; ctx.lineWidth = 1.3; if (dash) ctx.setLineDash(dash); ctx.stroke(); ctx.setLineDash([]); } }
     function box(x, y, w, d, h, top, side, front){ const p = [iso(x-w/2,y-d/2,0), iso(x+w/2,y-d/2,0), iso(x+w/2,y+d/2,0), iso(x-w/2,y+d/2,0)], q = [iso(x-w/2,y-d/2,h), iso(x+w/2,y-d/2,h), iso(x+w/2,y+d/2,h), iso(x-w/2,y+d/2,h)];
       const f = (a, col) => { ctx.beginPath(); ctx.moveTo(a[0].X,a[0].Y); for (let i=1;i<a.length;i++) ctx.lineTo(a[i].X,a[i].Y); ctx.closePath(); ctx.fillStyle = col; ctx.fill(); };
@@ -1890,7 +1932,7 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
       const lbTop = iso(LB[0], LB[1], 3.0), lbBot = iso(LB[0], LB[1], 0);
       ctx.strokeStyle = C.event; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(lbBot.X, lbBot.Y); ctx.lineTo(lbTop.X, lbTop.Y); ctx.stroke(); ctx.fillStyle = C.event; ctx.beginPath(); ctx.arc(lbTop.X, lbTop.Y, 6, 0, 7); ctx.fill();
       pill('load balancer', lbTop.X, lbTop.Y - 18, C.event);
-      { const down = zones.some(z => !z.up), mobS = W < 560, x0 = mobS ? 12 : 18, y0 = mobS ? 14 : 104, pl = (t, y, col) => { ctx.font = '600 11px '+MONO; const w = ctx.measureText(t).width + 14; ctx.fillStyle = C.bg; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(x0, y-10, w, 20, 10) : ctx.rect(x0, y-10, w, 20); ctx.fill(); ctx.strokeStyle = col; ctx.lineWidth = 1.2; ctx.stroke(); ctx.fillStyle = col; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText(t, x0 + 7, y + .5); };
+      { const down = zones.some(z => !z.up), mobS = W < 560, x0 = mobS ? 12 : 18, y0 = 16, pl = (t, y, col) => { ctx.font = '600 11px '+MONO; const w = ctx.measureText(t).width + 14; ctx.fillStyle = C.bg; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(x0, y-10, w, 20, 10) : ctx.rect(x0, y-10, w, 20); ctx.fill(); ctx.strokeStyle = col; ctx.lineWidth = 1.2; ctx.stroke(); ctx.fillStyle = col; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText(t, x0 + 7, y + .5); };
         pl(`Auto Scaling group · ${liveServers().length} healthy`, y0 + 26, C.event);
         pl(down ? 'CloudWatch · alarm raised' : 'CloudWatch · all healthy', y0, down ? C.fail : C.ok);
         if (deploying) pl(`GitHub Actions → new image v${nextV}`, y0 + 52, C.ok); }
@@ -1908,7 +1950,7 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
       zones.forEach(z => z.servers.forEach(s => { if (s.gone) return; total++; if (z.up){ vs[s.v] = (vs[s.v]||0) + 1; if (s.st === 'ok') healthy++; } }));
       tele.innerHTML = `<div class="row">requests per second <b>${win.length}</b></div><div class="row">zones up <b class="${upZ<3?'bad':''}">${upZ} of 3</b></div><div class="row">healthy servers <b class="${healthy<12?'bad':''}">${healthy} of 12 wanted</b></div><div class="row">versions running <b>${Object.keys(vs).sort().map(v => 'v'+v+' × '+vs[v]).join(', ')}</b></div><div class="row">failed requests <b class="good">${failed}</b></div><div class="log">${log}</div>`; }
     cv.addEventListener('pointerdown', e => { dragging = true; lx = e.clientX; try { cv.setPointerCapture(e.pointerId); } catch(_){} cv.style.cursor = 'grabbing'; });
-    cv.addEventListener('pointermove', e => { if (!dragging) return; ang += (e.clientX - lx)*0.008; lx = e.clientX; });
+    cv.addEventListener('pointermove', e => { if (!dragging) return;  lx = e.clientX; });
     const end = () => { dragging = false; cv.style.cursor = 'grab'; }; cv.addEventListener('pointerup', end); cv.addEventListener('pointercancel', end);
     function scaleOut(){ const ups = zones.filter(z => z.up); let added = 0;
       ups.forEach(z => { while (z.servers.filter(s => !s.gone).length < 6 && added < 4){ const used = z.servers.filter(s => !s.gone).length; const s = mk(used, true); s.v = deploying ? nextV : newest(); z.servers.push(s); added++; } });
