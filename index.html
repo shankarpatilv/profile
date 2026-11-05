@@ -517,6 +517,60 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
 .pr-f.ok .pr-mb{opacity:1;transform:none}
 @media (max-width:640px){.pr-ln{grid-template-columns:30px 18px minmax(0,1fr)}.pr-ln .tx{font-size:15px}.pr-cm{margin-left:48px}}
 @media (prefers-reduced-motion: reduce){.pr-fd,.pr-ln.rm .tx::after,.pr-mb{transition:none}}
+
+/* ===== be on call with me ===== */
+#oc h2.oc-h{font-weight:800;font-size:clamp(34px,4.6vw,64px);letter-spacing:-.04em;line-height:1;margin:0 0 12px}
+#oc .lede{color:var(--soft);font-size:clamp(16px,1.4vw,19px);line-height:1.55;margin:0 0 22px;max-width:58ch}
+#oc{--card:#ffffff}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) #oc{--card:#151c2b}}
+:root[data-theme="dark"] #oc{--card:#151c2b}
+#oc .pick{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}#oc .pick button{font:inherit;font-size:14px;font-weight:600;border:1.5px solid var(--line);background:transparent;color:var(--soft);border-radius:999px;padding:8px 14px;cursor:pointer}#oc .pick button[aria-pressed="true"]{border-color:var(--ink);background:var(--ink);color:var(--bg)}#oc .pick button small{font-weight:400;opacity:.75;margin-left:4px}#oc .stage{position:relative;background:var(--card);border:1px solid var(--line);border-radius:24px;overflow:hidden;min-height:560px}#oc /* pager */
+.pager{position:absolute;inset:0;display:grid;place-items:center;background:radial-gradient(circle at 50% 45%,color-mix(in srgb,var(--fail) 14%,transparent),transparent 60%);z-index:3;transition:opacity .4s}#oc .pager.gone{opacity:0;pointer-events:none}#oc .pg{width:min(360px,86%);background:#0b1019;color:#eef1f6;border-radius:28px;padding:22px 22px 18px;box-shadow:0 30px 60px rgba(15,20,32,.25);border:1px solid #1f2840}#oc .pg.buzz{animation:ocBuzz 1.8s ease-in-out infinite}#oc .pg.buzz:hover, #oc .pg.buzz:focus-within{animation:none}
+@keyframes ocBuzz{0%,30%,100%{transform:none}4%{transform:translateX(-4px) rotate(-1deg)}8%{transform:translateX(4px) rotate(1deg)}12%{transform:translateX(-4px) rotate(-1deg)}16%{transform:translateX(4px) rotate(1deg)}20%{transform:translateX(-2px)}24%{transform:translateX(2px)}}#oc .pg .app{display:flex;justify-content:space-between;font-family:var(--mono);font-size:11px;color:#8690a6;margin-bottom:12px}#oc .pg .sev{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:12px;font-weight:600;color:#ff6b6b}#oc .pg .sev i{width:9px;height:9px;border-radius:50%;background:#ff6b6b;box-shadow:0 0 0 0 rgba(255,107,107,.6);animation:ocRing 1.2s infinite}
+@keyframes ocRing{to{box-shadow:0 0 0 12px rgba(255,107,107,0)}}#oc .pg h3{font-size:22px;letter-spacing:-.02em;margin:8px 0 6px;line-height:1.15}#oc .pg p{margin:0 0 16px;color:#99a3b6;font-size:14.5px;line-height:1.5}#oc .pg .row{display:flex;gap:8px}#oc .pg button{flex:1;font:inherit;font-weight:700;font-size:15px;border:0;border-radius:14px;padding:12px;cursor:pointer}#oc .pg .ack{background:#ff6b6b;color:#0b1019}#oc .pg .snz{background:#1d2638;color:#99a3b6;flex:.6}#oc /* console */
+.con{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);min-height:560px}#oc .left{padding:18px 20px;border-right:1px solid var(--line);display:flex;flex-direction:column;gap:12px}#oc .top{display:flex;justify-content:space-between;align-items:center;gap:10px;font-family:var(--mono);font-size:12.5px;color:var(--soft)}#oc .top b{color:var(--ink)}#oc .top .st{display:inline-flex;align-items:center;gap:7px;font-weight:600}#oc .top .st i{width:8px;height:8px;border-radius:50%;background:var(--fail)}#oc .top .st.ok i{background:var(--ok)}#oc .top .st.mit i{background:var(--event)}#oc .graphs{display:grid;grid-template-rows:repeat(3,1fr);gap:10px;flex:1;min-height:300px}#oc .gr{background:var(--bg);border:1px solid var(--line);border-radius:14px;position:relative;overflow:hidden}#oc .gr canvas{position:absolute;inset:0;width:100%;height:100%}#oc .gr span{position:absolute;left:10px;top:7px;font-family:var(--mono);font-size:11px;color:var(--soft);z-index:1}#oc .gr b{position:absolute;right:10px;top:6px;font-family:var(--mono);font-size:12px;z-index:1}#oc .log{font-family:var(--mono);font-size:12px;line-height:1.7;color:var(--soft);max-height:110px;overflow:auto}#oc .log div{animation:ocIn .3s ease both}#oc .log .me{color:var(--ink)}#oc .log .bad{color:var(--fail)}#oc .log .good{color:var(--ok)}
+@keyframes ocIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}#oc .right{padding:20px 22px;display:flex;flex-direction:column}#oc .stepn{font-family:var(--mono);font-size:12px;color:var(--event);letter-spacing:.06em}#oc .q{font-weight:800;font-size:clamp(21px,2.1vw,27px);letter-spacing:-.025em;line-height:1.15;margin:8px 0 14px}#oc .opts{display:flex;flex-direction:column;gap:8px}#oc .opt{text-align:left;font:inherit;font-size:15.5px;line-height:1.4;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);border-radius:14px;padding:12px 14px;cursor:pointer;transition:border-color .2s,background .2s,transform .15s}#oc .opt:hover:not(:disabled){border-color:var(--ink);transform:translateX(3px)}#oc .opt:disabled{cursor:default}#oc .opt.mine{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 10%,var(--bg))}#oc .opt.wrong{border-color:var(--fail);background:color-mix(in srgb,var(--fail) 8%,var(--bg))}#oc .opt.dim{opacity:.45}#oc .opt small{display:block;font-family:var(--mono);font-size:11px;margin-top:4px}#oc .opt.mine small{color:var(--ok)}#oc .opt.wrong small{color:var(--fail)}#oc .fb{margin-top:14px;border-left:3px solid var(--ok);padding:4px 0 4px 14px;font-size:15.5px;line-height:1.55;color:var(--soft);display:none}#oc .fb.on{display:block;animation:ocIn .35s ease both}#oc .fb b{color:var(--ink)}#oc .next{margin-top:auto;align-self:flex-start;font:inherit;font-weight:700;font-size:15px;border:0;background:var(--ink);color:var(--bg);border-radius:12px;padding:11px 18px;cursor:pointer;display:none}#oc .next.on{display:inline-block}#oc /* postmortem */
+.pm{position:absolute;inset:0;background:var(--card);z-index:4;padding:26px clamp(18px,3vw,36px);overflow:auto;display:none}#oc .pm.on{display:block;animation:ocIn .4s ease both}#oc .pm .tag{font-family:var(--mono);font-size:12px;color:var(--ok)}#oc .pm h3{font-weight:800;font-size:clamp(26px,3vw,40px);letter-spacing:-.03em;margin:6px 0 16px;line-height:1.05}#oc .pm .stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:18px}#oc .pm .stats div{background:var(--bg);border-radius:14px;padding:12px 14px;font-family:var(--mono);font-size:11.5px;color:var(--soft)}#oc .pm .stats b{display:block;font-family:var(--display);font-size:26px;color:var(--ink);letter-spacing:-.02em}#oc .pm .tl{border-top:1px solid var(--line)}#oc .pm .tl div{display:grid;grid-template-columns:70px minmax(0,1fr) minmax(0,1fr);gap:14px;padding:10px 0;border-bottom:1px dashed var(--line);font-size:14.5px;line-height:1.45}#oc .pm .tl em{font-style:normal;font-family:var(--mono);font-size:12px;color:var(--faint)}#oc .pm .tl .y{color:var(--soft)}#oc .pm .tl .y.same{color:var(--ok)}#oc .pm .tl .m{color:var(--ink);font-weight:600}#oc .pm .tl .hd{font-family:var(--mono);font-size:11px;color:var(--faint);text-transform:uppercase}#oc .pm .lesson{margin:18px 0;padding:14px 16px;border-radius:14px;background:var(--bg2);font-size:16px;line-height:1.55}#oc .pm .lesson b{color:var(--event)}#oc .pm .ctas{display:flex;gap:10px;flex-wrap:wrap}#oc .pm .ctas a, #oc .pm .ctas button{font:inherit;font-weight:700;font-size:15px;border:1.5px solid var(--ink);border-radius:12px;padding:10px 16px;text-decoration:none;cursor:pointer;background:transparent;color:var(--ink)}#oc .pm .ctas a{background:var(--ink);color:var(--bg)}
+@media (max-width:860px){#oc .con{grid-template-columns:1fr}#oc .left{border-right:0;border-bottom:1px solid var(--line)}#oc .graphs{min-height:240px}#oc .pm .tl div{grid-template-columns:56px minmax(0,1fr)}#oc .pm .tl .m{grid-column:2}#oc .pm .stats{grid-template-columns:1fr 1fr 1fr}}
+@media (prefers-reduced-motion: reduce){#oc .pg.buzz, #oc .pg .sev i, #oc .log div, #oc .fb.on, #oc .pm.on{animation:none}#oc .opt{transition:none}}
+
+
+/* ===== seamless: no card frames, everything sits on the page ===== */
+.demo{background:none!important;border:0!important;border-radius:0!important;overflow:visible!important;margin-top:26px!important}
+.demo canvas{border-radius:0}
+.demo .ctl{background:none!important;border:0!important;backdrop-filter:none!important;padding:0!important;margin:0 0 8px!important}
+.demo .tele,.demo .ans{background:none!important;border:0!important;backdrop-filter:none!important;border-radius:0!important;padding:10px 0 0!important;margin:0!important;border-top:1px solid var(--line)!important}
+.demo .ans.refuse{border-top-color:var(--fail)!important}
+.pr{background:none!important;border:0!important;border-radius:0!important;overflow:visible!important}
+.pr-h{background:none!important;padding:0 0 10px!important}
+.pr-f{padding:14px 0 0!important}
+.pr-cm{background:none!important;border:0!important;border-left:2px solid var(--line)!important;border-radius:0!important;margin:2px 0 10px 68px!important;padding:4px 0 4px 12px!important}
+.td-card,.ask-card{background:none!important;border:0!important;border-radius:0!important;padding:0!important;backdrop-filter:none!important}
+.edu div{border:0!important;border-radius:0!important;padding:16px 0 0!important;border-top:1px solid var(--line)!important}
+#oc{--card:var(--bg)}
+#oc .stage{border:0!important;border-radius:0!important;background:none!important;overflow:visible}
+#oc .pm{background:var(--bg)!important}
+#oc .left{padding:0 22px 0 0!important}
+#oc .right{padding:0 0 0 22px!important}
+#oc .gr{border:0!important;border-radius:0!important;background:none!important;border-bottom:1px solid var(--line)!important}
+#oc .opt{background:none!important;border-radius:12px}
+@media (max-width:860px){#oc .left{padding:0 0 16px!important}#oc .right{padding:16px 0 0!important}}
+@media (max-width:640px){.pr-cm{margin-left:48px!important}}
+
+/* ===== seamless: no card frames, content sits on the page (on-call keeps its box) ===== */
+.demo{border:0!important;background:transparent!important;border-radius:0!important;overflow:visible!important;margin-top:34px}
+.demo canvas{border-radius:0}
+.demo .ctl{background:transparent!important;border:0!important;padding:0!important;margin:0 0 6px!important;backdrop-filter:none!important}
+.demo .tele,.demo .ans{background:transparent!important;border:0!important;border-top:1px solid var(--line)!important;border-radius:0!important;padding:12px 0 0!important;margin:6px 0 0!important;backdrop-filter:none!important}
+.demo .ans.refuse{border-top-color:var(--fail)!important}
+.pr{background:transparent!important;border:0!important;border-radius:0!important;overflow:visible!important}
+.pr-h{background:transparent!important;padding:0 0 10px!important}
+.pr-f{padding:14px 0 0!important}
+.pr-ln{border-radius:6px}
+.pr-cm{background:transparent!important;border:0!important;border-left:2px solid var(--line)!important;border-radius:0!important;padding:4px 0 4px 12px!important}
+.td-card,.ask-card{background:transparent!important;border:0!important;border-radius:0!important;padding:0!important}
+.edu div{border:0!important;border-top:1px solid var(--line)!important;border-radius:0!important;padding:16px 0 0!important}
+.stk .r div span.use{border-radius:8px}
 </style>
 
 </head>
@@ -726,25 +780,8 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
           <p class="lead">Two years, two roles: first building across the stack, then keeping a bank’s data moving.</p>
           <p>In my first year, I built full-stack apps and quick proofs of concept for client projects, owning features from the front end to the back end, and kept our cloud services healthy and locked down. I also built a sentiment-analysis system end to end, from raw data to the dashboard.</p>
           <p>Then I moved to <span class="gterm" tabindex="0" data-g="dp">data pipelines</span> for an enterprise banking client, including a large core-banking migration. The jobs were high-volume with tight processing windows, so most days were about speed and reliability: finding out why something failed in production, tuning it, and getting it done on time.</p>
-          <p>The failure I still remember happened only at peak load. It wasn’t a logic bug; the job was running out of memory. After that, I added the monitoring, alerts and docs the team leaned on to catch problems early.</p>
-          <div class="ir" id="irBox">
-            <div class="ir-head"><b>Replay the incident</b></div>
-            <div class="ir-grid">
-              <div class="ir-chart"><canvas id="irCv" aria-label="A chart of load and memory during the incident. Memory reaches its ceiling at peak load."></canvas>
-                <div class="ir-ctl"><button class="chip" id="irPlay">Play</button><input id="irT" type="range" min="0" max="100" value="0" aria-label="Incident timeline"><span id="irClock" class="ir-clock">start</span></div>
-                <div class="ir-ctl"><span class="ir-seg" role="group" aria-label="Before or after the fix"><button class="chip" aria-pressed="true" data-ir="0">Before the fix</button><button class="chip" aria-pressed="false" data-ir="1">After the fix</button></span></div>
-              </div>
-              <div class="ir-steps" id="irSteps">
-                <div class="ir-step"><em>normal</em><b>Normal volume</b><span>The migration jobs run fine.</span></div>
-                <div class="ir-step"><em>peak</em><b>Load climbs</b><span>Peak volume arrives, and memory climbs with it.</span></div>
-                <div class="ir-step"><em>failure</em><b>Jobs fail</b><span>Memory hits the ceiling. It looks like a logic bug, but it isn’t.</span></div>
-                <div class="ir-step"><em>diagnosis</em><b>A memory ceiling, not a bug</b><span>Failures line up with peak memory, not with any code path.</span></div>
-                <div class="ir-step"><em>prevention</em><b>Monitoring, alerts and docs</b><span>An alert fires well before the ceiling, and on-call knows what to do.</span></div>
-              </div>
-            </div>
-          </div>
           <p>Along the way, I was named <b>Best Talent</b> for 2021 to 2022.</p>
-          <div class="tags"><span>React</span><span>TypeScript</span><span>Angular</span><span>C#</span><span>.NET Core</span><span>Java</span><span>Python</span><span>SQL</span><span>AWS</span></div>
+          <div class="tags"><span>TypeScript</span><span>C#</span><span>Java</span><span>Python</span><span>SQL</span></div>
         </div>
       </article>
       <article class="xp">
@@ -777,6 +814,32 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
     </div>
   </section>
 
+  <section class="s" id="oc" aria-labelledby="oc-h" style="padding-top:0">
+    <div class="wrap">
+  <h2 class="oc-h dec" id="oc-h">Be on call with me.</h2>
+  <p class="lede">You’re holding the pager. Make the calls, and see what I actually did. Three decisions, about a minute.</p>
+  <div class="pick" id="oc-pick"></div>
+  <div class="stage" id="oc-stage">
+    <div class="pager" id="oc-pager"><div class="pg buzz" id="oc-pg"></div></div>
+    <div class="con">
+      <div class="left">
+        <div class="top"><span><b id="oc-incT">INC-</b> · <span id="oc-clock">00:00</span></span><span class="st" id="oc-st"><i></i><span>Firing</span></span></div>
+        <div class="graphs" id="oc-graphs"></div>
+        <div class="log" id="oc-log" aria-live="polite"></div>
+      </div>
+      <div class="right">
+        <div class="stepn" id="oc-stepn"></div>
+        <div class="q" id="oc-q"></div>
+        <div class="opts" id="oc-opts"></div>
+        <div class="fb" id="oc-fb"></div>
+        <button class="next" id="oc-next">Next</button>
+      </div>
+    </div>
+    <div class="pm" id="oc-pm"></div>
+  </div>
+</div>
+  </section>
+
   <section class="s" id="stack" aria-labelledby="stk-h" style="padding-top:0">
     <div class="wrap">
       <div class="sh"><h2 id="stk-h" class="dec">Stack</h2></div>
@@ -806,7 +869,6 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
   <section class="s ct" id="contact" aria-labelledby="ct-h" style="padding-top:clamp(12px,2vw,24px)">
     <div class="wrap">
       <h2 id="ct-h" aria-label="Hiring for backend, front end, full-stack, infra or AI?">Hiring for <span class="slotw" id="slotw" aria-hidden="true"><span class="role" id="role">backend</span>?</span></h2>
-      <p class="ct-sub">One engineer for the front end, the APIs, the data, the cloud and the AI.</p>
       <div class="prompt"><span class="pfx" aria-hidden="true">$ mail</span><a class="mail" id="mailA" href="mailto:patilshankarvivek@gmail.com" aria-label="patilshankarvivek@gmail.com">patilshankarvivek@gmail.com</a><span class="cur" aria-hidden="true"></span></div>
     </div>
   </section>
@@ -1666,7 +1728,7 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
       {k:['cloud','aws','azure','kubernetes','terraform','infra','infrastructure','devops','ci cd','cicd','deploy','deployments'], a:'Yes. AWS and Azure, Terraform, Docker and zero-downtime deploys, shown in the Cloud-Native Platform.', s:'Selected work → Cloud-Native Platform'},
       {k:['data','pipelines','pipeline','streaming','kafka','etl','databases','database','sql'], a:'Yes. Data pipelines for an enterprise bank at Collabera, and GitStream, a real-time pipeline on Kafka.', s:'Experience → Collabera Digital · Selected work → GitStream'},
       {k:['system design','distributed','scale','scaling','reliability','reliable'], a:'Yes, most of this page is about it. Every project shows how it keeps working when something fails.', s:'Selected work'},
-      {k:['on call','oncall','on-call','production','incident','incidents','support'], a:'Yes. At Collabera he root-caused a production failure and set up the alerts and docs for on-call. You can replay it in the Collabera section.', s:'Experience → Collabera Digital'},
+      {k:['on call','oncall','on-call','production','incident','incidents','support'], a:'Yes. At Collabera he root-caused a production failure and set up the alerts and docs for on-call. You can play through it in “Be on call with me”.', s:'Experience → Collabera Digital'},
       {k:['security','secure','auth','authentication'], a:'Yes. ChildGuard checks every request with signed tokens, roles and input cleaning, built with three classmates at Northeastern.', s:'Selected work → ChildGuard'}
     ];
     const SUG = ['Is he open to relocating?','What roles is he looking for?','How much experience does he have?','When did he graduate?','Does he do front end?','Does he do AI?','Does he do cloud?','Can I see his resume?','How do I reach him?','What’s his salary expectation?'];
@@ -2069,6 +2131,135 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
       rm.forEach(e => at(() => e.classList.add('in'), 140)); t += 450; rm.forEach(e => at(() => e.classList.add('cut'), 260));
       ad.forEach((e,k) => at(() => e.classList.add('in'), k % 2 ? 380 : 600)); at(done, 650); };
     const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting){ io.disconnect(); run(); } }), {threshold:0.12}); io.observe(document.getElementById('pr'));
+  })();
+
+  /* ---------- be on call with me ---------- */
+  (() => {
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches, $ = id => document.getElementById('oc-'+id);
+    const css = k => getComputedStyle(document.documentElement).getPropertyValue('--'+k).trim();
+  
+    const S = [
+      { id:'mem', tab:'Migration fails at peak', sub:'real · Collabera Digital', inc:'INC-2041', sys:'core-banking-migration',
+        page:['P1 · migration jobs failing', 'Core-banking migration jobs are failing. Only during peak volume, never at night.'],
+        graphs:[['jobs failing','fail'],['memory','event'],['load','worker']],
+        steps:[
+          {q:'Jobs fail only at peak load. What do you check first?', o:[
+            ['Roll back the last code change', 'Nothing had shipped that week, so a rollback wouldn’t have changed anything.'],
+            ['Line the failures up against memory and load', ''],
+            ['Restart the jobs and watch', 'They’d have failed again at the next peak, and we’d have lost a day.']],
+            me:1, why:'I lined the failures up against the resource graphs. They matched <b>peak memory</b>, not any code path. That’s when it stopped looking like a logic bug.'},
+          {q:'Memory hits its ceiling exactly when jobs fail. Now what?', o:[
+            ['Double the machine size and move on', 'It buys time, but the next bigger peak breaks it again.'],
+            ['Raise the limit as a stopgap, then fix what holds memory at peak', ''],
+            ['Only run the jobs at night', 'The bank needed them inside the processing window. Not an option.']],
+            me:1, why:'I raised the ceiling so the window wouldn’t be missed, then found what was <b>holding memory at peak</b> and fixed it. Stopgap first, real fix right after.'},
+          {q:'Jobs are passing again. Before you close the incident?', o:[
+            ['Close it. It’s fixed.', 'Then the next on-call person starts from zero.'],
+            ['Add an alert at 80% memory, a runbook and docs', ''],
+            ['Write up a long email about it', 'An email gets lost. An alert fires.']],
+            me:1, why:'I added <b>monitoring, an alert well before the ceiling, and a runbook</b>. The next person on call knew what to do from day one.'}
+        ],
+        lesson:'Not every failure is a bug. <b>Look at the resources before the code.</b>' },
+      { id:'lag', tab:'Consumer lag spike', sub:'GitStream', inc:'INC-3107', sys:'gitstream-consumers',
+        page:['P2 · consumer lag climbing', 'Kafka consumer lag jumped past 40,000 events and it’s still rising.'],
+        graphs:[['consumer lag','fail'],['workers up','worker'],['events lost','ok']],
+        steps:[
+          {q:'Lag is climbing fast. First move?', o:[
+            ['Delete the backlog so it catches up', 'That’s data loss on purpose. Never.'],
+            ['Check whether a worker crashed or the database slowed', ''],
+            ['Add more partitions right now', 'Repartitioning mid-incident adds risk before you know the cause.']],
+            me:1, why:'I checked the workers first. <b>Worker 2 had crashed mid-batch</b>, so its partition had stopped moving.'},
+          {q:'Worker 2 crashed mid-batch. Where should it restart from?', o:[
+            ['The latest offset, to skip ahead', 'Fast, but every event in between is silently lost.'],
+            ['The last committed offset, and accept a few repeats', ''],
+            ['Offset 0, to be safe', 'It would replay the whole history for hours.']],
+            me:1, why:'From the <b>last committed offset</b>. A few events run twice, none are lost. A repeat is easy to handle. A gap is not.'},
+          {q:'Lag is draining. How do you stop this from happening again?', o:[
+            ['Nothing. It recovered on its own.', 'It recovered because the design is right. Next time you might not be watching.'],
+            ['Alert on lag growth, and make the handlers safe to run twice', ''],
+            ['Turn off commits so nothing is ever skipped', 'Then every restart replays everything.']],
+            me:1, why:'An <b>alert on lag growth</b> catches it in minutes, and <b>idempotent handlers</b> make the repeats harmless.'}
+        ],
+        lesson:'Design for the crash. <b>Commit only what’s done, and make repeats harmless.</b>' },
+      { id:'az', tab:'A zone goes down', sub:'Cloud-Native Platform', inc:'INC-1188', sys:'web-platform',
+        page:['P1 · zone A health checks failing', 'Health checks are failing across availability zone A.'],
+        graphs:[['error rate','fail'],['healthy servers','worker'],['CPU, zones B and C','event']],
+        steps:[
+          {q:'Zone A is failing its health checks. First move?', o:[
+            ['Wait for the cloud provider to fix it', 'Users are hitting errors right now.'],
+            ['Confirm the load balancer drained zone A, and check B and C', ''],
+            ['Redeploy everything', 'A redeploy during an outage just adds more moving parts.']],
+            me:1, why:'I confirmed the <b>load balancer had stopped sending traffic to zone A</b>, and that B and C were taking it.'},
+          {q:'B and C are taking the traffic, but CPU is at 92%.', o:[
+            ['Leave it, they’ll cope', 'At 92% one more spike tips them over.'],
+            ['Make sure Auto Scaling adds servers in B and C', ''],
+            ['Turn off health checks to get zone A back', 'That sends traffic to broken servers.']],
+            me:1, why:'<b>Auto Scaling</b> added servers in B and C, and CPU dropped back to normal. Errors fell to zero.'},
+          {q:'Zone A is healthy again.', o:[
+            ['Send all traffic back at once', 'A sudden flood can knock it straight back down.'],
+            ['Let health checks bring it back, then scale the extras in', ''],
+            ['Keep zone A off for good', 'Then you’re one zone away from a full outage.']],
+            me:1, why:'Health checks <b>brought zone A back gradually</b>, and the extra capacity in B and C was <b>scaled back in</b>. No one had to touch a server.'}
+        ],
+        lesson:'Outages should be boring. <b>Let the system route around failure, and watch it do it.</b>' }
+    ];
+  
+    let sc = S[0], step = 0, picks = [], t0 = 0, timer = null, phase = 0, raf = null, series = [];
+    const pick = $('pick');
+    S.forEach((s,i) => { const b = document.createElement('button'); b.innerHTML = `${s.tab}<small>${s.sub}</small>`; b.setAttribute('aria-pressed', String(i === 0)); b.addEventListener('click', () => start(i)); pick.appendChild(b); });
+  
+    // graphs: each series moves toward a target set by the current phase
+    const TARGETS = {
+      mem: [[ [0.1,0.85], [0.75,0.97], [0.5,0.9] ], [ [0.85,0.85], [0.97,0.97], [0.9,0.9] ], [ [0.2,0.1], [0.7,0.6], [0.88,0.85] ], [ [0.02,0.02], [0.6,0.55], [0.85,0.8] ]],
+      lag: [[ [0.1,0.2], [1,1], [0.02,0.02] ], [ [0.9,0.95], [0.66,0.66], [0.02,0.02] ], [ [0.5,0.3], [1,1], [0.02,0.02] ], [ [0.05,0.05], [1,1], [0.02,0.02] ]],
+      az:  [[ [0.02,0.3], [1,0.66], [0.5,0.6] ], [ [0.3,0.3], [0.66,0.66], [0.92,0.92] ], [ [0.05,0.02], [1,1], [0.6,0.55] ], [ [0.02,0.02], [1,1], [0.45,0.45] ]]
+    };
+    function buildGraphs(){ const g = $('graphs'); g.innerHTML = ''; series = sc.graphs.map(([name, col]) => { const d = document.createElement('div'); d.className = 'gr'; d.innerHTML = `<span>${name}</span><b></b><canvas></canvas>`; g.appendChild(d);
+        const cv = d.querySelector('canvas'); return {name, col, cv, ctx: cv.getContext('2d'), val: d.querySelector('b'), pts: Array(80).fill(0.05), cur:0.05}; }); }
+    function drawGraphs(now){ const tg = TARGETS[sc.id][phase];
+      series.forEach((s,i) => { const r = s.cv.getBoundingClientRect(), dpr = Math.min(devicePixelRatio||1, 2); if (s.cv.width !== Math.round(r.width*dpr)){ s.cv.width = r.width*dpr; s.cv.height = r.height*dpr; } const c = s.ctx; c.setTransform(dpr,0,0,dpr,0,0); const W = r.width, H = r.height;
+        const [lo, hi] = tg[i], wob = (Math.sin(now/300 + i*2) + 1)/2, target = lo + (hi - lo)*wob + (Math.random() - .5)*0.03;
+        s.cur += (target - s.cur)*0.08; s.pts.push(Math.max(0, Math.min(1, s.cur))); s.pts.shift();
+        c.clearRect(0,0,W,H);
+        if (sc.id === 'mem' && i === 1){ c.strokeStyle = css('fail'); c.setLineDash([4,4]); c.beginPath(); c.moveTo(0, H*0.1); c.lineTo(W, H*0.1); c.stroke(); c.setLineDash([]); c.fillStyle = css('fail'); c.font = '600 10px JetBrains Mono, monospace'; c.fillText('ceiling', W - 52, H*0.1 - 4);
+          if (phase >= 3){ c.strokeStyle = css('event'); c.setLineDash([4,4]); c.beginPath(); c.moveTo(0, H*0.28); c.lineTo(W, H*0.28); c.stroke(); c.setLineDash([]); c.fillStyle = css('event'); c.fillText('alert 80%', W - 66, H*0.28 - 4); } }
+        const col = css(s.col); c.beginPath(); s.pts.forEach((v,k) => { const x = k/(s.pts.length-1)*W, y = H - 6 - v*(H - 24); k ? c.lineTo(x,y) : c.moveTo(x,y); }); c.strokeStyle = col; c.lineWidth = 2; c.stroke();
+        c.lineTo(W, H); c.lineTo(0, H); c.closePath(); c.globalAlpha = .1; c.fillStyle = col; c.fill(); c.globalAlpha = 1;
+        const v = s.pts[s.pts.length-1];
+        s.val.style.color = col; s.val.textContent = sc.id === 'lag' && i === 0 ? Math.round(v*42000).toLocaleString() : sc.id === 'lag' && i === 1 ? `${Math.round(v*3)} of 3` : sc.id === 'lag' && i === 2 ? '0' : sc.id === 'az' && i === 1 ? `${Math.round(v*12)} of 12` : Math.round(v*100) + '%'; });
+      raf = requestAnimationFrame(drawGraphs); }
+  
+    const log = (cls, text) => { const d = document.createElement('div'); d.className = cls; d.textContent = `${$('clock').textContent}  ${text}`; $('log').appendChild(d); $('log').scrollTop = 1e6; };
+    const setSt = (cls, text) => { const e = $('st'); e.className = 'st ' + cls; e.lastChild.textContent = text; };
+  
+    function start(i){ sc = S[i]; step = 0; picks = []; phase = 0; [...pick.children].forEach((b,k) => b.setAttribute('aria-pressed', String(k === i)));
+      $('pm').className = 'pm'; $('pager').className = 'pager'; $('incT').textContent = sc.inc; $('clock').textContent = '00:00'; $('log').innerHTML = ''; setSt('', 'Firing');
+      $('pg').className = 'pg' + (reduce ? '' : ' buzz');
+      $('pg').innerHTML = `<div class="app"><span>on-call · pager</span><span>now</span></div><span class="sev"><i></i>${sc.page[0]}</span><h3>${sc.sys}</h3><p>${sc.page[1]}</p><div class="row"><button class="ack" id="oc-ack">Acknowledge</button><button class="snz" id="oc-snz">Snooze</button></div>`;
+      $('ack').onclick = ack; $('snz').onclick = () => { $('snz').textContent = 'Nice try'; $('snz').disabled = true; };
+      clearInterval(timer); cancelAnimationFrame(raf); buildGraphs(); raf = requestAnimationFrame(drawGraphs); renderStep(); }
+    function ack(){ $('pager').className = 'pager gone'; t0 = performance.now(); log('bad', `alert: ${sc.page[0]}`); log('me', 'acknowledged by you');
+      clearInterval(timer); timer = setInterval(() => { const s = Math.floor((performance.now() - t0)/1000); $('clock').textContent = `${String(Math.floor(s/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`; }, 250); }
+    function renderStep(){ const st = sc.steps[step]; $('stepn').textContent = `DECISION ${step+1} OF 3`; $('q').textContent = st.q; const o = $('opts'); o.innerHTML = ''; $('fb').className = 'fb'; $('next').className = 'next';
+      st.o.forEach(([txt],k) => { const b = document.createElement('button'); b.className = 'opt'; b.textContent = txt; b.addEventListener('click', () => choose(k)); o.appendChild(b); }); }
+    function choose(k){ const st = sc.steps[step], btns = [...$('opts').children]; picks.push(k);
+      btns.forEach((b,j) => { b.disabled = true; if (j === st.me){ b.classList.add('mine'); b.innerHTML = `${st.o[j][0]}<small>what I did</small>`; } else if (j === k){ b.classList.add('wrong'); b.innerHTML = `${st.o[j][0]}<small>${st.o[j][1]}</small>`; } else b.classList.add('dim'); });
+      $('fb').innerHTML = (k === st.me ? '<b>Same call I made.</b> ' : '') + st.why; $('fb').className = 'fb on';
+      log(k === st.me ? 'good' : 'me', `you: ${st.o[k][0].toLowerCase()}`);
+      phase = step + 1; setSt(phase >= 2 ? 'mit' : '', phase >= 2 ? 'Mitigating' : 'Investigating');
+      if (step === 2){ setSt('ok', 'Resolved'); log('good', 'resolved · 0 data lost'); }
+      $('next').textContent = step < 2 ? 'Next decision' : 'Read the postmortem'; $('next').className = 'next on'; }
+    $('next').addEventListener('click', () => { if (step < 2){ step++; renderStep(); } else post(); });
+    function post(){ clearInterval(timer); const same = picks.filter((p,i) => p === sc.steps[i].me).length, time = $('clock').textContent;
+      $('pm').innerHTML = `<span class="tag">✓ RESOLVED · BLAMELESS POSTMORTEM · ${sc.inc}</span><h3>${same === 3 ? 'You’d make a great on-call partner.' : same === 2 ? 'Close. One call different from mine.' : 'Good instincts to build on.'}</h3>
+        <div class="stats"><div>calls that matched mine<b>${same} of 3</b></div><div>time to resolve<b>${time}</b></div><div>data lost<b style="color:var(--ok)">0</b></div></div>
+        <div class="tl"><div><span class="hd">step</span><span class="hd">your call</span><span class="hd">what I did</span></div>${sc.steps.map((s,i) => `<div><em>0${i+1}</em><span class="y ${picks[i] === s.me ? 'same' : ''}">${s.o[picks[i]][0]}</span><span class="m">${s.o[s.me][0]}</span></div>`).join('')}</div>
+        <div class="lesson">What I took away: ${sc.lesson}</div>
+        <div class="ctas"><a href="mailto:patilshankarvivek@gmail.com">Put me on your rotation</a><button id="oc-again">Try another incident</button></div>`;
+      $('pm').className = 'pm on'; $('again').onclick = () => start((S.indexOf(sc) + 1) % S.length); }
+    // start when the section first comes into view, so the graphs aren't running unseen
+    const ocRoot = document.getElementById('oc'); let started = false;
+    new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting && !started){ started = true; start(0); } }), {threshold:0.2}).observe(ocRoot);
   })();
 
   /* ---------- case study accordion ---------- */
