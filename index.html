@@ -603,6 +603,10 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
 .sig-u path{fill:none;stroke:var(--event);stroke-width:2.6;stroke-linecap:round;stroke-dasharray:240;stroke-dashoffset:240;transition:stroke-dashoffset .8s ease 1.3s}
 .sig.on .sig-t{clip-path:inset(0 0 0 0)} .sig.on .sig-u path{stroke-dashoffset:0}
 @media (prefers-reduced-motion: reduce){.off-ic.ball,.off-i:hover .off-ic.bat .swing,.off-i:hover .off-ic.reel .spin{animation:none}.sig-t{clip-path:none;transition:none}.sig-u path{stroke-dashoffset:0;transition:none}}
+
+/* polish: a tighter hero on tall screens and phones */
+.hx{height:min(calc(100svh - 62px - env(safe-area-inset-top,0px)), 760px)!important}
+@media (max-width:700px){.hx{height:clamp(440px,64svh,560px)!important;min-height:0!important}.hx-copy{bottom:22px}}
 </style>
 
 </head>
@@ -631,7 +635,7 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
     <div class="wrap">
       <h2 id="who-h" class="who-h">I don’t ship what the AI writes. I ship what I’ve checked.</h2>
       <div class="pr" id="pr">
-        <div class="pr-h"><b>about.md</b><span><span class="pr-av" aria-hidden="true">V</span> reviewing a suggestion from an AI assistant</span></div>
+        <div class="pr-h"><b>about.md</b></div>
         <div id="prBody"></div>
         <div class="pr-f" id="prF"><span id="prS">Review in progress…</span><span class="pr-mb" aria-hidden="true">Merged</span></div>
       </div>
@@ -1007,181 +1011,9 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
     else if (kind === 'ok') tone(880, 1320, 0.1, 'triangle', 0.07); };
   const sfx = k => window.sfx(k);
 
-  /* ---------- hero: pipeline in a card ---------- */
-  if (document.getElementById('streamCv')) {
-
-  const streamTele = document.getElementById('streamTele');
-  const S = Stage(document.getElementById('streamCv'), {
-    workers:[], parts:[], acc:0, win:[], rebal:0, log:'All workers healthy.',
-    setup(){
-      const W=this.W, H=this.H, mob=W<520, n=Math.max(3, Math.min(8, Math.floor(W/100)));
-      this.fs = mob?11:12.5;
-      this.kw = mob?64:86; this.sw = mob?92:124;
-      this.kx = this.kw/2 + 4; this.ky = H/2;
-      this.x0 = this.kx + this.kw/2; this.laneStart = this.x0 + (mob?40:70);
-      this.wx = W*(mob?0.50:0.52);
-      this.sx = W - this.sw/2 - 4; this.x1 = this.sx - this.sw/2;
-      const top=H*0.10, bot=H*0.90, before=this.workers.length;
-      if (!before){ for (let i=0;i<n;i++) this.workers.push({i, y:0, ty:0, a:1, alive:true, deadAt:0}); }
-      else if (n > before){ for (let i=before;i<n;i++) this.workers.push({i, y:this.workers[before-1].y, ty:0, a:0, alive:true, deadAt:0});
-        this.log=`Scaled out to ${n} workers to fit the new size. New workers joined once they were healthy.`; }
-      else if (n < before){ this.workers.length = n; this.parts.forEach(q => { if (q.lane>=n) q.lane%=n; if (q.route>=n) q.route%=n; });
-        this.log=`Scaled in to ${n} workers. Their events moved to the others, and none were dropped.`; }
-      this.workers.forEach((w,i) => { w.ty = top+(bot-top)*i/(n-1); if (!before || reduce.matches){ w.y = w.ty; w.a = 1; } });
-      this.sinks=[{n:'PostgreSQL', y:H*0.30},{n:'ClickHouse', y:H*0.70}];
-    },
-    sinkOf(i){ return i < this.workers.length/2 ? this.sinks[0] : this.sinks[1]; },
-    alive(i){ let b=-1,d=1e9; this.workers.forEach(w => { if (w.alive && Math.abs(w.i-i)<d){ d=Math.abs(w.i-i); b=w.i; } }); return b; },
-    kill(w){ if (!w.alive) return; if (this.workers.filter(v=>v.alive).length < 2){ this.log='At least one worker has to stay up. Wait for a restart.'; return; }
-      w.alive=false; w.deadAt=performance.now(); this.rebal++; w.byUser=true; sfx('down'); const to=this.alive(w.i);
-      this.log=`Worker ${w.i+1} stopped. Its events moved to worker ${to+1}, and only finished work is committed, so nothing was lost.`; },
-    sm(t){ t=Math.max(0,Math.min(1,t)); return t*t*(3-2*t); },
-    yAt(lane, route, x){
-      const yl=this.workers[lane].y, yr=this.workers[route].y, sy=this.sinkOf(route).y;
-      if (x < this.laneStart) return this.ky + (yl-this.ky)*this.sm((x-this.x0)/(this.laneStart-this.x0));
-      if (x < this.wx-60) return yl;
-      if (x < this.wx) return yl + (yr-yl)*this.sm((x-(this.wx-60))/60);
-      return yr + (sy-yr)*this.sm((x-this.wx)/(this.x1-this.wx));
-    },
-    step(dt, now){
-      const sp = Math.max(110, this.W*0.24);
-      this.acc += dt*(this.W<520?20:32);
-      while (this.acc > 1){ this.acc--; const l=Math.floor(Math.random()*this.workers.length); this.parts.push({lane:l, route:l, x:this.x0, v:sp*(0.75+Math.random()*0.5), c:false}); }
-      this.workers.forEach(w => { w.y += (w.ty - w.y)*Math.min(1, dt*6); w.a += (1 - w.a)*Math.min(1, dt*3); });
-      this.workers.forEach(w => { if (!w.alive && now-w.deadAt > 3200){ w.alive=true; if (w.byUser){ w.byUser=false; sfx('up'); } this.log=`Worker ${w.i+1} restarted and took its events back.`; } });
-      for (let k=this.parts.length-1;k>=0;k--){ const p=this.parts[k]; p.x += p.v*dt;
-        if (p.x > this.wx-64 && p.x < this.wx-56){ const w=this.workers[p.lane]; p.route = w.alive ? p.lane : this.alive(p.lane); }
-        if (!p.c && p.x >= this.wx){ p.c=true; this.win.push(now); }
-        if (p.x > this.x1) this.parts.splice(k,1); }
-      while (this.win.length && now-this.win[0] > 1000) this.win.shift();
-    },
-    box(x,y,w,label){ const ctx=this.ctx, h=36;
-      ctx.beginPath(); ctx.roundRect ? ctx.roundRect(x-w/2,y-h/2,w,h,10) : ctx.rect(x-w/2,y-h/2,w,h);
-      ctx.fillStyle=C.bg; ctx.fill(); ctx.strokeStyle=C.ink; ctx.lineWidth=1.5; ctx.stroke();
-      ctx.fillStyle=C.ink; ctx.font='500 '+this.fs+'px '+MONO; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText(label, x, y+.5); },
-    render(now){
-      const ctx=this.ctx;
-      ctx.lineWidth=1.3; ctx.strokeStyle=C.lane;
-      this.workers.forEach(w => { ctx.beginPath(); for (let x=this.x0; x<=this.x1; x+=8){ const y=this.yAt(w.i,w.i,x); x===this.x0?ctx.moveTo(x,y):ctx.lineTo(x,y); } ctx.stroke(); });
-      this.parts.forEach(p => { const y=this.yAt(p.lane,p.route,p.x); ctx.fillStyle=(p.route!==p.lane && p.x>this.wx-60)?C.worker:C.event; ctx.globalAlpha=.9; ctx.beginPath(); ctx.arc(p.x,y,2.5,0,Math.PI*2); ctx.fill(); });
-      ctx.globalAlpha=1;
-      this.workers.forEach(w => { const hov=this.hover===w; ctx.globalAlpha=w.a;
-        ctx.beginPath(); ctx.arc(this.wx,w.y,hov?17:14,0,Math.PI*2); ctx.fillStyle=C.bg; ctx.fill(); ctx.lineWidth=2.5; ctx.strokeStyle=w.alive?C.worker:C.fail; ctx.stroke();
-        ctx.fillStyle=w.alive?C.worker:C.fail; ctx.font='600 11px '+MONO; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText(w.alive?String(w.i+1):'×', this.wx, w.y+.5);
-        if (!w.alive){ const t=Math.max(0,3.2-(now-w.deadAt)/1000).toFixed(1)+' s'; ctx.fillStyle=C.soft; ctx.font='500 10.5px '+MONO; if (this.W<520){ ctx.textAlign='center'; ctx.fillText(t, this.wx, w.y-24); } else { ctx.textAlign='left'; ctx.fillText('restarts in '+t, this.wx+22, w.y+.5); } } });
-      ctx.globalAlpha=1;
-      ctx.fillStyle=C.faint; ctx.font='500 11px '+MONO; ctx.textAlign='center'; ctx.fillText('workers', this.wx, this.workers[0].y-26);
-      this.box(this.kx, this.ky, this.kw, 'Kafka');
-      this.sinks.forEach(s => this.box(this.sx, s.y, this.sw, s.n));
-    },
-    tele(){
-      const a=this.workers.filter(w=>w.alive).length;
-      streamTele.innerHTML = `<div class="n">events / s<b>${this.win.length}</b></div><div class="n">workers up<b class="${a<this.workers.length?'bad':''}">${a} of ${this.workers.length}</b></div><div class="n">rebalances<b>${this.rebal}</b></div><div class="n">lost events<b class="good">0</b></div><div class="lg">${this.log}</div>`;
-    }
-  });
-  const sc = S.canvas;
-  function workerAt(e){ const r=sc.getBoundingClientRect(), x=e.clientX-r.left, y=e.clientY-r.top; return S.workers.find(w => Math.hypot(x-S.wx, y-w.y) < 24); }
-  sc.addEventListener('pointermove', e => { const w=workerAt(e); S.hover=w||null; sc.style.cursor = w?'pointer':'default'; showTip(w ? (w.alive?`Worker ${w.i+1}. Click to stop it.`:`Worker ${w.i+1} is restarting`) : '', e.clientX, e.clientY); if (paused) S.nudge(); });
-  sc.addEventListener('pointerleave', () => { S.hover=null; showTip(''); });
-  sc.addEventListener('pointerdown', e => { const w=workerAt(e); if (w){ S.kill(w); S.nudge(); } });
-  document.addEventListener('keydown', e => { if ((e.key==='k'||e.key==='K') && S.visible && !/input|textarea/i.test(document.activeElement.tagName)){ const a=S.workers.filter(w=>w.alive); if (a.length>1){ S.kill(a[Math.floor(Math.random()*a.length)]); S.nudge(); } } });
-
-  }
-  /* ---------- GitStream demo: backpressure ---------- */
-  if (document.getElementById('loadCv')) {
-
-  const loadR = document.getElementById('loadR'), loadV = document.getElementById('loadV'), loadTele = document.getElementById('loadTele');
-  loadR.addEventListener('input', () => { loadV.textContent = loadR.value+'×'; L.nudge(); });
-  const L = Stage(document.getElementById('loadCv'), {
-    cap:24, q:[], parts:[], out:[], dlq:[], acc:0, drain:0, win:[], toDLQ:0, full:false, log:'Workers keep up. Drag the slider to add load.',
-    setup(){ this.q=[]; this.parts=[]; this.out=[]; this.dlq=[]; const mob=this.W<560;
-      this.qx=this.W*(mob?0.46:0.48); this.qy=this.H*(mob?0.30:0.24); this.qh=this.H*(mob?0.34:0.50); this.b0=this.H*(mob?0.30:0.24); this.b1=this.H*(mob?0.64:0.74); this.dy=this.H*(mob?0.70:0.84); },
-    step(dt, now){
-      const load=+loadR.value, offered=10*load, capacity=46, gate=this.qx-30;
-      // events waiting at the gate go first, in order, as soon as there is room
-      for (let k=0;k<this.parts.length;k++){ const p=this.parts[k]; if (p.wait && this.q.length < this.cap){ this.parts.splice(k,1); k--; this.q.push({poison:p.poison, tries:0}); } }
-      const waiting = this.parts.reduce((n,p) => n + (p.wait ? 1 : 0), 0);
-      this.full = this.q.length >= this.cap;
-      // backpressure: once a line forms at the gate, the producer waits instead of sending more
-      const admit = waiting >= 16 ? 0 : offered;
-      this.acc += dt*admit;
-      const sp = Math.max(160, this.W*0.2);
-      while (this.acc > 1){ this.acc--; this.parts.push({x:-10, y:this.b0+Math.random()*(this.b1-this.b0), v:sp*(0.8+Math.random()*0.4), poison:Math.random()<0.03}); }
-      for (let k=this.parts.length-1;k>=0;k--){ const p=this.parts[k]; if (p.wait) continue; p.x+=p.v*dt;
-        if (p.x >= gate){ if (this.q.length < this.cap){ this.parts.splice(k,1); this.q.push({poison:p.poison, tries:0}); } else { p.wait=true; p.x = gate - 6 - Math.random()*46; } } }
-      this.drain += dt*capacity;
-      while (this.drain > 1 && this.q.length){ this.drain--; const m=this.q.shift();
-        if (m.poison){ m.tries++; if (m.tries<3) this.q.push(m); else { this.dlq.push({x:this.qx+40, v:120}); this.toDLQ++; this.log='A message failed 3 retries and went to the dead-letter queue. Nothing was dropped.'; } }
-        else { this.win.push(now); this.out.push({x:this.qx+110, y:this.b0+Math.random()*(this.b1-this.b0)*0.8, v:Math.max(200,this.W*0.22)}); } }
-      if (!this.q.length) this.drain = Math.min(this.drain, 1);
-      while (this.win.length && now-this.win[0] > 1000) this.win.shift();
-      this.out.forEach(o => o.x += o.v*dt); this.out = this.out.filter(o => o.x < this.W+20);
-      this.dlq.forEach(o => o.x += o.v*dt); this.dlq = this.dlq.filter(o => o.x < this.W+20);
-      if (this.log.indexOf('dead-letter')===-1){ this.log = this.full ? 'The queue is full, so the producer waits for room instead of piling up more. Nothing is dropped.' : 'Workers keep up. Drag the slider to add load.'; }
-      else if (Math.random() < dt*0.25) this.log = this.full ? 'The queue is full, so the producer waits for room instead of piling up more. Nothing is dropped.' : 'Workers keep up. Drag the slider to add load.';
-    },
-    render(){
-      const {ctx,W} = this, cw=44, slot=this.qh/this.cap;
-      this.parts.forEach(p => { ctx.fillStyle=this.full?C.fail:C.event; ctx.beginPath(); ctx.arc(p.x,p.y,2.4,0,Math.PI*2); ctx.fill(); });
-      ctx.lineWidth=2; ctx.strokeStyle=this.full?C.fail:C.line; ctx.strokeRect(this.qx-cw/2, this.qy, cw, this.qh);
-      for (let i=0;i<Math.min(this.q.length,this.cap);i++){ ctx.fillStyle=this.q[i].poison?C.fail:C.event; ctx.fillRect(this.qx-cw/2+5, this.qy+this.qh-(i+1)*slot+1.5, cw-10, Math.max(1,slot-3)); }
-      ctx.fillStyle=C.soft; ctx.font='500 12px '+MONO; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText('Bounded queue', this.qx, this.qy-16);
-      for (let i=0;i<3;i++){ const y=this.qy+this.qh*(0.2+i*0.3); ctx.beginPath(); ctx.arc(this.qx+90,y,13,0,Math.PI*2); ctx.fillStyle=C.bg2; ctx.fill(); ctx.strokeStyle=C.worker; ctx.lineWidth=2.5; ctx.stroke(); }
-      ctx.fillStyle=C.soft; ctx.fillText('Workers', this.qx+90, this.qy-16);
-      this.out.forEach(o => { ctx.fillStyle=C.worker; ctx.beginPath(); ctx.arc(o.x,o.y,2.2,0,Math.PI*2); ctx.fill(); });
-      ctx.strokeStyle=C.lane; ctx.lineWidth=1.2; ctx.beginPath(); ctx.moveTo(this.qx+40,this.dy); ctx.lineTo(W,this.dy); ctx.stroke();
-      ctx.fillStyle=C.soft; ctx.textAlign='right'; ctx.fillText('Dead-letter queue', W-16, this.dy-14);
-      this.dlq.forEach(o => { ctx.fillStyle=C.fail; ctx.beginPath(); ctx.arc(o.x,this.dy,3,0,Math.PI*2); ctx.fill(); });
-    },
-    tele(){
-      loadTele.innerHTML = `<div class="row">offered load <b>${10*(+loadR.value)} / s</b></div><div class="row">processed <b>${this.win.length} / s</b></div><div class="row">queue depth <b class="${this.full?'bad':''}">${Math.min(this.q.length,this.cap)} of ${this.cap}</b></div><div class="row">sent to dead-letter <b>${this.toDLQ}</b></div><div class="row">dropped <b class="good">0</b></div><div class="log">${this.log}</div>`;
-    }
-  });
-
-  }
-  /* ---------- heal: self-healing type ---------- */
-  if (document.getElementById('healCv')) {
-
-  const ptr = {x:-9999, y:-9999, down:false, on:false};
-  const Hh = Stage(document.getElementById('healCv'), {
-    pts:[], lastBreak:0, rec:null, broken:0,
-    setup(){ this.build(); },
-    theme(){},
-    build(){
-      const W=this.W, H=this.H, mob=W<760;
-      const off=document.createElement('canvas'); const ow=Math.max(10,Math.floor(W)), oh=Math.max(10,Math.floor(H*(mob?0.56:0.72)));
-      off.width=ow; off.height=oh; const o=off.getContext('2d');
-      const lines=['Break it.','It heals.'];
-      const pad = Math.max(18, W*0.04);
-      let fs = Math.min((ow-2*pad)/(mob?5.1:4.6), oh/2.25);
-      o.font = `800 ${fs}px "Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif`;
-      o.textBaseline='middle'; o.textAlign='center'; o.fillStyle='#000';
-      lines.forEach((l,i) => o.fillText(l, ow/2, oh/2 + (i - 0.5)*fs*0.98));
-      const d=o.getImageData(0,0,ow,oh).data, gap=mob?5:6, pts=[], oy=Math.max(0, (H - oh)/2);
-      for (let y=0;y<oh;y+=gap) for (let x=0;x<ow;x+=gap) if (d[(y*ow+x)*4+3]>128) pts.push({hx:x, hy:oy+y, x:x, y:oy+y, vx:0, vy:0});
-      this.pts=pts; this.lastBreak=performance.now(); this.rec=null;
-    },
-    step(dt, now){
-      const r=this.canvas.getBoundingClientRect(); const px=ptr.x-r.left, py=ptr.y-r.top, R=this.W<760?70:110; let disp=0;
-      this.pts.forEach(p => {
-        if (ptr.on){ const dx=p.x-px, dy=p.y-py, dd=Math.hypot(dx,dy); if (dd<R){ const f=(1-dd/R)*(ptr.down?2600:1300); p.vx+=dx/(dd||1)*f*dt; p.vy+=dy/(dd||1)*f*dt; this.lastBreak=now; this.rec=null; } }
-        p.vx+=(p.hx-p.x)*9*dt; p.vy+=(p.hy-p.y)*9*dt; const damp=Math.pow(0.012,dt); p.vx*=damp; p.vy*=damp; p.x+=p.vx*dt; p.y+=p.vy*dt;
-        if (Math.abs(p.x-p.hx)+Math.abs(p.y-p.hy) > 4) disp++; });
-      this.broken=disp;
-      if (disp<4 && this.rec===null) this.rec=(now-this.lastBreak)/1000;
-    },
-    render(){ const ctx=this.ctx; this.pts.forEach(p => { const off=Math.abs(p.x-p.hx)+Math.abs(p.y-p.hy) > 4; ctx.fillStyle = off ? C.event : C.ink; ctx.fillRect(p.x-1.6,p.y-1.6,3.2,3.2); }); },
-    tele(){}
-  });
-  const hc = Hh.canvas;
-  hc.addEventListener('pointermove', e => { ptr.x=e.clientX; ptr.y=e.clientY; ptr.on=true; Hh.nudge(); });
-  hc.addEventListener('pointerdown', e => { ptr.down=true; ptr.x=e.clientX; ptr.y=e.clientY; ptr.on=true; Hh.nudge(); });
-  hc.addEventListener('pointerleave', () => { ptr.on=false; });
-  window.addEventListener('pointerup', () => { ptr.down=false; });
-  if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { Hh.build(); Hh.draw(true); if (typeof S !== 'undefined') S.size(); });
 
 
-  }
+
   /* ---------- InterviewKit: grounded or refuse ---------- */
   const ragAns = document.getElementById('ragAns'), ragQs = document.getElementById('ragQs');
   const CL = [
@@ -1282,88 +1114,7 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
     ragQs.appendChild(b); });
   ragAns.className='ans'; ragAns.innerHTML='<div class="k">waiting for a question</div><div class="a">Answers are drafted only from your own notes, and every one cites its file.</div>';
 
-  /* ---------- Cloud-Native: zones, health checks, rolling deploy ---------- */
-  if (document.getElementById('azCv')) {
 
-  const azTele=document.getElementById('azTele'), azDown=document.getElementById('azDown'), azDeploy=document.getElementById('azDeploy');
-  const A = Stage(document.getElementById('azCv'), {
-    zones:[], reqs:[], acc:0, win:[], errors:0, log:'All zones healthy. Traffic is spread across every instance.', deploying:false, dq:[], dt0:0, rr:0,
-    setup(){
-      const W=this.W, H=this.H, mob=W<560;
-      const avail = mob ? W - 24 : Math.max(300, W - 350);
-      const zw = Math.min(240, (avail - 48) / 3);
-      const x0 = 12 + Math.max(0, (avail - (3*zw + 32)) / 2);
-      this.lb = {x: x0 + 1.5*zw + 16, y: H*(mob?0.20:0.26)};
-      if (!this.zones.length){ this.zones = ['A','B','C'].map((n,i) => ({n, up:true, inst:[{v:1,st:'ok'},{v:1,st:'ok'}]})); }
-      this.zones.forEach((z,i) => { z.x = x0 + i*(zw+16); z.y=H*0.42; z.w=zw; z.h=H*0.40; });
-    },
-    instPos(z,j){ const n=z.inst.length, gap=z.w/(n+1);
-      if (gap >= 40) return {x:z.x+gap*(j+1), y:z.y+z.h*0.58};
-      const top=z.y+(z.w<130?56:34), span=Math.max(0, z.y+z.h-18-top); return {x:z.x+z.w/2, y: n===1 ? top+span/2 : top+span*j/(n-1)}; },
-    instR(z){ const n=z.inst.length, gap=z.w/(n+1); if (gap >= 40) return Math.min(18, gap*0.42);
-      const top=z.y+(z.w<130?56:34), span=Math.max(0, z.y+z.h-18-top); return Math.max(8, Math.min(15, z.w*0.3, n>1 ? (span/(n-1))*0.44 : 15)); },
-    healthy(){ const h=[]; this.zones.forEach(z => { if (!z.up) return; z.inst.forEach((s,j)=>{ if (s.st==='ok') h.push([z,j]); }); }); return h; },
-    toggleZone(){ const z=this.zones[0];
-      if (z.up){ z.up=false; sfx('down'); this.log='Zone A is down. Its instances failed health checks, so the load balancer stopped sending them traffic. Auto Scaling is adding capacity in B and C.';
-        setTimeout(() => { if (this.zones[0].up) return; const nv = this.deploying ? this.nextV : Math.max(...this.zones.flatMap(q=>q.inst.map(s=>s.v))); this.zones[1].inst.push({v:nv, st:'boot', t:performance.now()}); this.zones[2].inst.push({v:nv, st:'boot', t:performance.now()}); A.nudge(); }, 900);
-        azDown.textContent='Bring zone A back'; }
-      else { z.up=true; sfx('up'); const newest = this.deploying ? this.nextV : Math.max(...this.zones.filter(q=>q!==z).flatMap(q=>q.inst.map(s=>s.v))); z.inst.forEach(s=>{ s.st='ok'; s.v=newest; }); this.zones.forEach((zz,i)=>{ if (i>0 && zz.inst.length>2) zz.inst.splice(2); }); this.log='Zone A is back. Extra capacity in B and C was scaled in again.'; azDown.textContent='Take zone A down'; }
-    },
-    deploy(){
-      if (this.deploying) return;
-      const next = Math.max(...this.zones.flatMap(z=>z.inst.map(s=>s.v)))+1;
-      this.deploying=true; this.nextV=next; this.dq=[]; this.zones.forEach(z => { if (z.up) z.inst.forEach((s,j)=>this.dq.push([z,j])); });
-      sfx('tick'); this.dt0=performance.now(); this.log=`Rolling out version ${next}, one instance at a time.`; azDeploy.disabled=true;
-    },
-    step(dt, now){
-      // requests
-      this.acc += dt*28;
-      while (this.acc > 1){ this.acc--; const h=this.healthy(); if (!h.length){ this.errors++; continue; } this.rr=(this.rr+1)%h.length; const [z,j]=h[this.rr]; this.reqs.push({z,j,t:0}); }
-      for (let k=this.reqs.length-1;k>=0;k--){ const r=this.reqs[k]; r.t+=dt*1.6; if (r.t>=1){ this.reqs.splice(k,1); this.win.push(now); } }
-      while (this.win.length && now-this.win[0]>1000) this.win.shift();
-      // boot finish
-      this.zones.forEach(z => z.inst.forEach(s => { if (s.st==='boot' && now-s.t>900){ s.st='ok'; if (!this.deploying) this.log = this.zones[0].up ? this.log : 'Replacement instances passed their health checks and joined the pool. No requests failed.'; } }));
-      // rolling deploy
-      if (this.deploying){
-        const cur = this.dq[0];
-        if (!cur){ const left=[]; this.zones.forEach(z => { if (z.up) z.inst.forEach((s,j) => { if (s.v!==this.nextV && s.st==='ok') left.push([z,j]); }); });
-          if (left.length){ this.dq = left; }
-          else { this.deploying=false; sfx('ok'); azDeploy.disabled=false; azDeploy.textContent=`Deploy version ${this.nextV+1}`; this.log = this.zones[0].up ? `Version ${this.nextV} is live everywhere. Errors during the rollout: 0.` : `Version ${this.nextV} is live on every healthy instance. Zone A will start on it when it’s back. Errors: 0.`; } }
-        else { const [z,j]=cur, s=z.inst[j];
-          if (!s){ this.dq.shift(); }
-          else if (s.st==='ok' && s.v!==this.nextV){ s.st='drain'; s.t=now; }
-          else if (s.st==='drain' && now-s.t>450){ s.st='boot'; s.v=this.nextV; s.t=now; }
-          else if (s.st==='ok' && s.v===this.nextV){ this.dq.shift(); } }
-      }
-    },
-    render(){
-      const ctx=this.ctx; ctx.font='500 12px '+MONO; ctx.textBaseline='middle';
-      // LB
-      ctx.beginPath(); ctx.roundRect ? ctx.roundRect(this.lb.x-70,this.lb.y-20,140,40,10) : ctx.rect(this.lb.x-70,this.lb.y-20,140,40);
-      ctx.fillStyle=C.bg; ctx.fill(); ctx.strokeStyle=C.ink; ctx.lineWidth=2; ctx.stroke();
-      ctx.fillStyle=C.ink; ctx.textAlign='center'; ctx.fillText('Load balancer', this.lb.x, this.lb.y);
-      ctx.fillStyle=C.soft; ctx.fillText('users', this.lb.x, this.lb.y-44);
-      // zones
-      this.zones.forEach(z => {
-        ctx.setLineDash([5,5]); ctx.strokeStyle = z.up ? C.line : C.fail; ctx.lineWidth=1.5; ctx.strokeRect(z.x,z.y,z.w,z.h); ctx.setLineDash([]);
-        ctx.fillStyle = z.up ? C.soft : C.fail; ctx.textAlign='left'; if (z.w < 130){ ctx.fillText('Zone '+z.n, z.x+8, z.y+16); if (!z.up) ctx.fillText('down', z.x+8, z.y+31); } else ctx.fillText('Zone '+z.n+(z.up?'':' · down'), z.x+10, z.y+16);
-        z.inst.forEach((s,j) => { const p=this.instPos(z,j);
-          let col = C.worker; if (!z.up) col=C.fail; else if (s.st==='drain') col=C.faint; else if (s.st==='boot') col=C.event;
-          const rr=this.instR(z); ctx.beginPath(); ctx.arc(p.x,p.y,rr,0,Math.PI*2); ctx.fillStyle=C.bg2; ctx.fill(); ctx.lineWidth=rr<12?2:2.5; ctx.strokeStyle=col; ctx.stroke();
-          ctx.fillStyle=col; ctx.textAlign='center'; ctx.font=(rr<12?'600 9.5px ':'500 12px ')+MONO; ctx.fillText('v'+s.v, p.x, p.y); ctx.font='500 12px '+MONO;
-          if (z.w/(z.inst.length+1) > 46){ ctx.fillStyle=C.faint; ctx.fillText(!z.up?'failed':(s.st==='ok'?'healthy':(s.st==='drain'?'draining':'starting')), p.x, p.y+32); } });
-      });
-      // requests
-      this.reqs.forEach(r => { const p=this.instPos(r.z,r.j); const t=r.t, x=this.lb.x+(p.x-this.lb.x)*t, y=(this.lb.y+20)+(p.y-18-(this.lb.y+20))*t; ctx.beginPath(); ctx.arc(x,y,2.6,0,Math.PI*2); ctx.fillStyle=C.event; ctx.fill(); });
-    },
-    tele(){ const h=this.healthy().length, tot=this.zones.reduce((a,z)=>a+z.inst.length,0);
-      const vs={}; this.zones.forEach(z=>{ if (z.up) z.inst.forEach(s=>{ vs[s.v]=(vs[s.v]||0)+1; }); });
-      azTele.innerHTML = `<div class="row">requests per second <b>${this.win.length}</b></div><div class="row">healthy instances <b class="${h<tot?'bad':''}">${h} of ${tot}</b></div><div class="row">versions running <b>${Object.keys(vs).sort().map(v=>'v'+v+' × '+vs[v]).join(', ')}</b></div><div class="row">failed requests <b class="good">${this.errors}</b></div><div class="log">${this.log}</div>`; }
-  });
-  azDown.addEventListener('click', () => { A.toggleZone(); A.nudge(); });
-  azDeploy.addEventListener('click', () => { A.deploy(); A.nudge(); });
-
-  }
   /* ---------- Healthcare: sync vs async writes, ETag reads ---------- */
   const lerpF = (a,b,t) => a + (b-a)*Math.max(0, Math.min(1, t));
   const hcTele=document.getElementById('hcTele'), hcRead=document.getElementById('hcRead');
@@ -1609,42 +1360,7 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
       me.addEventListener('mouseenter', flip); me.addEventListener('focus', flip); }
   })();
 
-  /* ---------- the commit rule, running ---------- */
-  (() => {
-    const root = document.getElementById('crDemo'); if (!root) return;
-    const rm = reduce.matches, N = 16, offs = document.getElementById('crOffs'), lines = [...document.getElementById('crCode').children];
-    const cmEl = document.getElementById('crCm'), dEl = document.getElementById('crDone'), lg = document.getElementById('crLog');
-    const boxes = Array.from({length:N}, (_,i) => { const d = document.createElement('div'); d.className = 'cr-off'; d.textContent = i+1; offs.appendChild(d); return d; });
-    let st, committed, done, next, flying, speed = 1, timer = null, busy = false, on = false, running = false;
-    const reset = () => { st = Array(N+1).fill('idle'); committed = 0; done = new Set(); next = 1; flying = []; draw(); };
-    const draw = () => { boxes.forEach((b,i) => { const o = i+1; b.className = 'cr-off' + (o<=committed?' com':'') + (st[o]==='fly'?' fly':'') + (st[o]==='done'?' done':'') + (st[o]==='rep'?' fly rep':''); });
-      cmEl.textContent = committed; dEl.textContent = done.size ? 'map['+[...done].sort((a,b)=>a-b).map(o => o+':true').join(' ')+']' : 'map[]'; };
-    const hl = ix => lines.forEach((l,i) => l.classList.toggle('hl', ix.includes(i)));
-    const wait = ms => new Promise(r => setTimeout(r, rm ? 0 : ms*speed));
-    let epoch = 0;
-    async function complete(o){ busy = true; const my = epoch;
-      st[o] = 'done'; done.add(o); hl([0,1]); draw(); await wait(380); if (my !== epoch) return; hl([2]); await wait(320); if (my !== epoch) return;
-      while (done.has(committed+1)){ committed++; done.delete(committed); st[committed] = 'idle'; hl([3,4]); draw(); await wait(260); if (my !== epoch) return; hl([2]); await wait(160); if (my !== epoch) return; }
-      hl([6]); draw(); lg.textContent = done.size ? `Offset ${o} finished, but ${committed+1} is still running, so the commit stays at ${committed}.` : `Committed up to ${committed}. Everything before it is done.`;
-      await wait(420); if (my !== epoch) return; hl([]); busy = false; }
-    async function tick(){
-      if (!on){ running = false; return; } running = true;
-      while (flying.length < 3 && next <= N){ if (st[next] !== 'rep') st[next] = 'fly'; flying.push({o:next, left:500 + Math.random()*1600}); next++; }
-      draw();
-      if (!busy && flying.length){ flying.forEach(f => f.left -= 220); const ready = flying.find(f => f.left <= 0); if (ready){ flying = flying.filter(x => x !== ready); await complete(ready.o); } }
-      if (committed >= N){ lg.textContent = 'All 16 committed. Starting over.'; await wait(1400); reset(); }
-      timer = setTimeout(tick, rm ? 600 : 220*speed);
-    }
-    document.getElementById('crCrash').addEventListener('click', async () => {
-      epoch++; clearTimeout(timer); sfx('down'); hl([9,10]); const lost = flying.length, redo = done.size;
-      flying.forEach(f => st[f.o] = 'idle'); done.forEach(o => st[o] = 'idle'); flying = []; done = new Set();
-      for (let o = committed+1; o < next; o++) st[o] = 'rep'; next = committed + 1; draw();
-      lg.textContent = `Crashed with ${lost} running and ${redo} finished but not committed. Restarting from offset ${committed+1}: ${lost+redo} events will run again, and none are lost.`;
-      await wait(1400); hl([]); busy = false; if (on) tick(); });
-    document.getElementById('crSlow').addEventListener('click', e => { speed = speed === 1 ? 2.2 : 1; e.target.textContent = speed === 1 ? 'Slow down' : 'Normal speed'; });
-    reset();
-    new IntersectionObserver(es => es.forEach(e => { on = e.isIntersecting; if (on && !running){ clearTimeout(timer); tick(); } }), {threshold:0.2}).observe(root);
-  })();
+
 
   /* ---------- jargon explains itself ---------- */
   (() => {
@@ -1872,125 +1588,9 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
     let last = performance.now(); const loop = now => { const dt = Math.min(.05, (now-last)/1000); last = now; if (on && W) frame(dt, now); requestAnimationFrame(loop); }; requestAnimationFrame(loop);
   })();
 
-  /* ===== spectacle 2: follow one event ===== */
-  (() => {
-    const sec = document.getElementById('journey'), cv = document.getElementById('jyCv'); if (!sec || !cv) return;
-    const ctx = cv.getContext('2d'); let W = 0, H = 0, on = false, cur = -1, bg = [];
-    const N = { phone:{x:0,y:0,l:'a user taps “Buy”'}, lb:{x:600,y:0,l:'load balancer'}, gate:{x:1200,y:0,l:'security checks'}, kafka:{x:1800,y:0,l:'Kafka · partition 3'}, worker:{x:2400,y:0,l:'worker 2'}, pg:{x:3000,y:-180,l:'PostgreSQL'}, ch:{x:3000,y:180,l:'ClickHouse'}, idx:{x:3600,y:0,l:'search index'} };
-    const STOPS = [
-      {n:'01 / 08', h:'It starts with one tap.', p:'Every action in a product becomes an event. Let’s follow one through the systems I build.', cam:{x:0,y:20,z:1.6}, at:0},
-      {n:'02 / 08', h:'The load balancer picks a healthy copy.', p:'Copies run in several zones, and health checks decide who gets traffic.', cam:{x:600,y:30,z:1.5}, at:.14, open:['p-cn','See the Cloud-Native Platform']},
-      {n:'03 / 08', h:'Every request gets checked.', p:'Signed tokens, roles and clean input, before anything touches the data.', cam:{x:1200,y:20,z:1.6}, at:.28, open:['p-cg','See ChildGuard']},
-      {n:'04 / 08', h:'Kafka writes it down, in order.', p:'The event lands on partition 3 at offset 48,213. From now on, it can’t be lost.', cam:{x:1800,y:30,z:1.6}, at:.42, open:['p-gitstream','See GitStream']},
-      {n:'05 / 08', h:'A worker processes it, then commits.', p:'Only when everything before it is done does the offset move. That’s GitStream’s one rule.', cam:{x:2400,y:0,z:1.6}, at:.56, open:['p-gitstream','See GitStream']},
-      {n:'06 / 08', h:'Two databases, two questions.', p:'PostgreSQL answers “what happened to this one?” ClickHouse answers “what happened across all of them?”', cam:{x:3000,y:0,z:1.2}, at:.70, open:['p-gitstream','See GitStream']},
-      {n:'07 / 08', h:'Search catches up a moment later.', p:'The save already returned. Indexing happens in the background, so saves are 60% faster.', cam:{x:3600,y:0,z:1.5}, at:.84, open:['p-hc','See the Healthcare Data Service']},
-      {n:'08 / 08', h:'Now picture 4,820 of those a second.', p:'Every one of them, through every failure, with zero lost. That’s the job.', cam:{x:1800,y:0,z:0.28}, at:1}
-    ];
-    const prog = document.getElementById('jyProg'); STOPS.forEach(() => prog.appendChild(document.createElement('i')));
-    const capEl = document.getElementById('jyCap'), nEl = document.getElementById('jyN'), hEl = document.getElementById('jyH'), pEl = document.getElementById('jyP'), openEl = document.getElementById('jyOpen');
-    const path = [N.phone, N.lb, N.gate, N.kafka, N.worker, N.pg, N.idx];
-    const lerp = (a,b,t) => a + (b-a)*t, ease = t => t < .5 ? 4*t*t*t : 1 - Math.pow(-2*t+2, 3)/2;
-    function build(){ const r = cv.getBoundingClientRect(), d = Math.min(devicePixelRatio||1, 2); W = r.width; H = r.height; if (!W) return; cv.width = Math.round(W*d); cv.height = Math.round(H*d);
-      bg = Array.from({length:800}, () => ({t:Math.random(), lane:Math.floor(Math.random()*7)-3, v:0.04 + Math.random()*0.08})); }
-    function camAt(p){ let i = 0; while (i < STOPS.length-1 && p > STOPS[i+1].at) i++; const a = STOPS[i], b = STOPS[Math.min(i+1, STOPS.length-1)];
-      const t = b.at === a.at ? 0 : ease(Math.min(1, Math.max(0, (p - a.at)/(b.at - a.at))));
-      return {x:lerp(a.cam.x,b.cam.x,t), y:lerp(a.cam.y,b.cam.y,t), z:Math.exp(lerp(Math.log(a.cam.z), Math.log(b.cam.z), t)), i: t > .5 ? Math.min(i+1, STOPS.length-1) : i}; }
-    function onPath(p){ const seg = Math.min(path.length-2, Math.floor(p*(path.length-1))), t = p*(path.length-1) - seg, a = path[seg], b = path[seg+1]; return {x:lerp(a.x,b.x,t), y:lerp(a.y,b.y,t)}; }
-    function node(n, hot, z){ const w = 180, h = 62; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(n.x-w/2, n.y-h/2, w, h, 14) : ctx.rect(n.x-w/2, n.y-h/2, w, h);
-      ctx.fillStyle = C.bg2; ctx.fill(); ctx.lineWidth = 2/z*1.2; ctx.strokeStyle = hot ? C.event : C.line; ctx.stroke();
-      ctx.fillStyle = hot ? C.ink : C.soft; ctx.font = '600 14px '+MONO; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(n.l, n.x, n.y - 14); }
-    function draw(p, now){
-      const d = Math.min(devicePixelRatio||1, 2); ctx.setTransform(d,0,0,d,0,0); ctx.clearRect(0,0,W,H);
-      const c = camAt(p), z = c.z * Math.min(W, H) / 700;
-      ctx.save(); ctx.translate(W/2, H/2); ctx.scale(z, z); ctx.translate(-c.x, -c.y);
-      const show = Math.max(0, Math.min(1, (0.9 - c.z)/0.5));
-      if (show > 0){ ctx.globalAlpha = show; ctx.fillStyle = C.event; for (const e of bg){ e.t = (e.t + e.v*(reduce.matches ? 0 : 0.016)) % 1; const pt = onPath(e.t); ctx.fillRect(pt.x-3, pt.y + e.lane*26 - 3, 6, 6); } ctx.globalAlpha = 1; }
-      ctx.lineWidth = 2/z; ctx.strokeStyle = C.line;
-      [[N.phone,N.lb],[N.lb,N.gate],[N.gate,N.kafka],[N.kafka,N.worker],[N.worker,N.pg],[N.worker,N.ch],[N.pg,N.idx]].forEach(([a,b]) => { ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.bezierCurveTo((a.x+b.x)/2, a.y, (a.x+b.x)/2, b.y, b.x, b.y); ctx.stroke(); });
-      for (let k=-6;k<=6;k++){ ctx.fillStyle = k === 0 ? C.event : C.bg2; ctx.fillRect(N.kafka.x + k*24 - 10, N.kafka.y + 70, 20, 14); }
-      ctx.fillStyle = C.soft; ctx.font = '500 10px '+MONO; ctx.textAlign = 'center'; ctx.fillText('offset 48,213', N.kafka.x, N.kafka.y + 104);
-      ['A','B','C'].forEach((zn,i) => { const x = N.lb.x - 84 + i*84; ctx.setLineDash([6/z, 6/z]); ctx.strokeStyle = C.line; ctx.strokeRect(x - 36, N.lb.y + 60, 72, 50); ctx.setLineDash([]);
-        ctx.beginPath(); ctx.arc(x, N.lb.y + 85, 9, 0, 7); ctx.strokeStyle = C.worker; ctx.lineWidth = 2/z; ctx.stroke(); ctx.fillStyle = C.faint; ctx.font = '500 10px '+MONO; ctx.fillText('zone '+zn, x, N.lb.y + 124); });
-      ['token','role','input'].forEach((g,i) => { const x = N.gate.x - 70 + i*70; ctx.strokeStyle = C.ok; ctx.lineWidth = 2/z; ctx.strokeRect(x - 26, N.gate.y + 60, 52, 26); ctx.fillStyle = C.soft; ctx.font = '500 10px '+MONO; ctx.fillText(g + ' ✓', x, N.gate.y + 74); });
-      const at = c.i;
-      [[N.phone,0],[N.lb,1],[N.gate,2],[N.kafka,3],[N.worker,4],[N.pg,5],[N.ch,5],[N.idx,6]].forEach(([n,k]) => node(n, at === k || at === 7, z));
-      const ep = Math.min(1, p / 0.86), pt0 = onPath(ep), pt = {x:pt0.x, y:pt0.y + 14}, pulse = 1 + 0.25*Math.sin(now/180);
-      const g = ctx.createRadialGradient(pt.x, pt.y, 0, pt.x, pt.y, 26*pulse); g.addColorStop(0, 'rgba(255,181,71,.75)'); g.addColorStop(1, 'rgba(255,181,71,0)');
-      ctx.fillStyle = g; ctx.beginPath(); ctx.arc(pt.x, pt.y, 26*pulse, 0, 7); ctx.fill(); ctx.fillStyle = C.event; ctx.beginPath(); ctx.arc(pt.x, pt.y, 7, 0, 7); ctx.fill(); ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(pt.x, pt.y, 3.5, 0, 7); ctx.fill();
-      if (at === 5){ const t = Math.min(1, Math.max(0, (ep - 0.72) * 7)); ctx.fillStyle = C.worker; ctx.beginPath(); ctx.arc(lerp(N.worker.x, N.ch.x, t), lerp(N.worker.y, N.ch.y, t) + 14, 6, 0, 7); ctx.fill(); }
-      ctx.restore();
-      if (at !== cur){ cur = at; const s = STOPS[cur]; capEl.style.opacity = 0;
-        setTimeout(() => { nEl.textContent = s.n; hEl.textContent = s.h; pEl.textContent = s.p;
-          if (s.open){ openEl.hidden = false; openEl.textContent = s.open[1] + ' →'; openEl.dataset.p = s.open[0]; } else openEl.hidden = true;
-          capEl.style.opacity = 1; }, reduce.matches ? 0 : 160);
-        prog.querySelectorAll('i').forEach((el,k) => el.classList.toggle('on', k === cur)); if (cur > 0) sfx('tick'); }
-    }
-    openEl.addEventListener('click', e => { e.preventDefault(); const id = openEl.dataset.p, b = document.querySelector(`[aria-controls="${id}"]`); if (b && b.getAttribute('aria-expanded') !== 'true') b.click(); if (b) b.scrollIntoView({behavior: reduce.matches ? 'auto' : 'smooth', block:'start'}); });
-    const progress = () => { const r = sec.getBoundingClientRect(), stick = sec.querySelector('.jy-stick'), top = parseFloat(getComputedStyle(stick).top) || 62, total = Math.max(1, sec.offsetHeight - stick.offsetHeight); return Math.min(1, Math.max(0, (top - r.top) / total)); };
-    new ResizeObserver(build).observe(cv);
-    new IntersectionObserver(es => es.forEach(e => on = e.isIntersecting), {threshold:0}).observe(sec);
-    const loop = now => { if (on && W) draw(progress(), now); requestAnimationFrame(loop); }; requestAnimationFrame(loop);
-  })();
 
-  /* ===== GitStream: the flow into two stores ===== */
-  (() => {
-    const cv = document.getElementById('gfCv'); if (!cv) return;
-    const ctx = cv.getContext('2d'), tele = document.getElementById('gfTele'); let W = 0, H = 0, on = false;
-    let parts = [], acc = 0, written = 0, pgRows = [], chCols = [0,0,0,0,0], mode = null, modeT = 0, offset = 48200, log = 'Every event is written twice: once as a row, once into columns.';
-    const COLS = ['time','user','event','amount','region'];
-    function size(){ const r = cv.getBoundingClientRect(), d = Math.min(devicePixelRatio||1, 2); W = r.width; H = r.height; if (!W) return; cv.width = Math.round(W*d); cv.height = Math.round(H*d); ctx.setTransform(d,0,0,d,0,0); }
-    const L = () => { const mob = W < 560; return mob
-      ? {kx:W*0.13, wx:W*0.42, pg:{x:W*0.60, y:H*0.08, w:W*0.37, h:H*0.40}, ch:{x:W*0.60, y:H*0.54, w:W*0.37, h:H*0.40}, ky:H*0.5}
-      : {kx:W*0.08, wx:W*0.30, pg:{x:W*0.44, y:H*0.10, w:W*0.24, h:H*0.38}, ch:{x:W*0.44, y:H*0.54, w:W*0.24, h:H*0.38}, ky:H*0.5}; };
-    function pill(text, x, y, col){ ctx.font = '600 11px '+MONO; const w = ctx.measureText(text).width + 14; ctx.fillStyle = C.bg; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(x - w/2, y - 10, w, 20, 10) : ctx.rect(x-w/2, y-10, w, 20); ctx.fill(); ctx.strokeStyle = col || C.line; ctx.lineWidth = 1.2; ctx.stroke(); ctx.fillStyle = col || C.soft; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(text, x, y + .5); }
-    function frame(dt, now){
-      ctx.clearRect(0,0,W,H); const g = L(), move = reduce.matches ? 0.2 : 1;
-      acc += dt*14*move; while (acc > 1){ acc--; parts.push({x:g.kx + 18, y:g.ky + (Math.random()-.5)*20, stage:0, t:0, off:++offset}); }
-      // kafka log tape
-      for (let k=0;k<9;k++){ const y = g.ky - 4*24 + k*24; ctx.fillStyle = k === 4 ? C.event : C.bg2; ctx.fillRect(g.kx - 16, y - 9, 32, 18); if (k !== 4){ ctx.strokeStyle = C.line; ctx.lineWidth = 1; ctx.strokeRect(g.kx - 16, y - 9, 32, 18); } }
-      pill('Kafka', g.kx, g.ky - 4*24 - 26, C.soft);
-      // worker
-      ctx.beginPath(); ctx.arc(g.wx, g.ky, 22, 0, 7); ctx.fillStyle = C.bg; ctx.fill(); ctx.lineWidth = 2.5; ctx.strokeStyle = C.worker; ctx.stroke(); ctx.fillStyle = C.worker; ctx.font = '600 12px '+MONO; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('Go', g.wx, g.ky + .5);
-      pill('worker pool', g.wx, g.ky - 40, C.soft);
-      // links
-      ctx.strokeStyle = C.line; ctx.lineWidth = 1.5;
-      const pgIn = {x:g.pg.x, y:g.pg.y + g.pg.h/2}, chIn = {x:g.ch.x, y:g.ch.y + g.ch.h/2};
-      [[g.kx+18,g.ky,g.wx-22,g.ky],[g.wx+22,g.ky,pgIn.x,pgIn.y],[g.wx+22,g.ky,chIn.x,chIn.y]].forEach(([a,b,c,d]) => { ctx.beginPath(); ctx.moveTo(a,b); ctx.bezierCurveTo((a+c)/2,b,(a+c)/2,d,c,d); ctx.stroke(); });
-      // particles: kafka -> worker -> both stores
-      const bez = (a,b,c,d,t) => { const u = 1-t, mx = (a+c)/2; return {x: u*u*u*a + 3*u*u*t*mx + 3*u*t*t*mx + t*t*t*c, y: u*u*u*b + 3*u*u*t*b + 3*u*t*t*d + t*t*t*d}; };
-      for (let i=parts.length-1;i>=0;i--){ const p = parts[i]; p.t += dt*(p.stage ? 1.1 : 1.4)*move;
-        if (p.stage === 0){ const q = bez(g.kx+18, p.y, g.wx-22, g.ky, Math.min(1,p.t)); ctx.fillStyle = C.event; ctx.beginPath(); ctx.arc(q.x, q.y, 3.2, 0, 7); ctx.fill();
-          if (p.t >= 1){ parts.splice(i,1); parts.push({stage:1, to:'pg', t:0, off:p.off}, {stage:1, to:'ch', t:0, off:p.off}); } continue; }
-        const tgt = p.to === 'pg' ? pgIn : chIn, q = bez(g.wx+22, g.ky, tgt.x, tgt.y, Math.min(1,p.t));
-        ctx.fillStyle = p.to === 'pg' ? C.worker : C.event; ctx.beginPath(); ctx.arc(q.x, q.y, 3, 0, 7); ctx.fill();
-        if (p.t >= 1){ parts.splice(i,1);
-          if (p.to === 'pg'){ pgRows.push({off:p.off, a:1}); if (pgRows.length > 9) pgRows.shift(); written++; }
-          else { chCols = chCols.map(v => Math.min(1, v + 0.012 + Math.random()*0.01)); } } }
-      // PostgreSQL: rows
-      const P = g.pg; ctx.strokeStyle = C.line; ctx.lineWidth = 1.2; ctx.strokeRect(P.x, P.y, P.w, P.h);
-      pill('PostgreSQL · rows', P.x + P.w/2, P.y - 2, C.worker);
-      const rh = (P.h - 20) / 9;
-      pgRows.forEach((r,i) => { r.a = Math.max(0, r.a - dt*1.5); const y = P.y + 12 + i*rh, hot = mode === 'look' && r === pgRows[Math.floor(pgRows.length/2)];
-        ctx.fillStyle = hot ? C.worker : C.bg2; ctx.globalAlpha = hot ? 1 : 0.7 + 0.3*r.a; ctx.fillRect(P.x + 8, y, P.w - 16, rh - 4); ctx.globalAlpha = 1;
-        ctx.fillStyle = hot ? C.bg : C.soft; ctx.font = '500 10px '+MONO; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText('offset ' + r.off.toLocaleString() + (W < 560 ? '' : '  · user · amount · region'), P.x + 14, y + (rh-4)/2); });
-      // ClickHouse: columns
-      const Q = g.ch; ctx.strokeStyle = C.line; ctx.strokeRect(Q.x, Q.y, Q.w, Q.h);
-      pill('ClickHouse · columns', Q.x + Q.w/2, Q.y - 2, C.event);
-      const cw = (Q.w - 16) / COLS.length;
-      COLS.forEach((c,i) => { const x = Q.x + 8 + i*cw, h = (Q.h - 40) * (0.15 + 0.85*chCols[i]), hot = mode === 'sum' && i === 3, dim = mode === 'sum' && i !== 3;
-        ctx.globalAlpha = dim ? 0.18 : (hot ? 1 : 0.45); ctx.fillStyle = C.event; ctx.fillRect(x + 3, Q.y + Q.h - 20 - h, cw - 6, h);
-        if (hot){ const sweep = Math.min(1, (now - modeT)/900); ctx.fillStyle = 'rgba(255,255,255,.35)'; ctx.fillRect(x + 3, Q.y + Q.h - 20 - h*sweep, cw - 6, 3); }
-        ctx.globalAlpha = 1; ctx.fillStyle = hot ? C.ink : C.faint; ctx.font = '500 10px '+MONO; ctx.textAlign = 'center'; ctx.fillText(W < 560 && !hot ? c[0] : c, x + cw/2, Q.y + Q.h - 9); });
-      if (chCols[0] > 0.95) chCols = chCols.map(v => v*0.6);
-      if (mode && now - modeT > 3200) mode = null;
-    }
-    function teleDraw(){ tele.innerHTML = `<div class="row">events written <b>${written.toLocaleString()}</b></div><div class="row">row store <b>PostgreSQL</b></div><div class="row">column store <b>ClickHouse</b></div><div class="row">lost events <b class="good">0</b></div><div class="log">${log}</div>`; }
-    document.getElementById('gfLook').addEventListener('click', () => { mode = 'look'; modeT = performance.now(); log = 'Looking up one event: PostgreSQL jumps straight to that row through its index.'; sfx('tick'); teleDraw(); });
-    document.getElementById('gfSum').addEventListener('click', () => { mode = 'sum'; modeT = performance.now(); log = 'Adding up the last hour: ClickHouse reads only the “amount” column, so millions of rows sum fast.'; sfx('tick'); teleDraw(); });
-    new ResizeObserver(size).observe(cv); new IntersectionObserver(es => es.forEach(e => on = e.isIntersecting), {threshold:0.02}).observe(cv);
-    let last = performance.now(), tA = 1; const loop = now => { const dt = Math.min(.05,(now-last)/1000); last = now; if (on && W){ frame(dt, now); tA += dt; if (tA > .25){ tA = 0; teleDraw(); } } requestAnimationFrame(loop); }; requestAnimationFrame(loop);
-  })();
+
+
 
   /* ===== spectacle: GitStream, the Kafka log in 3D ===== */
   (() => {
