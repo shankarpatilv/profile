@@ -484,6 +484,14 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
 @keyframes hxPulse{50%{box-shadow:0 0 0 7px color-mix(in srgb,var(--ok) 0%,transparent)}}
 @media (max-width:700px){.hx-status{font-size:10.5px;gap:10px;padding:6px 11px}.hx-status span:nth-child(2){display:none}}
 @media (prefers-reduced-motion: reduce){.hx-status i{animation:none}}
+
+/* nav: monogram at the top, name slides in after the hero */
+.nav .me{display:flex;align-items:center;gap:10px;min-width:0}
+.nav .me .mono{width:30px;height:30px;border-radius:8px;background:#0f1420;display:grid;place-items:center;flex:none}
+.nav .me .nm{white-space:nowrap;display:inline-block;min-width:12ch;transition:opacity .35s,transform .35s}
+.nav .me .nm.hide{opacity:0;transform:translateX(-6px);pointer-events:none}
+.nav .nm.scr{font-family:var(--mono);font-weight:600;letter-spacing:-.03em}
+@media (prefers-reduced-motion: reduce){.nav .me .nm{transition:none}}
 </style>
 
 </head>
@@ -491,7 +499,7 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
 
 <header class="nav">
   <div class="wrap">
-    <a class="me" id="meName" href="#top" aria-label="Vivek Shankar Patil, back to top">Vivek Shankar Patil</a>
+    <a class="me" href="#top" aria-label="Vivek Shankar Patil, back to top"><span class="mono" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 64 64"><path d="M15 15L32 49L49 15" fill="none" stroke="#ffb547" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="nm hide" id="meName" aria-hidden="true">Vivek Shankar Patil</span></a>
     <a class="l" href="#work">Work</a>
     <a class="l" href="#experience">Experience</a>
     <a class="cv" href="#contact">Contact</a>
@@ -1638,13 +1646,12 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
     form.addEventListener('submit', e => { e.preventDefault(); if (q.value.trim()) answer(q.value); });
   })();
 
-  /* ===== hero: the headline breaks and heals, demos itself, reports its own status ===== */
+  /* ===== hero: the name flies in, heals, demos itself, glitches, ripples, leaves a heat trail and breathes ===== */
   (() => {
     const cv = document.getElementById('hxCv'); if (!cv) return;
-    const ctx = cv.getContext('2d'); let W = 0, H = 0, P = [], on = true, box = {x0:0,x1:0,y0:0,y1:0};
+    const ctx = cv.getContext('2d'); let W = 0, H = 0, P = [], on = true, box = {x0:0,x1:0,y0:0,y1:0}, born = 0, waves = [];
     const ptr = {x:-9999, y:-9999, on:false, down:false}, ghost = {x:0, y:0, on:false, t:-1, next: performance.now() + 4200};
-    const healEl = document.getElementById('hxHeal'), stEl = document.getElementById('hxState'), dotEl = document.getElementById('hxDot');
-    let broken = false, brokeAt = 0, born = 0;
+    const glitch = {t:-1, next: performance.now() + 5000, y0:0, y1:0, dx:0};
     const DISPLAY = getComputedStyle(document.documentElement).getPropertyValue('--display').trim() || 'sans-serif';
     function build(){
       const r = cv.getBoundingClientRect(), d = Math.min(devicePixelRatio||1, 2); W = r.width; H = r.height; if (!W) return;
@@ -1659,35 +1666,44 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
       const data = o.getImageData(0,0,off.width,off.height).data, gap = mob ? 3 : 4; P = [];
       if (!build.start) build.start = performance.now(); const first = !reduce.matches && performance.now() - build.start < 1500;
       for (let y=0; y<off.height; y+=gap) for (let x=0; x<off.width; x+=gap) if (data[(y*off.width+x)*4+3] > 128){ const a = Math.random()*Math.PI*2, rr = (0.3 + Math.random()*0.7)*Math.max(W,H)*0.38;
-        P.push(first ? {hx:x, hy:y, x: W/2 + Math.cos(a)*rr, y: H*0.42 + Math.sin(a)*rr*0.6, vx:0, vy:0, d: Math.random()*0.3} : {hx:x, hy:y, x, y, vx:0, vy:0, d:0}); }
+        P.push(first ? {hx:x, hy:y, x: W/2 + Math.cos(a)*rr, y: H*0.42 + Math.sin(a)*rr*0.6, vx:0, vy:0, d: Math.random()*0.3, heat:0} : {hx:x, hy:y, x, y, vx:0, vy:0, d:0, heat:0}); }
       born = performance.now();
     }
     const push = (src, p, dt, R, k) => { const dx = p.x - src.x, dy = p.y - src.y, dd = Math.hypot(dx, dy); if (dd < R){ const f = Math.pow(1 - dd/R, 2)*k; p.vx += dx/(dd||1)*f*dt; p.vy += dy/(dd||1)*f*dt; } };
     function frame(dt, now){
       ctx.clearRect(0,0,W,H); ctx.globalAlpha = 1;
-      const mob = W < 700, R = mob ? 64 : 100, sz = mob ? 2.2 : 2.8;
-      if (ptr.on && !mob){ const g = ctx.createRadialGradient(ptr.x, ptr.y, 0, ptr.x, ptr.y, 260); g.addColorStop(0, 'rgba(255,181,71,.10)'); g.addColorStop(1, 'rgba(255,181,71,0)'); ctx.fillStyle = g; ctx.fillRect(ptr.x - 260, ptr.y - 260, 520, 520); }
-      // it demos itself: a faint outage sweeps through the words every few seconds
-      if (!reduce.matches){ if (ghost.t < 0 && now > ghost.next && !ptr.on) ghost.t = 0;
+      const mob = W < 700, R = mob ? 64 : 100, sz = mob ? 2.2 : 2.8, still = reduce.matches, maxR = Math.max(W, H);
+      // the self-demo: a faint outage sweeps through the name every few seconds
+      if (!still){ if (ghost.t < 0 && now > ghost.next && !ptr.on) ghost.t = 0;
         if (ghost.t >= 0){ ghost.t += dt/1.8; const u = Math.min(1, ghost.t); ghost.x = box.x0 + (box.x1 - box.x0)*u; ghost.y = box.y0 + (box.y1 - box.y0)*(0.5 + 0.28*Math.sin(u*Math.PI*2)); ghost.on = true;
           if (ghost.t >= 1){ ghost.t = -1; ghost.on = false; ghost.next = now + 8000; } } }
-      let moved = 0;
+      // 4. glitch: a thin band jumps sideways for a split second, then snaps back
+      if (!still){ if (glitch.t < 0 && now > glitch.next){ glitch.t = 0; const gh = (box.y1 - box.y0)*0.14, gy = box.y0 + Math.random()*(box.y1 - box.y0 - gh); glitch.y0 = gy; glitch.y1 = gy + gh; glitch.dx = (Math.random() < .5 ? -1 : 1)*(8 + Math.random()*12); }
+        if (glitch.t >= 0){ glitch.t += dt; if (glitch.t > 0.4){ glitch.t = -1; glitch.next = now + 5000; } } }
+      // 5. shockwaves from clicks
+      waves.forEach(w => w.r += dt*700); waves = waves.filter(w => w.r < maxR);
+      // 8. breathing
+      const breath = still ? 1 : 1 + 0.05*Math.sin(now/900), age = (now - born)/1000;
       for (const p of P){
         if (ptr.on) push(ptr, p, dt, R, ptr.down ? 2000 : 1000); if (ghost.on) push(ghost, p, dt, R*0.8, 800);
-        const age = (now - born)/1000, live = age > (p.d||0), kS = age < 2.2 ? 11 : 7; if (live){ p.vx += (p.hx - p.x)*kS*dt; p.vy += (p.hy - p.y)*kS*dt; } const damp = Math.pow(0.006, dt); p.vx *= damp; p.vy *= damp; p.x += p.vx*dt; p.y += p.vy*dt;
-        const disp = Math.abs(p.x - p.hx) + Math.abs(p.y - p.hy); if (disp > 4) moved++;
-        const near = ptr.on ? Math.max(0, 1 - Math.hypot(p.hx - ptr.x, p.hy - ptr.y)/(R*1.8)) : 0, z = sz*(1 + near*0.6);
-        ctx.globalAlpha = 1; ctx.fillStyle = C.ink; ctx.fillRect(p.x - z/2, p.y - z/2, z, z);
-        if (disp > 1.5){ ctx.globalAlpha = Math.min(1, disp/28); ctx.fillStyle = C.event; ctx.fillRect(p.x - z/2, p.y - z/2, z, z); }
+        for (const w of waves){ const dx = p.x - w.x, dy = p.y - w.y, dd = Math.hypot(dx, dy), band = Math.abs(dd - w.r); if (band < 26){ const f = (1 - band/26)*(1 - w.r/maxR)*2600; p.vx += dx/(dd||1)*f*dt; p.vy += dy/(dd||1)*f*dt; } }
+        if (age > (p.d||0)){ const kS = age < 2.2 ? 11 : 7; p.vx += (p.hx - p.x)*kS*dt; p.vy += (p.hy - p.y)*kS*dt; }
+        const damp = Math.pow(0.006, dt); p.vx *= damp; p.vy *= damp; p.x += p.vx*dt; p.y += p.vy*dt;
+        const disp = Math.abs(p.x - p.hx) + Math.abs(p.y - p.hy);
+        // 6. heat trail: tiles that were pushed stay warm and cool slowly (not during the fly-in)
+        p.heat = age < 2.2 ? 0 : Math.max(p.heat - dt*0.45, Math.min(1, disp/20));
+        const z = sz*breath, inG = glitch.t >= 0 && p.hy >= glitch.y0 && p.hy <= glitch.y1, gx = p.x + (inG ? glitch.dx : 0);
+        ctx.globalAlpha = 1; ctx.fillStyle = C.ink; ctx.fillRect(gx - z/2, p.y - z/2, z, z);
+        if (inG){ ctx.globalAlpha = .9; ctx.fillStyle = C.fail; ctx.fillRect(gx - z/2, p.y - z/2, z, z); }
+        else if (p.heat > 0.05){ ctx.globalAlpha = p.heat; ctx.fillStyle = C.event; ctx.fillRect(gx - z/2, p.y - z/2, z, z); }
       }
       ctx.globalAlpha = 1;
+      waves.forEach(w => { ctx.strokeStyle = C.event; ctx.globalAlpha = Math.max(0, 0.35*(1 - w.r/maxR)); ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(w.x, w.y, w.r, 0, 7); ctx.stroke(); }); ctx.globalAlpha = 1;
       if (ghost.on){ ctx.strokeStyle = C.fail; ctx.globalAlpha = .45; ctx.setLineDash([4,6]); ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(ghost.x, ghost.y, R*0.4, 0, 7); ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1; }
-      // the status strip reports real breaks and real heal times
-      if (moved > 30 && !broken){ broken = true; brokeAt = now; if (stEl) stEl.textContent = 'Recovering'; if (dotEl) dotEl.className = 'warn'; }
-      if (moved < 6 && broken){ broken = false; const s = ((now - brokeAt)/1000).toFixed(1); if (healEl) healEl.textContent = s + ' s'; if (stEl) stEl.textContent = 'All systems healthy'; if (dotEl) dotEl.className = ''; }
     }
     const pos = e => { const r = cv.getBoundingClientRect(); ptr.x = e.clientX - r.left; ptr.y = e.clientY - r.top; ptr.on = true; };
-    cv.addEventListener('pointermove', pos); cv.addEventListener('pointerdown', e => { ptr.down = true; pos(e); });
+    cv.addEventListener('pointermove', pos);
+    cv.addEventListener('pointerdown', e => { ptr.down = true; pos(e); if (!reduce.matches) waves.push({x:ptr.x, y:ptr.y, r:0}); });
     cv.addEventListener('pointerleave', () => ptr.on = false); addEventListener('pointerup', e => { ptr.down = false; if (e.pointerType === 'touch') ptr.on = false; }); cv.addEventListener('pointercancel', () => { ptr.on = false; ptr.down = false; });
     new ResizeObserver(build).observe(cv); if (document.fonts && document.fonts.ready) document.fonts.ready.then(build);
     new IntersectionObserver(es => es.forEach(e => on = e.isIntersecting), {threshold:0.02}).observe(cv);
@@ -1993,6 +2009,10 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
     new ResizeObserver(size).observe(cv); new IntersectionObserver(es => es.forEach(e => on = e.isIntersecting), {threshold:0.02}).observe(cv);
     let last = performance.now(), tAcc = 1; const loop = now => { const dt = Math.min(.05, (now-last)/1000); last = now; if (on && W){ frame(dt, now); tAcc += dt; if (tAcc > .25){ tAcc = 0; teleDraw(); } } requestAnimationFrame(loop); }; requestAnimationFrame(loop);
   })();
+
+  /* ---------- nav: show the name only once the hero is out of view ---------- */
+  (() => { const nm = document.getElementById('meName'), hero = document.querySelector('.hx'); if (!nm || !hero) return;
+    new IntersectionObserver(es => es.forEach(e => nm.classList.toggle('hide', e.isIntersecting)), {threshold:0, rootMargin:'-62px 0px 0px 0px'}).observe(hero); })();
 
   /* ---------- case study accordion ---------- */
   const sizeMap = {'p-gitstream':(typeof L !== 'undefined' ? L : null), 'p-ik':R, 'p-cn':(typeof A !== 'undefined' ? A : null), 'p-hc':Hc, 'p-cg':G};
