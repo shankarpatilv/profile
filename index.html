@@ -475,6 +475,15 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
 
 .demo.cg canvas{height:420px!important}
 @media (max-width:560px){.demo.cg canvas{height:340px!important}}
+
+/* hero status strip */
+.hx-status{position:absolute;left:50%;transform:translateX(-50%);top:clamp(16px,4vh,34px);z-index:2;display:flex;gap:18px;align-items:center;font-family:var(--mono);font-size:12.5px;color:var(--soft);background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:7px 16px;white-space:nowrap}
+.hx-status b{color:var(--ink);font-weight:600}
+.hx-status i{width:8px;height:8px;border-radius:50%;background:var(--ok);display:inline-block;margin-right:7px;vertical-align:1px;box-shadow:0 0 0 4px color-mix(in srgb,var(--ok) 22%,transparent);animation:hxPulse 2s infinite}
+.hx-status i.warn{background:var(--event);box-shadow:0 0 0 4px color-mix(in srgb,var(--event) 22%,transparent)}
+@keyframes hxPulse{50%{box-shadow:0 0 0 7px color-mix(in srgb,var(--ok) 0%,transparent)}}
+@media (max-width:700px){.hx-status{font-size:10.5px;gap:10px;padding:6px 11px}.hx-status span:nth-child(2){display:none}}
+@media (prefers-reduced-motion: reduce){.hx-status i{animation:none}}
 </style>
 
 </head>
@@ -491,13 +500,12 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
 
 <main id="top">
   <section class="hx" aria-labelledby="hx-h">
-    <h1 id="hx-h" class="vh">I build systems that get back up.</h1>
+    <h1 id="hx-h" class="vh">Vivek Shankar Patil, software engineer.</h1>
     <canvas id="hxCv" aria-hidden="true"></canvas>
     <div class="hx-copy">
-      <p>Full-stack, backend, distributed systems and AI, built to survive the bad day. Previously at <b>Amazon</b> and <b>Collabera Digital</b>.</p>
+      <p>I build backend, distributed, full-stack and AI systems that hold up in production. Previously at <b>Amazon</b> and <b>Collabera Digital</b>.</p>
       <div class="cta"><a class="btn main" href="#work">See the work</a><a class="btn" href="#contact">Get in touch</a></div>
     </div>
-    <span class="hx-hint" id="hxHint"><span class="click">Move</span><span class="tap">Drag</span> through the words. They heal.</span>
   </section>
 
   <section class="s" id="work" aria-labelledby="work-h">
@@ -713,7 +721,7 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
           <h3>bigonotes</h3>
           <div class="role">Creator and Engineer</div>
           <p class="lead">A free study site for CS students and early-career engineers, built from what my own interviews tested.</p>
-          <p>Every interview showed me a gap. I wrote each one up in plain English, and those write-ups grew into <span data-count="261">261</span> free notes across <span data-count="48">48</span> topics, from DSA and CS concepts to system design and cloud. No account needed.</p>
+          
           <p>I built and run the whole thing myself: the design, the content pipeline, search and every deploy. <a href="https://bigonotes.com" target="_blank" rel="noopener noreferrer">Visit bigonotes.com</a></p>
           <div class="tags"><span>Next.js</span><span>React</span><span>TypeScript</span><span>Tailwind CSS</span><span>Python</span><span>Pagefind</span><span>Playwright</span><span>Vercel</span></div>
         </div>
@@ -1630,42 +1638,55 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
     form.addEventListener('submit', e => { e.preventDefault(); if (q.value.trim()) answer(q.value); });
   })();
 
-  /* ===== hero: the headline breaks and heals (same technique as the old "Break it. It heals.") ===== */
+  /* ===== hero: the headline breaks and heals, demos itself, reports its own status ===== */
   (() => {
     const cv = document.getElementById('hxCv'); if (!cv) return;
-    const ctx = cv.getContext('2d'); let W = 0, H = 0, P = [], on = true, t0 = 0, buX = 1e9, buY0 = 0, buY1 = 0, amp = 0;
-    const ptr = {x:-9999, y:-9999, on:false, down:false}, hint = document.getElementById('hxHint');
+    const ctx = cv.getContext('2d'); let W = 0, H = 0, P = [], on = true, box = {x0:0,x1:0,y0:0,y1:0};
+    const ptr = {x:-9999, y:-9999, on:false, down:false}, ghost = {x:0, y:0, on:false, t:-1, next: performance.now() + 4200};
+    const healEl = document.getElementById('hxHeal'), stEl = document.getElementById('hxState'), dotEl = document.getElementById('hxDot');
+    let broken = false, brokeAt = 0, born = 0;
     const DISPLAY = getComputedStyle(document.documentElement).getPropertyValue('--display').trim() || 'sans-serif';
     function build(){
       const r = cv.getBoundingClientRect(), d = Math.min(devicePixelRatio||1, 2); W = r.width; H = r.height; if (!W) return;
       cv.width = Math.round(W*d); cv.height = Math.round(H*d); ctx.setTransform(d,0,0,d,0,0);
-      const mob = W < 700, lines = mob ? ['I build','systems that','get back up.'] : ['I build systems','that get back up.'];
+      const mob = W < 700, lines = mob ? ['Vivek Shankar','Patil, software','engineer.'] : ['Vivek Shankar Patil,','software engineer.'];
       const off = document.createElement('canvas'); off.width = Math.floor(W); off.height = Math.floor(H); const o = off.getContext('2d');
       let fs = 100; o.font = `800 ${fs}px ${DISPLAY}`; const widest = Math.max(...lines.map(l => o.measureText(l).width));
-      fs = Math.min(fs * (W*(mob ? 0.86 : 0.7)) / widest, H * (mob ? 0.14 : 0.15));
+      fs = Math.min(fs * (W*(mob ? 0.86 : 0.72)) / widest, H * (mob ? 0.12 : 0.15));
       o.font = `800 ${fs}px ${DISPLAY}`; o.textAlign = 'center'; o.textBaseline = 'middle'; o.fillStyle = '#000';
-      const lh = fs*1.02, y0 = H*0.40 - (lines.length-1)*lh/2; lines.forEach((l,i) => o.fillText(l, W/2, y0 + i*lh));
-      const last = lines[lines.length-1], pre = last.replace(/back up\.?$/, ''), wl = o.measureText(last).width, yl = y0 + (lines.length-1)*lh;
-      buX = W/2 - wl/2 + o.measureText(pre).width; buY0 = yl - fs*0.6; buY1 = yl + fs*0.6; amp = fs*0.28;
-      const data = o.getImageData(0,0,off.width,off.height).data, gap = mob ? 4 : 5;
-      P = [];
-      for (let y=0; y<off.height; y+=gap) for (let x=0; x<off.width; x+=gap) if (data[(y*off.width+x)*4+3] > 128) P.push({hx:x, hy:y, x, y, vx:0, vy:0, bu: x >= buX && y >= buY0 && y <= buY1});
-      t0 = performance.now();
+      const lh = fs*1.04, y0 = H*0.42 - (lines.length-1)*lh/2; lines.forEach((l,i) => o.fillText(l, W/2, y0 + i*lh));
+      const wide = Math.max(...lines.map(l => o.measureText(l).width)); box = {x0:W/2 - wide/2, x1:W/2 + wide/2, y0:y0 - fs*0.5, y1:y0 + (lines.length-1)*lh + fs*0.5};
+      const data = o.getImageData(0,0,off.width,off.height).data, gap = mob ? 3 : 4; P = [];
+      if (!build.start) build.start = performance.now(); const first = !reduce.matches && performance.now() - build.start < 1500;
+      for (let y=0; y<off.height; y+=gap) for (let x=0; x<off.width; x+=gap) if (data[(y*off.width+x)*4+3] > 128){ const a = Math.random()*Math.PI*2, rr = (0.3 + Math.random()*0.7)*Math.max(W,H)*0.38;
+        P.push(first ? {hx:x, hy:y, x: W/2 + Math.cos(a)*rr, y: H*0.42 + Math.sin(a)*rr*0.6, vx:0, vy:0, d: Math.random()*0.3} : {hx:x, hy:y, x, y, vx:0, vy:0, d:0}); }
+      born = performance.now();
     }
+    const push = (src, p, dt, R, k) => { const dx = p.x - src.x, dy = p.y - src.y, dd = Math.hypot(dx, dy); if (dd < R){ const f = Math.pow(1 - dd/R, 2)*k; p.vx += dx/(dd||1)*f*dt; p.vy += dy/(dd||1)*f*dt; } };
     function frame(dt, now){
-      ctx.clearRect(0,0,W,H);
-      const R = W < 700 ? 70 : 110, sz = W < 700 ? 2.6 : 3.2, bt = (now - t0)/2400, bouncing = bt < 1 && !reduce.matches;
-      const bounce = bouncing ? -amp*Math.abs(Math.sin(bt*3*Math.PI))*(1 - bt*0.6) : 0;
+      ctx.clearRect(0,0,W,H); ctx.globalAlpha = 1;
+      const mob = W < 700, R = mob ? 64 : 100, sz = mob ? 2.2 : 2.8;
+      if (ptr.on && !mob){ const g = ctx.createRadialGradient(ptr.x, ptr.y, 0, ptr.x, ptr.y, 260); g.addColorStop(0, 'rgba(255,181,71,.10)'); g.addColorStop(1, 'rgba(255,181,71,0)'); ctx.fillStyle = g; ctx.fillRect(ptr.x - 260, ptr.y - 260, 520, 520); }
+      // it demos itself: a faint outage sweeps through the words every few seconds
+      if (!reduce.matches){ if (ghost.t < 0 && now > ghost.next && !ptr.on) ghost.t = 0;
+        if (ghost.t >= 0){ ghost.t += dt/1.8; const u = Math.min(1, ghost.t); ghost.x = box.x0 + (box.x1 - box.x0)*u; ghost.y = box.y0 + (box.y1 - box.y0)*(0.5 + 0.28*Math.sin(u*Math.PI*2)); ghost.on = true;
+          if (ghost.t >= 1){ ghost.t = -1; ghost.on = false; ghost.next = now + 8000; } } }
+      let moved = 0;
       for (const p of P){
-        if (ptr.on){ const dx = p.x - ptr.x, dy = p.y - ptr.y, dd = Math.hypot(dx, dy);
-          if (dd < R){ const f = (1 - dd/R) * (ptr.down ? 2600 : 1300); p.vx += dx/(dd||1)*f*dt; p.vy += dy/(dd||1)*f*dt; } }
-        p.vx += (p.hx - p.x)*9*dt; p.vy += (p.hy - p.y)*9*dt; const damp = Math.pow(0.012, dt); p.vx *= damp; p.vy *= damp; p.x += p.vx*dt; p.y += p.vy*dt;
-        const moved = Math.abs(p.x - p.hx) + Math.abs(p.y - p.hy) > 4;
-        ctx.fillStyle = moved ? C.event : (p.bu ? C.event : C.ink);
-        ctx.fillRect(p.x - sz/2, p.y - sz/2 + (p.bu ? bounce : 0), sz, sz);
+        if (ptr.on) push(ptr, p, dt, R, ptr.down ? 2000 : 1000); if (ghost.on) push(ghost, p, dt, R*0.8, 800);
+        const age = (now - born)/1000, live = age > (p.d||0), kS = age < 2.2 ? 11 : 7; if (live){ p.vx += (p.hx - p.x)*kS*dt; p.vy += (p.hy - p.y)*kS*dt; } const damp = Math.pow(0.006, dt); p.vx *= damp; p.vy *= damp; p.x += p.vx*dt; p.y += p.vy*dt;
+        const disp = Math.abs(p.x - p.hx) + Math.abs(p.y - p.hy); if (disp > 4) moved++;
+        const near = ptr.on ? Math.max(0, 1 - Math.hypot(p.hx - ptr.x, p.hy - ptr.y)/(R*1.8)) : 0, z = sz*(1 + near*0.6);
+        ctx.globalAlpha = 1; ctx.fillStyle = C.ink; ctx.fillRect(p.x - z/2, p.y - z/2, z, z);
+        if (disp > 1.5){ ctx.globalAlpha = Math.min(1, disp/28); ctx.fillStyle = C.event; ctx.fillRect(p.x - z/2, p.y - z/2, z, z); }
       }
+      ctx.globalAlpha = 1;
+      if (ghost.on){ ctx.strokeStyle = C.fail; ctx.globalAlpha = .45; ctx.setLineDash([4,6]); ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(ghost.x, ghost.y, R*0.4, 0, 7); ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1; }
+      // the status strip reports real breaks and real heal times
+      if (moved > 30 && !broken){ broken = true; brokeAt = now; if (stEl) stEl.textContent = 'Recovering'; if (dotEl) dotEl.className = 'warn'; }
+      if (moved < 6 && broken){ broken = false; const s = ((now - brokeAt)/1000).toFixed(1); if (healEl) healEl.textContent = s + ' s'; if (stEl) stEl.textContent = 'All systems healthy'; if (dotEl) dotEl.className = ''; }
     }
-    const pos = e => { const r = cv.getBoundingClientRect(); ptr.x = e.clientX - r.left; ptr.y = e.clientY - r.top; ptr.on = true; if (hint) hint.style.opacity = 0; };
+    const pos = e => { const r = cv.getBoundingClientRect(); ptr.x = e.clientX - r.left; ptr.y = e.clientY - r.top; ptr.on = true; };
     cv.addEventListener('pointermove', pos); cv.addEventListener('pointerdown', e => { ptr.down = true; pos(e); });
     cv.addEventListener('pointerleave', () => ptr.on = false); addEventListener('pointerup', e => { ptr.down = false; if (e.pointerType === 'touch') ptr.on = false; }); cv.addEventListener('pointercancel', () => { ptr.on = false; ptr.down = false; });
     new ResizeObserver(build).observe(cv); if (document.fonts && document.fonts.ready) document.fonts.ready.then(build);
