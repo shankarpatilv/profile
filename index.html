@@ -472,6 +472,9 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
 
 .demo.gs3{display:flex!important;flex-direction:column}
 .demo.gs3 canvas{width:100%}
+
+.demo.cg canvas{height:420px!important}
+@media (max-width:560px){.demo.cg canvas{height:340px!important}}
 </style>
 
 </head>
@@ -494,7 +497,7 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
       <p>Full-stack, backend, distributed systems and AI, built to survive the bad day. Previously at <b>Amazon</b> and <b>Collabera Digital</b>.</p>
       <div class="cta"><a class="btn main" href="#work">See the work</a><a class="btn" href="#contact">Get in touch</a></div>
     </div>
-    <span class="hx-hint" id="hxHint"><span class="click">Move</span><span class="tap">Drag</span> through the words. Traffic routes around you.</span>
+    <span class="hx-hint" id="hxHint"><span class="click">Move</span><span class="tap">Drag</span> through the words. They heal.</span>
   </section>
 
   <section class="s" id="work" aria-labelledby="work-h">
@@ -1278,36 +1281,36 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
         cgTele.innerHTML = `<div class="row">request <b>${r.q}</b></div><div class="row">result <b class="${ok?'good':'bad'}">${r.code}</b></div><div class="log">${r.msg}</div>`; }
     },
     render(){
-      const ctx=this.ctx, W=this.W, H=this.H, mob=W<560, vx=W*0.5, vy=H*0.47;
-      const labels = mob ? ['Origin','Headers','Clean input','Login','Role','Save'] : GATES;
-      const cam = this.ri >= 0 ? Math.max(0, this.p - 0.6) : 0;
-      const F = 1.6, scaleAt = z => F/(F + Math.max(0.05, z)), bw = Math.min(W*0.86, 720), bh = Math.min(H*0.86, 320);
-      ctx.strokeStyle = C.line; ctx.lineWidth = 1;
-      [[-1,-1],[1,-1],[1,1],[-1,1]].forEach(([sx,sy]) => { ctx.beginPath(); ctx.moveTo(vx + sx*bw/2*scaleAt(0.1), vy + sy*bh/2*scaleAt(0.1)); ctx.lineTo(vx + sx*bw/2*scaleAt(9), vy + sy*bh/2*scaleAt(9)); ctx.stroke(); });
-      for (let k=5; k>=0; k--){
-        const z = (k+1)*1.1 - cam*1.1; if (z < 0.15) continue;
-        const s = scaleAt(z), w = bw*s, h = bh*s, st = this.st[k];
-        let col = C.line, lw = 1.5, note = '';
-        if (st===1){ col=C.ok; lw=2.5; note='passed'; } else if (st===0){ col=C.fail; lw=3; note='stopped'; } else if (st===2){ col=C.faint; note='skipped'; } else if (st===3){ col=C.event; lw=2.5; note='cleaned'; }
-        ctx.globalAlpha = Math.min(1, 0.25 + s*1.1);
-        if (st===2) ctx.setLineDash([6,6]);
-        ctx.strokeStyle = col; ctx.lineWidth = lw*Math.max(.6, s*1.4); ctx.strokeRect(vx - w/2, vy - h/2, w, h); ctx.setLineDash([]);
-        if (st===0){ ctx.fillStyle = 'rgba(255,107,107,.16)'; ctx.fillRect(vx - w/2, vy - h/2, w, h); ctx.strokeStyle = C.fail; ctx.lineWidth = 2.5*s; for (let b=1;b<6;b++){ ctx.beginPath(); ctx.moveTo(vx - w/2 + w*b/6, vy - h/2); ctx.lineTo(vx - w/2 + w*b/6, vy + h/2); ctx.stroke(); } }
-        if (s > 0.42){ const t = labels[k] + (note ? ' · ' + note : ''); ctx.font = `600 ${s > 0.6 ? 13 : 12}px ${MONO}`; const tw = ctx.measureText(t).width + 16, ty = vy - h/2 - 14;
-          ctx.globalAlpha = 1; ctx.fillStyle = C.bg; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(vx - tw/2, ty - 11, tw, 22, 11) : ctx.rect(vx - tw/2, ty - 11, tw, 22); ctx.fill(); ctx.strokeStyle = col; ctx.lineWidth = 1.2; ctx.stroke();
-          ctx.fillStyle = st===-1 || st===undefined ? C.soft : col; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(t, vx, ty + .5); }
-        ctx.globalAlpha = 1;
+      const ctx=this.ctx, W=this.W, H=this.H, mob=W<560, D = C.bg.toLowerCase() === '#0f1420';
+      const names = ['Origin','Headers','Sanitize','JWT Auth','RBAC Role','MongoDB'];
+      const ang = -0.42, ca = Math.cos(ang), sa = Math.sin(ang), k = mob ? W/21 : Math.min(W/27, H/9.5), ox = W*0.5, oy = H*(mob ? 0.56 : 0.60);
+      const iso = (x,y,z) => ({X: ox + (x*ca - y*sa)*k, Y: oy + (x*sa + y*ca)*k*0.5 - z*k});
+      const face = (a,c) => { ctx.beginPath(); ctx.moveTo(a[0].X,a[0].Y); for (let q=1;q<a.length;q++) ctx.lineTo(a[q].X,a[q].Y); ctx.closePath(); ctx.fillStyle = c; ctx.fill(); };
+      const box = (x,y,w,d,h,top,side,front,z0) => { z0 = z0||0; const p=[iso(x-w/2,y-d/2,z0),iso(x+w/2,y-d/2,z0),iso(x+w/2,y+d/2,z0),iso(x-w/2,y+d/2,z0)], q=[iso(x-w/2,y-d/2,z0+h),iso(x+w/2,y-d/2,z0+h),iso(x+w/2,y+d/2,z0+h),iso(x-w/2,y+d/2,z0+h)]; face([p[1],p[2],q[2],q[1]],side); face([p[2],p[3],q[3],q[2]],front); face([q[0],q[1],q[2],q[3]],top); };
+      const pill = (t,x,y,col) => { ctx.font = (mob ? '600 11px ' : '600 13px ')+MONO; const w = ctx.measureText(t).width + 18, h = mob ? 22 : 26; x = Math.max(w/2 + 4, Math.min(W - w/2 - 4, x)); ctx.fillStyle = C.bg; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(x-w/2, y-h/2, w, h, h/2) : ctx.rect(x-w/2, y-h/2, w, h); ctx.fill(); ctx.strokeStyle = col; ctx.lineWidth = 1.6; ctx.stroke(); ctx.fillStyle = col; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(t, x, y + .5); };
+      const side = D ? '#1b2a46' : '#b9c6d8', front = D ? '#22355a' : '#cdd7e4', step = 3, gx = q => -7.5 + q*step;
+      // floor and track
+      face([iso(-10.5,-1.8,0), iso(10.2,-1.8,0), iso(10.2,1.8,0), iso(-10.5,1.8,0)], D ? '#131b2c' : '#dde3ec');
+      const t0 = iso(-10.2,0,0.02), t1 = iso(9.6,0,0.02); ctx.strokeStyle = C.worker; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(t0.X,t0.Y); ctx.lineTo(t1.X,t1.Y); ctx.stroke();
+      const sym = v => v===1 ? ' ✓' : v===0 ? ' ✕' : v===2 ? ' –' : v===3 ? ' ~' : '';
+      const colOf = v => v===1 ? C.ok : v===0 ? C.fail : v===3 ? C.event : v===2 ? C.faint : C.soft;
+      const px = this.ri >= 0 ? -10.5 + this.p*step : -10.2, stopped = this.done && this.ri >= 0 && CGR[this.ri].code[0] !== '2';
+      const drawCube = () => { if (this.ri < 0) return; box(px, 0, 0.75, 0.75, 0.75, stopped ? C.fail : C.event, D ? '#7a4d12' : '#e4b062', D ? '#9a6418' : '#efc684'); };
+      let cubeDrawn = false;
+      for (let q=0;q<6;q++){
+        const x = gx(q), v = this.ri >= 0 ? this.st[q] : -1, col = colOf(v), beam = v===-1 ? (D ? '#2b3a5e' : '#aab7ca') : col;
+        if (!cubeDrawn && px < x){ drawCube(); cubeDrawn = true; }
+        box(x, -1.15, 0.35, 0.35, 3, D ? '#2b3a5e' : '#d9e0ea', side, front);
+        ctx.globalAlpha = v===0 ? 0.32 : 0.18; face([iso(x,-1,0), iso(x,1,0), iso(x,1,3), iso(x,-1,3)], v===-1 ? C.worker : col); ctx.globalAlpha = 1;
+        if (v===0){ ctx.strokeStyle = C.fail; ctx.lineWidth = 2.5; [0.8,1.5,2.2].forEach(z => { const a = iso(x,-1,z), b = iso(x,1,z); ctx.beginPath(); ctx.moveTo(a.X,a.Y); ctx.lineTo(b.X,b.Y); ctx.stroke(); }); }
+        box(x, 1.15, 0.35, 0.35, 3, D ? '#2b3a5e' : '#d9e0ea', side, front);
+        box(x, 0, 0.45, 2.7, 0.32, beam, side, front, 3);
       }
-      { const sym = v => v===1?'✓':v===0?'✕':v===2?'–':v===3?'~':'·', colr = v => v===1?C.ok:v===0?C.fail:v===3?C.event:C.faint;
-        ctx.font = '600 12px '+MONO; ctx.textBaseline = 'middle';
-        labels.forEach((l,k) => { const v = this.ri >= 0 ? this.st[k] : -1, t = sym(v) + ' ' + l, tw = ctx.measureText(t).width + 16;
-          let x, y; if (mob){ x = 12 + (k%3)*((W-24)/3); y = H - 58 + Math.floor(k/3)*26; } else { x = 16; y = 40 + k*36; }
-          const bw2 = mob ? (W-24)/3 - 6 : tw; ctx.fillStyle = C.bg; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(x, y - 11, bw2, 22, 11) : ctx.rect(x, y-11, bw2, 22); ctx.fill(); ctx.strokeStyle = colr(v); ctx.lineWidth = 1.2; ctx.stroke();
-          ctx.fillStyle = v===-1 ? C.soft : colr(v); ctx.textAlign = 'left'; ctx.font = (mob ? '600 10.5px ' : '600 12px ')+MONO; ctx.fillText(t, x + 8, y + .5); }); }
-      if (this.ri >= 0){ const stopped = this.done && CGR[this.ri].code[0] !== '2', s = scaleAt(0.55), r = 9*s*1.6;
-        const g = ctx.createRadialGradient(vx, vy, 0, vx, vy, r*3); g.addColorStop(0, stopped ? 'rgba(255,107,107,.6)' : 'rgba(255,181,71,.65)'); g.addColorStop(1, 'rgba(0,0,0,0)'); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(vx, vy, r*3, 0, 7); ctx.fill();
-        ctx.fillStyle = stopped ? C.fail : C.event; ctx.beginPath(); ctx.arc(vx, vy, r, 0, 7); ctx.fill(); }
-      else { ctx.fillStyle = C.soft; ctx.font = '500 13px '+MONO; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('Pick a request to send it down the tunnel.', vx, mob ? H*0.1 : H - 22); }
+      if (!cubeDrawn) drawCube();
+      // labels: odd gates above, even gates below, so they never touch
+      for (let q=0;q<6;q++){ const x = gx(q), v = this.ri >= 0 ? this.st[q] : -1, above = q % 2 === 0, at = above ? iso(x, 0, 3.4) : iso(x, 1.8, 0);
+        pill(`${q+1}. ${names[q]}${sym(v)}`, at.X, at.Y + (above ? -(mob ? 16 : 20) : (mob ? 20 : 24)), colOf(v)); }
+      if (this.ri < 0){ ctx.fillStyle = C.soft; ctx.font = '500 13px '+MONO; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('Pick a request to send it through the gates.', W/2, mob ? 18 : 22); }
     },
     tele(){}
   });
@@ -1627,11 +1630,11 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
     form.addEventListener('submit', e => { e.preventDefault(); if (q.value.trim()) answer(q.value); });
   })();
 
-  /* ===== spectacle 1: the headline is traffic ===== */
+  /* ===== hero: the headline breaks and heals (same technique as the old "Break it. It heals.") ===== */
   (() => {
     const cv = document.getElementById('hxCv'); if (!cv) return;
-    const ctx = cv.getContext('2d'); let W = 0, H = 0, P = [], on = true; const hero = {buX:1e9, buY0:0, buY1:0, amp:0, t0:0};
-    const mouse = {x:-9999, y:-9999, active:false}, hint = document.getElementById('hxHint');
+    const ctx = cv.getContext('2d'); let W = 0, H = 0, P = [], on = true, t0 = 0, buX = 1e9, buY0 = 0, buY1 = 0, amp = 0;
+    const ptr = {x:-9999, y:-9999, on:false, down:false}, hint = document.getElementById('hxHint');
     const DISPLAY = getComputedStyle(document.documentElement).getPropertyValue('--display').trim() || 'sans-serif';
     function build(){
       const r = cv.getBoundingClientRect(), d = Math.min(devicePixelRatio||1, 2); W = r.width; H = r.height; if (!W) return;
@@ -1639,36 +1642,35 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
       const mob = W < 700, lines = mob ? ['I build','systems that','get back up.'] : ['I build systems','that get back up.'];
       const off = document.createElement('canvas'); off.width = Math.floor(W); off.height = Math.floor(H); const o = off.getContext('2d');
       let fs = 100; o.font = `800 ${fs}px ${DISPLAY}`; const widest = Math.max(...lines.map(l => o.measureText(l).width));
-      fs = Math.min(fs * (W*0.9) / widest, H * (mob ? 0.17 : 0.22));
+      fs = Math.min(fs * (W*(mob ? 0.86 : 0.7)) / widest, H * (mob ? 0.14 : 0.15));
       o.font = `800 ${fs}px ${DISPLAY}`; o.textAlign = 'center'; o.textBaseline = 'middle'; o.fillStyle = '#000';
       const lh = fs*1.02, y0 = H*0.40 - (lines.length-1)*lh/2; lines.forEach((l,i) => o.fillText(l, W/2, y0 + i*lh));
-      const data = o.getImageData(0,0,off.width,off.height).data, step = mob ? 4 : 6, runs = [];
-      for (let y=0; y<off.height; y+=step){ let x0 = -1; for (let x=0; x<=off.width; x++){ const inside = x < off.width && data[(y*off.width+x)*4+3] > 128; if (inside && x0 < 0) x0 = x; if (!inside && x0 >= 0){ if (x - x0 > 3) runs.push({y, x0, x1:x}); x0 = -1; } } }
-      P = []; const per = mob ? 0.14 : 0.11;
-      const last = lines[lines.length-1], pre = last.replace(/back up\.?$/, ''), wl = o.measureText(last).width, buX = W/2 - wl/2 + o.measureText(pre).width, buY = y0 + (lines.length-1)*lh; hero.buX = buX; hero.buY0 = buY - fs*0.6; hero.buY1 = buY + fs*0.6; hero.amp = fs*0.28; hero.t0 = performance.now();
-      runs.forEach(rn => { const n = Math.max(1, Math.round((rn.x1 - rn.x0) * per)); for (let k=0;k<n;k++) P.push({r:rn, x: rn.x0 + Math.random()*(rn.x1-rn.x0), dy:0, vy:0, v:30 + Math.random()*55, hot:0}); });
+      const last = lines[lines.length-1], pre = last.replace(/back up\.?$/, ''), wl = o.measureText(last).width, yl = y0 + (lines.length-1)*lh;
+      buX = W/2 - wl/2 + o.measureText(pre).width; buY0 = yl - fs*0.6; buY1 = yl + fs*0.6; amp = fs*0.28;
+      const data = o.getImageData(0,0,off.width,off.height).data, gap = mob ? 4 : 5;
+      P = [];
+      for (let y=0; y<off.height; y+=gap) for (let x=0; x<off.width; x+=gap) if (data[(y*off.width+x)*4+3] > 128) P.push({hx:x, hy:y, x, y, vx:0, vy:0, bu: x >= buX && y >= buY0 && y <= buY1});
+      t0 = performance.now();
     }
-    function frame(dt){
-      ctx.clearRect(0,0,W,H); const R = W < 700 ? 70 : 110, move = reduce.matches ? 0 : 1;
+    function frame(dt, now){
+      ctx.clearRect(0,0,W,H);
+      const R = W < 700 ? 70 : 110, sz = W < 700 ? 2.6 : 3.2, bt = (now - t0)/2400, bouncing = bt < 1 && !reduce.matches;
+      const bounce = bouncing ? -amp*Math.abs(Math.sin(bt*3*Math.PI))*(1 - bt*0.6) : 0;
       for (const p of P){
-        p.x += p.v*dt*move; if (p.x > p.r.x1) p.x = p.r.x0;
-        let y = p.r.y + p.dy;
-        if (mouse.active){ const dx = p.x - mouse.x, dyy = y - mouse.y, dd = Math.hypot(dx, dyy); if (dd < R){ p.vy += (dyy >= 0 ? 1 : -1) * (1 - dd/R) * 1800 * dt; p.hot = 1; } }
-        p.vy += -p.dy*16*dt; p.vy *= Math.pow(0.02, dt); p.dy += p.vy*dt; p.hot = Math.max(0, p.hot - dt*1.4);
-        ctx.fillStyle = p.hot > 0.05 ? C.worker : C.event; ctx.globalAlpha = 0.72 + 0.28*Math.min(1, p.v/80);
-        const bu = p.x >= hero.buX && p.r.y >= hero.buY0 && p.r.y <= hero.buY1, bt = (performance.now() - hero.t0)/2400, bounce = (bu && bt < 1 && !reduce.matches) ? -hero.amp*Math.abs(Math.sin(bt*3*Math.PI))*(1 - bt*0.6) : 0;
-        ctx.fillRect(p.x - 0.5, p.r.y + p.dy + bounce, p.hot > 0.05 ? 5 : 4.2, 4);
+        if (ptr.on){ const dx = p.x - ptr.x, dy = p.y - ptr.y, dd = Math.hypot(dx, dy);
+          if (dd < R){ const f = (1 - dd/R) * (ptr.down ? 2600 : 1300); p.vx += dx/(dd||1)*f*dt; p.vy += dy/(dd||1)*f*dt; } }
+        p.vx += (p.hx - p.x)*9*dt; p.vy += (p.hy - p.y)*9*dt; const damp = Math.pow(0.012, dt); p.vx *= damp; p.vy *= damp; p.x += p.vx*dt; p.y += p.vy*dt;
+        const moved = Math.abs(p.x - p.hx) + Math.abs(p.y - p.hy) > 4;
+        ctx.fillStyle = moved ? C.event : (p.bu ? C.event : C.ink);
+        ctx.fillRect(p.x - sz/2, p.y - sz/2 + (p.bu ? bounce : 0), sz, sz);
       }
-      ctx.globalAlpha = 1;
-      if (mouse.active){ ctx.beginPath(); ctx.arc(mouse.x, mouse.y, R*0.45, 0, 7); ctx.strokeStyle = C.fail; ctx.globalAlpha = .6; ctx.setLineDash([4,6]); ctx.lineWidth = 1.5; ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1;
-        ctx.fillStyle = C.fail; ctx.font = '600 11px '+MONO; ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic'; ctx.fillText('outage', mouse.x, mouse.y - R*0.45 - 10); }
     }
-    const pos = e => { const r = cv.getBoundingClientRect(); mouse.x = e.clientX - r.left; mouse.y = e.clientY - r.top; mouse.active = true; if (hint) hint.style.opacity = 0; };
-    cv.addEventListener('pointermove', pos); cv.addEventListener('pointerdown', pos);
-    cv.addEventListener('pointerleave', () => mouse.active = false); cv.addEventListener('pointerup', e => { if (e.pointerType === 'touch') mouse.active = false; }); cv.addEventListener('pointercancel', () => mouse.active = false);
+    const pos = e => { const r = cv.getBoundingClientRect(); ptr.x = e.clientX - r.left; ptr.y = e.clientY - r.top; ptr.on = true; if (hint) hint.style.opacity = 0; };
+    cv.addEventListener('pointermove', pos); cv.addEventListener('pointerdown', e => { ptr.down = true; pos(e); });
+    cv.addEventListener('pointerleave', () => ptr.on = false); addEventListener('pointerup', e => { ptr.down = false; if (e.pointerType === 'touch') ptr.on = false; }); cv.addEventListener('pointercancel', () => { ptr.on = false; ptr.down = false; });
     new ResizeObserver(build).observe(cv); if (document.fonts && document.fonts.ready) document.fonts.ready.then(build);
     new IntersectionObserver(es => es.forEach(e => on = e.isIntersecting), {threshold:0.02}).observe(cv);
-    let last = performance.now(); const loop = now => { const dt = Math.min(.05, (now-last)/1000); last = now; if (on && W) frame(dt); requestAnimationFrame(loop); }; requestAnimationFrame(loop);
+    let last = performance.now(); const loop = now => { const dt = Math.min(.05, (now-last)/1000); last = now; if (on && W) frame(dt, now); requestAnimationFrame(loop); }; requestAnimationFrame(loop);
   })();
 
   /* ===== spectacle 2: follow one event ===== */
