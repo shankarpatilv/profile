@@ -492,6 +492,31 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
 .nav .me .nm.hide{opacity:0;transform:translateX(-6px);pointer-events:none}
 .nav .nm.scr{font-family:var(--mono);font-weight:600;letter-spacing:-.03em}
 @media (prefers-reduced-motion: reduce){.nav .me .nm{transition:none}}
+
+/* who I am: an AI bio, reviewed */
+.who{padding-bottom:0}
+.who-h{font-weight:800;font-size:clamp(30px,4.2vw,56px);letter-spacing:-.04em;line-height:1.02;margin:0 0 26px;max-width:22ch}
+.pr{background:var(--panel);border:1px solid var(--line);border-radius:22px;overflow:hidden;max-width:1040px}
+.pr-h{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:center;padding:13px 18px;border-bottom:1px solid var(--line);background:var(--bg2);font-family:var(--mono);font-size:12.5px;color:var(--soft)}
+.pr-h b{font-family:var(--display);font-size:16px;color:var(--ink)}
+.pr-av{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:6px;background:#0f1420;color:#ffb547;font-family:var(--display);font-weight:700;font-size:12px;vertical-align:middle;margin-right:4px}
+.pr-ln{display:grid;grid-template-columns:46px 22px minmax(0,1fr);align-items:start;line-height:1.7;font-family:var(--mono);font-size:13.5px}
+.pr-ln .no{color:var(--faint);text-align:right;padding-right:10px}
+.pr-ln .tx{padding-right:16px;font-family:var(--display);font-size:16.5px;position:relative}
+.pr-ln.rm{background:color-mix(in srgb,var(--fail) 9%,transparent)} .pr-ln.rm .sg{color:var(--fail)} .pr-ln.rm .tx{color:var(--soft)}
+.pr-ln.rm .tx::after{content:"";position:absolute;left:0;top:52%;height:2px;background:var(--fail);width:0;transition:width .5s}
+.pr-ln.rm.cut .tx::after{width:100%}
+.pr-ln.ad{background:color-mix(in srgb,var(--ok) 10%,transparent)} .pr-ln.ad .sg{color:var(--ok)} .pr-ln.ad .tx{font-weight:600;color:var(--ink)}
+.pr-ln.ad .tx small{display:block;font-weight:400;color:var(--soft);font-size:14.5px}
+.pr-cm{margin:4px 16px 10px 68px;border:1px solid var(--line);border-radius:12px;background:var(--bg);padding:9px 12px;font-size:14.5px;line-height:1.5;color:var(--soft);display:flex;gap:10px;align-items:flex-start}
+.pr-cm b{color:var(--ink)}
+.pr-fd{opacity:0;transform:translateY(5px);transition:opacity .35s,transform .35s}.pr-fd.in{opacity:1;transform:none}
+.pr-f{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:14px 18px;border-top:1px solid var(--line);font-family:var(--mono);font-size:13px;color:var(--soft)}
+.pr-f.ok{color:var(--ok)}
+.pr-mb{font-family:var(--display);font-size:14px;font-weight:700;background:var(--ok);color:#fff;border-radius:10px;padding:8px 15px;opacity:0;transform:scale(.9);transition:opacity .3s,transform .3s}
+.pr-f.ok .pr-mb{opacity:1;transform:none}
+@media (max-width:640px){.pr-ln{grid-template-columns:30px 18px minmax(0,1fr)}.pr-ln .tx{font-size:15px}.pr-cm{margin-left:48px}}
+@media (prefers-reduced-motion: reduce){.pr-fd,.pr-ln.rm .tx::after,.pr-mb{transition:none}}
 </style>
 
 </head>
@@ -513,6 +538,17 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
     <div class="hx-copy">
       <p>I build backend, distributed, full-stack and AI systems that hold up in production. Previously at <b>Amazon</b> and <b>Collabera Digital</b>.</p>
       <div class="cta"><a class="btn main" href="#work">See the work</a><a class="btn" href="#contact">Get in touch</a></div>
+    </div>
+  </section>
+
+  <section class="s who" id="who" aria-labelledby="who-h">
+    <div class="wrap">
+      <h2 id="who-h" class="who-h">I don’t ship what the AI writes. I ship what I’ve checked.</h2>
+      <div class="pr" id="pr">
+        <div class="pr-h"><b>about.md</b><span><span class="pr-av" aria-hidden="true">V</span> reviewing a suggestion from an AI assistant</span></div>
+        <div id="prBody"></div>
+        <div class="pr-f" id="prF"><span id="prS">Review in progress…</span><span class="pr-mb" aria-hidden="true">Merged</span></div>
+      </div>
     </div>
   </section>
 
@@ -2013,6 +2049,27 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
   /* ---------- nav: show the name only once the hero is out of view ---------- */
   (() => { const nm = document.getElementById('meName'), hero = document.querySelector('.hx'); if (!nm || !hero) return;
     new IntersectionObserver(es => es.forEach(e => nm.classList.toggle('hide', e.isIntersecting)), {threshold:0, rootMargin:'-62px 0px 0px 0px'}).observe(hero); })();
+
+  /* ---------- who I am: an AI bio, reviewed ---------- */
+  (() => {
+    const box = document.getElementById('prBody'), foot = document.getElementById('prF'), st = document.getElementById('prS'); if (!box) return;
+    const C = [
+      ['I am a passionate and highly motivated developer', 'I ship every layer.', 'React front ends, Python and Java APIs, PostgreSQL, and AWS or Azure underneath.', '“Passionate” isn’t a skill. Name the layers you’ve actually shipped.'],
+      ['who is a fast learner', 'I learn fast and ship fast.', 'New stack, new codebase, new problem: up to speed quickly, then into production.', '“Fast learner” needs an outcome. Shipping is the outcome.'],
+      ['and is familiar with AI tools', 'I get real speed from AI, and verify every line.', 'I read it, test it and fix it before anything merges.', 'Everyone is “familiar with AI tools”. Checking its work is the skill.'],
+      ['with a strong skill set in many technologies.', 'I make systems talk to each other.', 'APIs, queues, cloud services and AI models, wired into one product.', '“Many technologies” says nothing. Integrating them is the hard part.']
+    ];
+    const rm = C.map((c,i) => { const d = document.createElement('div'); d.className = 'pr-ln rm pr-fd'; d.innerHTML = `<span class="no">${i+1}</span><span class="sg">-</span><span class="tx">${c[0]}</span>`; box.appendChild(d); return d; });
+    const ad = [];
+    C.forEach((c,i) => { const d = document.createElement('div'); d.className = 'pr-ln ad pr-fd'; d.innerHTML = `<span class="no">${i+1}</span><span class="sg">+</span><span class="tx">${c[1]}<small>${c[2]}</small></span>`;
+      const m = document.createElement('div'); m.className = 'pr-cm pr-fd'; m.innerHTML = `<span class="pr-av" aria-hidden="true">V</span><span><b>Review:</b> ${c[3]}</span>`; box.appendChild(d); box.appendChild(m); ad.push(d, m); });
+    const done = () => { foot.classList.add('ok'); st.textContent = '✓ 4 changes verified · 0 unsupported claims · merged'; };
+    if (reduce.matches){ [...rm, ...ad].forEach(e => e.classList.add('in')); rm.forEach(e => e.classList.add('cut')); done(); return; }
+    const run = () => { let t = 150; const at = (fn, ms) => setTimeout(fn, t += ms);
+      rm.forEach(e => at(() => e.classList.add('in'), 140)); t += 450; rm.forEach(e => at(() => e.classList.add('cut'), 260));
+      ad.forEach((e,k) => at(() => e.classList.add('in'), k % 2 ? 380 : 600)); at(done, 650); };
+    const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting){ io.disconnect(); run(); } }), {threshold:0.12}); io.observe(document.getElementById('pr'));
+  })();
 
   /* ---------- case study accordion ---------- */
   const sizeMap = {'p-gitstream':(typeof L !== 'undefined' ? L : null), 'p-ik':R, 'p-cn':(typeof A !== 'undefined' ? A : null), 'p-hc':Hc, 'p-cg':G};
