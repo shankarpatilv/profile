@@ -607,6 +607,18 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
 /* polish: a tighter hero on tall screens and phones */
 .hx{height:min(calc(100svh - 62px - env(safe-area-inset-top,0px)), 760px)!important}
 @media (max-width:700px){.hx{height:clamp(440px,64svh,560px)!important;min-height:0!important}.hx-copy{bottom:22px}}
+
+/* new hero: the message first, the name small */
+.hero-n{padding:clamp(72px,14vh,160px) 0 clamp(56px,10vh,120px);border-bottom:1px solid var(--line)}
+.hn-k{font-family:var(--mono);font-size:13px;color:var(--event);letter-spacing:.04em;margin:0 0 18px}
+.hn-h{font-weight:800;font-size:clamp(44px,7.2vw,108px);line-height:.95;letter-spacing:-.045em;margin:0 0 24px;max-width:13ch}
+.hn-p{font-size:clamp(17px,1.6vw,21px);line-height:1.55;color:var(--soft);margin:0 0 30px;max-width:48ch}
+.hn-p b{color:var(--ink);font-weight:600;background:linear-gradient(var(--mark),var(--mark)) no-repeat 0 88%/100% 45%;padding:0 .08em}
+.hero-n .cta{display:flex;gap:10px;flex-wrap:wrap}
+/* the tiled name as a signature under the note */
+.sign-c{position:relative;height:clamp(84px,9vw,120px);margin-top:10px;max-width:520px}
+.sign-c canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:pan-y}
+@media (max-width:700px){.sign-c{height:78px}}
 </style>
 
 </head>
@@ -622,11 +634,10 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
 </header>
 
 <main id="top">
-  <section class="hx" aria-labelledby="hx-h">
-    <h1 id="hx-h" class="vh">Vivek Shankar Patil, software engineer.</h1>
-    <canvas id="hxCv" aria-hidden="true"></canvas>
-    <div class="hx-copy">
-      <p>I build backend, distributed, full-stack and AI systems that hold up in production. Previously at <b>Amazon</b> and <b>Collabera Digital</b>.</p>
+  <section class="hero-n" aria-labelledby="hero-h">
+    <div class="wrap">
+      <h1 id="hero-h" class="hn-h">I build systems that hold up in production.</h1>
+      <p class="hn-p">Backend, distributed, full-stack and AI. Previously at <b>Amazon</b> and <b>Collabera Digital</b>.</p>
       <div class="cta"><a class="btn main" href="#work">See the work</a><a class="btn" href="#contact">Get in touch</a></div>
     </div>
   </section>
@@ -929,7 +940,8 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
         <p>Here is what I want next: a hard problem, a team that cares about good work, and room to grow.</p>
         <p>In return, I will show up, take ownership, and keep learning and delivering every day.</p>
         <p>Let’s build something that lasts.</p>
-        <div class="sig" aria-label="Vivek"><span class="sig-t" aria-hidden="true">Vivek</span><svg class="sig-u" viewBox="0 0 220 24" aria-hidden="true"><path d="M4 16c40-10 90-12 140-6s60 4 72-4"/></svg></div>
+        <div class="sign-c" role="img" aria-label="Signed, Vivek Shankar Patil"><canvas id="hxCv" aria-hidden="true"></canvas></div>
+        
       </div>
     </div>
   </section>
@@ -1534,15 +1546,15 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
     function build(){
       const r = cv.getBoundingClientRect(), d = Math.min(devicePixelRatio||1, 2); W = r.width; H = r.height; if (!W) return;
       cv.width = Math.round(W*d); cv.height = Math.round(H*d); ctx.setTransform(d,0,0,d,0,0);
-      const mob = W < 700, lines = mob ? ['Vivek Shankar','Patil, software','engineer.'] : ['Vivek Shankar Patil,','software engineer.'];
+      const mob = W < 700, lines = ['Vivek Shankar Patil'];
       const off = document.createElement('canvas'); off.width = Math.floor(W); off.height = Math.floor(H); const o = off.getContext('2d');
       let fs = 100; o.font = `800 ${fs}px ${DISPLAY}`; const widest = Math.max(...lines.map(l => o.measureText(l).width));
-      fs = Math.min(fs * (W*(mob ? 0.86 : 0.72)) / widest, H * (mob ? 0.12 : 0.15));
-      o.font = `800 ${fs}px ${DISPLAY}`; o.textAlign = 'center'; o.textBaseline = 'middle'; o.fillStyle = '#000';
-      const lh = fs*1.04, y0 = H*0.42 - (lines.length-1)*lh/2; lines.forEach((l,i) => o.fillText(l, W/2, y0 + i*lh));
-      const wide = Math.max(...lines.map(l => o.measureText(l).width)); box = {x0:W/2 - wide/2, x1:W/2 + wide/2, y0:y0 - fs*0.5, y1:y0 + (lines.length-1)*lh + fs*0.5};
-      const data = o.getImageData(0,0,off.width,off.height).data, gap = mob ? 3 : 4; P = [];
-      if (!build.start) build.start = performance.now(); const first = !reduce.matches && performance.now() - build.start < 1500;
+      fs = Math.min(fs * (W*0.97) / widest, H*0.66);
+      o.font = `800 ${fs}px ${DISPLAY}`; o.textAlign = 'left'; o.textBaseline = 'middle'; o.fillStyle = '#000';
+      const lh = fs*1.04, y0 = H*0.5; lines.forEach((l,i) => o.fillText(l, 2, y0 + i*lh));
+      const wide = Math.max(...lines.map(l => o.measureText(l).width)); box = {x0:2, x1:2 + wide, y0:y0 - fs*0.5, y1:y0 + fs*0.5};
+      const data = o.getImageData(0,0,off.width,off.height).data, gap = 3; P = [];
+      const first = false;
       for (let y=0; y<off.height; y+=gap) for (let x=0; x<off.width; x+=gap) if (data[(y*off.width+x)*4+3] > 128){ const a = Math.random()*Math.PI*2, rr = (0.3 + Math.random()*0.7)*Math.max(W,H)*0.38;
         P.push(first ? {hx:x, hy:y, x: W/2 + Math.cos(a)*rr, y: H*0.42 + Math.sin(a)*rr*0.6, vx:0, vy:0, d: Math.random()*0.3, heat:0} : {hx:x, hy:y, x, y, vx:0, vy:0, d:0, heat:0}); }
       born = performance.now();
@@ -1550,7 +1562,7 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
     const push = (src, p, dt, R, k) => { const dx = p.x - src.x, dy = p.y - src.y, dd = Math.hypot(dx, dy); if (dd < R){ const f = Math.pow(1 - dd/R, 2)*k; p.vx += dx/(dd||1)*f*dt; p.vy += dy/(dd||1)*f*dt; } };
     function frame(dt, now){
       ctx.clearRect(0,0,W,H); ctx.globalAlpha = 1;
-      const mob = W < 700, R = mob ? 64 : 100, sz = mob ? 2.2 : 2.8, still = reduce.matches, maxR = Math.max(W, H);
+      const mob = W < 700, R = 56, sz = 2.2, still = reduce.matches, maxR = Math.max(W, H);
       // the self-demo: a faint outage sweeps through the name every few seconds
       if (!still){ if (ghost.t < 0 && now > ghost.next && !ptr.on) ghost.t = 0;
         if (ghost.t >= 0){ ghost.t += dt/1.8; const u = Math.min(1, ghost.t); ghost.x = box.x0 + (box.x1 - box.x0)*u; ghost.y = box.y0 + (box.y1 - box.y0)*(0.5 + 0.28*Math.sin(u*Math.PI*2)); ghost.on = true;
@@ -1584,7 +1596,8 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
     cv.addEventListener('pointerdown', e => { ptr.down = true; pos(e); if (!reduce.matches) waves.push({x:ptr.x, y:ptr.y, r:0}); });
     cv.addEventListener('pointerleave', () => ptr.on = false); addEventListener('pointerup', e => { ptr.down = false; if (e.pointerType === 'touch') ptr.on = false; }); cv.addEventListener('pointercancel', () => { ptr.on = false; ptr.down = false; });
     new ResizeObserver(build).observe(cv); if (document.fonts && document.fonts.ready) document.fonts.ready.then(build);
-    new IntersectionObserver(es => es.forEach(e => on = e.isIntersecting), {threshold:0.02}).observe(cv);
+    let signed = false;
+    new IntersectionObserver(es => es.forEach(e => { on = e.isIntersecting; if (on && !signed && W){ signed = true; if (!reduce.matches){ P.forEach(p => { const a = Math.random()*Math.PI*2, rr = (0.3 + Math.random()*0.7)*W*0.5; p.x = p.hx + Math.cos(a)*rr; p.y = p.hy + Math.sin(a)*rr*0.4; p.vx = p.vy = 0; p.d = (p.hx/W)*0.6 + Math.random()*0.1; p.heat = 0; }); born = performance.now(); ghost.next = born + 4500; glitch.next = born + 6000; } } }), {threshold:0.5}).observe(cv);
     let last = performance.now(); const loop = now => { const dt = Math.min(.05, (now-last)/1000); last = now; if (on && W) frame(dt, now); requestAnimationFrame(loop); }; requestAnimationFrame(loop);
   })();
 
@@ -1773,7 +1786,7 @@ footer{padding:30px 0 40px;color:var(--faint);font-size:14px;border-top:1px soli
   })();
 
   /* ---------- nav: show the name only once the hero is out of view ---------- */
-  (() => { const nm = document.getElementById('meName'), hero = document.querySelector('.hx'); if (!nm || !hero) return;
+  (() => { const nm = document.getElementById('meName'), hero = document.querySelector('.hero-n'); if (!nm || !hero) return;
     new IntersectionObserver(es => es.forEach(e => nm.classList.toggle('hide', e.isIntersecting)), {threshold:0, rootMargin:'-62px 0px 0px 0px'}).observe(hero); })();
 
   /* ---------- who I am: an AI bio, reviewed ---------- */
