@@ -32,7 +32,7 @@ a{color:inherit}
 .sign-t{font-family:"Mrs Saint Delafield","Segoe Script","Brush Script MT",cursive!important;font-size:clamp(52px,5.4vw,80px)!important;line-height:1.1!important;color:var(--ink);margin:18px 0 0!important;padding:0 .3em 0 .05em;display:inline-block;clip-path:inset(-20% 100% -20% 0);transition:clip-path 2s cubic-bezier(.22,1,.36,1) .25s}
 .sign-t.in{clip-path:inset(-20% -10% -20% 0)}
 .sign-t{white-space:nowrap}
-@media (max-width:480px){.sign-t{font-size:44px!important}}
+@media (max-width:480px){.sign-t{font-size:38px!important;padding-right:.1em!important;max-width:100%}}
 @media (prefers-reduced-motion: reduce){.sign-t{clip-path:none!important;transition:none}}
 .mast a{pointer-events:auto;text-decoration:none}
 .mast .nm{font-family:var(--serif);font-size:22px;line-height:28px}
@@ -177,7 +177,7 @@ section{position:relative;z-index:2}
 .lg-b .lg-t{font-family:var(--mono);font-size:12px;color:var(--faint);margin-top:18px}
 .lg-edu{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:24px;border-top:1px solid var(--line);padding-top:32px}
 .lg-edu div{grid-column:span 6}
-.lg-edu div:first-child{grid-column:4/8}.lg-edu div:last-child{grid-column:8/12}
+.lg-edu div:first-child{grid-column:4/12}
 .lg-yy{font-family:var(--mono);font-size:11px;color:var(--faint);letter-spacing:.1em}
 .lg-edu b{display:block;font-family:var(--serif);font-weight:400;font-size:28px;line-height:1.1;margin:6px 0}
 .lg-edu p{color:var(--soft);margin:0;font-size:14px}
@@ -300,6 +300,12 @@ section{position:relative;z-index:2}
         <p class="lg-t">Python · Kotlin · AWS · DynamoDB · SQS · CloudWatch</p></div>
     </article>
     <article class="lg">
+      <div class="lg-y"><span>2025</span><small>December</small></div>
+      <div class="lg-b"><h4>Northeastern University</h4><p class="lg-r">MS in Computer Software Engineering · GPA 3.78</p>
+        <p class="lg-l">Graduated with a master’s degree. Most of the systems on this page started here.</p>
+        <p>GitStream, Cloud Native, InterviewKit and ChildGuard were all designed and built during the program.</p></div>
+    </article>
+    <article class="lg">
       <div class="lg-y"><span>2026</span><small>to now</small></div>
       <div class="lg-b"><h4>bigonotes</h4><p class="lg-r">Creator and Engineer · <a href="https://bigonotes.com" target="_blank" rel="noopener noreferrer">bigonotes.com</a></p>
         <p class="lg-l">My personal notes on DSA, core CS concepts, design patterns, system design, cloud, Linux and AI, shared free for anyone.</p>
@@ -307,7 +313,6 @@ section{position:relative;z-index:2}
         <p class="lg-t">Next.js · React · TypeScript · Tailwind CSS · Python</p></div>
     </article>
     <div class="lg-edu">
-      <div><span class="lg-yy">2025</span><b>Northeastern University</b><p>MS in Computer Software Engineering. GPA 3.78.</p></div>
       <div><span class="lg-yy">2021</span><b>Ramaiah Institute of Technology</b><p>Bachelor’s in Information Technology. GPA 8.29/10.</p></div>
     </div>
   </div></section>
