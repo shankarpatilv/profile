@@ -272,6 +272,30 @@ section{position:relative;z-index:2}
 @media (max-width:860px) and (max-height:600px){.ch .stats{display:none!important}.ch h2{font-size:38px!important}}
 
 @media (max-width:360px){.sign-t{font-size:32px!important}}
+
+/* hidden controls take no space */
+.try-c[hidden]{display:none!important}
+/* phones: the chapter's words come back, compact */
+@media (max-width:860px){
+  .ch:not(.trying) .pull{display:block!important;font-size:18px!important;line-height:24px!important;margin:0 0 10px!important}
+  .ch:not(.trying) .steps{display:block!important;margin-top:4px}
+  .ch .steps li{padding:6px 0!important;font-size:13.5px!important;line-height:19px!important;grid-template-columns:30px minmax(0,1fr)!important}
+  .ch .stats{margin-top:12px!important}
+}
+/* only the shortest screens drop the three points */
+@media (max-width:860px) and (max-height:620px){ .ch:not(.trying) .steps{display:none!important} }
+
+/* phones: each project reads in full, then shows its system at a readable size; nothing is squeezed into one screen */
+@media (max-width:860px){
+  .ch{height:auto!important}
+  .ch .stick{position:relative!important;height:auto!important;min-height:0!important;padding:84px 0 40px!important}
+  .ch .stick>.wrap{height:auto!important}
+  .stage-box{flex:none!important;height:min(92vw,400px)!important;min-height:0!important;margin-top:18px!important}
+  .ch .pull,.ch:not(.trying) .pull{display:block!important}
+  .ch .steps,.ch:not(.trying) .steps{display:block!important}
+  .ch .stats{display:flex!important}
+  .ch .ch-stk{display:block!important}
+}
 </style>
 </head>
 <body>
@@ -495,11 +519,14 @@ section{position:relative;z-index:2}
     Object.values(sy.nodes).forEach(n => { for (const dx of [-.5,.5]) for (const dy of [-.5,.5]) { add(n[0] + dx*n[2], n[1] + dy*n[3], 0); add(n[0] + dx*n[2], n[1] + dy*n[3], n[4]); } });
     (sy.areas || []).forEach(a => { for (const dx of [-.5,.5]) for (const dy of [-.5,.5]) add(a[0] + dx*a[2], a[1] + dy*a[3], 0); }); BOUNDS[k] = {x0, x1, y0, y1}; });
   const stageR = c => { const key = c.dataset.scene, r = c.querySelector('.stage-box').getBoundingClientRect(), mob = W < 860, lab = c.querySelector('.stage-lab').getBoundingClientRect(), stk = c.querySelector('.ch-stk').getBoundingClientRect();
-    const padX = mob ? 40 : 34, x0 = r.left + padX, x1 = r.right - padX, y0 = Math.max(r.top, lab.height ? lab.bottom : r.top) + (mob ? 30 : 40), y1 = Math.min(r.bottom, stk.height ? stk.top : r.bottom) - (mob ? (key === 'cg' ? 34 : 12) : 16);
+    const padX = mob ? 40 : 34, x0 = r.left + padX, x1 = r.right - padX, y0 = Math.max(r.top, lab.height ? lab.bottom : r.top) + (mob ? 30 : 40), y1 = Math.min(r.bottom, stk.height ? stk.top : r.bottom) - (mob ? (key === 'cg' ? 38 : 22) : 16);
     const B = BOUNDS[key], bw = B.x1 - B.x0, bh = B.y1 - B.y0, S = Math.max(10, Math.min((x1 - x0)/bw, (y1 - y0)/bh));
     return {x0, x1, y0, y1, S, ox: x0 + ((x1 - x0) - bw*S)/2 - B.x0*S, oy: y0 + ((y1 - y0) - bh*S)/2 - B.y0*S}; };
   // the whole transition is a pure function of the scroll position: scroll back and it reverses
-  function plan(){ const y = scrollY, vh = innerHeight, L = chs.map(c => { const top = c.getBoundingClientRect().top + y; return {top, end: top + c.offsetHeight - vh}; });
+  function plan(){ const y = scrollY, vh = innerHeight;
+    // laptops: a project holds while its pinned screen is on; phones: while its graphic sits near the middle of the screen
+    const L = W < 860 ? chs.map(c => { const r = c.querySelector('.stage-box').getBoundingClientRect(), mid = r.top + y + r.height/2 - vh/2, hw = vh*.16; return {top: mid - hw, end: mid + hw}; })
+                      : chs.map(c => { const top = c.getBoundingClientRect().top + y; return {top, end: top + c.offsetHeight - vh}; });
     for (let i=0;i<L.length;i++){ if (y >= L[i].top && y <= L[i].end) return {mode:'hold', a:i};
       if (i + 1 < L.length && y > L[i].end && y < L[i+1].top) return {mode:'trans', a:i, b:i+1, t:(y - L[i].end)/Math.max(1, L[i+1].top - L[i].end)}; }
     if (y < L[0].top && y >= L[0].top - vh) return {mode:'pre', b:0, t:(y - (L[0].top - vh))/vh};
