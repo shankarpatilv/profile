@@ -163,7 +163,9 @@ section{position:relative;z-index:2}
 
 /* path as a ledger */
 .path{height:auto!important;padding:14vh 0 8vh}
-.lg{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:24px;padding:32px 0;border-top:1px solid var(--line)}
+.lg{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:24px;padding:22px 0;border-top:1px solid var(--line)}
+.lg-b .lg-r{margin:6px 0 12px!important}.lg-b .lg-l{margin-bottom:10px!important;max-width:46ch!important}.lg-b .lg-t{margin-top:12px!important}.lg-b p{margin-bottom:8px}
+.path h3{margin-bottom:24px!important}.lg-edu{padding-top:22px!important}
 .lg-y{grid-column:1/4}
 .lg-y span{display:block;font-family:var(--serif);font-size:clamp(56px,6vw,96px);line-height:.9;color:var(--ink)}
 .lg-y small{display:block;font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--faint);margin-top:10px;text-transform:uppercase}
@@ -285,6 +287,11 @@ section{position:relative;z-index:2}
   <section class="path" id="path" data-scene="drift" data-name="PATH"><div class="wrap">
     <span class="no">PATH</span><h3>Five years, so far.</h3>
     <article class="lg">
+      <div class="lg-y"><span>2021</span><small>Bachelor’s</small></div>
+      <div class="lg-b"><h4>Ramaiah Institute of Technology</h4><p class="lg-r">Bachelor’s in Information Technology · GPA 8.29/10 · Bangalore</p>
+        <p class="lg-l">Where the foundations came from, before I started shipping software for a living.</p></div>
+    </article>
+    <article class="lg">
       <div class="lg-y"><span>2021</span><small>to 2023</small></div>
       <div class="lg-b"><h4>Collabera Digital</h4><p class="lg-r">Software Engineer (Analyst, then Associate Data Engineer) · Bangalore</p>
         <p class="lg-l">Full stack apps, backend services and high volume data pipelines for an enterprise bank.</p>
@@ -302,8 +309,7 @@ section{position:relative;z-index:2}
     <article class="lg">
       <div class="lg-y"><span>2025</span><small>December</small></div>
       <div class="lg-b"><h4>Northeastern University</h4><p class="lg-r">MS in Computer Software Engineering · GPA 3.78</p>
-        <p class="lg-l">Graduated with a master’s degree. Most of the systems on this page started here.</p>
-        <p>GitStream, Cloud Native, InterviewKit and ChildGuard were all designed and built during the program.</p></div>
+        <p class="lg-l">Took courses and built projects across web applications, cloud infrastructure, distributed systems and AI.</p></div>
     </article>
     <article class="lg">
       <div class="lg-y"><span>2026</span><small>to now</small></div>
@@ -312,9 +318,6 @@ section{position:relative;z-index:2}
         <p>I write the notes, and I designed and built the site that holds them.</p>
         <p class="lg-t">Next.js · React · TypeScript · Tailwind CSS · Python</p></div>
     </article>
-    <div class="lg-edu">
-      <div><span class="lg-yy">2021</span><b>Ramaiah Institute of Technology</b><p>Bachelor’s in Information Technology. GPA 8.29/10.</p></div>
-    </div>
   </div></section>
 
   <section class="how" data-scene="drift" data-name="HOW I WORK"><div class="stick"><div class="wrap">
