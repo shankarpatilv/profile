@@ -257,6 +257,21 @@ section{position:relative;z-index:2}
   .ch .stick{align-items:flex-start!important}}
 
 .stage-box{background:none!important;border:0!important}
+
+/* phones: the system fills exactly the height left under the chapter text */
+@media (max-width:860px){
+  .ch .stick{height:100svh!important;min-height:0!important;padding-top:74px!important;padding-bottom:8px!important;box-sizing:border-box}
+  .ch .stick>.wrap{display:flex!important;flex-direction:column;align-items:stretch!important;height:100%}
+  .stage-box{width:100%}
+  .ch .stick>.wrap>.txt{flex:none}
+  .stage-box{flex:1 1 auto;height:auto!important;min-height:170px;margin-top:8px!important}
+}
+@media (max-width:860px) and (max-height:700px){.ch .pull{display:none!important}.stage-box{min-height:130px}}
+
+@media (max-width:380px){.close h2{font-size:64px!important}}
+@media (max-width:860px) and (max-height:600px){.ch .stats{display:none!important}.ch h2{font-size:38px!important}}
+
+@media (max-width:360px){.sign-t{font-size:32px!important}}
 </style>
 </head>
 <body>
@@ -454,7 +469,7 @@ section{position:relative;z-index:2}
   };
   // a rotated isometric view, scaled so the whole system fills its stage
   const ISO_C = Math.cos(-.5), ISO_S = Math.sin(-.5);
-  const isoP = (R, x, y, z) => { const w = R.x1 - R.x0, h = R.y1 - R.y0, S = Math.min(w/1.34, h/.94);
+  const isoP = (R, x, y, z) => { if (R.S){ const rx = x*ISO_C - y*ISO_S, ry = x*ISO_S + y*ISO_C; return [R.ox + rx*R.S, R.oy + (ry*.5 - z*.62)*R.S]; } const w = R.x1 - R.x0, h = R.y1 - R.y0, S = Math.min(w/1.34, h/.94);
     const rx = x*ISO_C - y*ISO_S, ry = x*ISO_S + y*ISO_C, ox = R.x0 + (w - 1.36*S)/2, oy = R.y0 + (h - .68*S)/2 + .48*S*.5 + .12*S;
     return [ox + rx*S, oy + ry*S*.5 - z*S*.62]; };
   // the visible edges of an isometric box, as segments in plan coordinates
@@ -476,7 +491,13 @@ section{position:relative;z-index:2}
     return [X, Y + (p.z - .5)*6, dead ? .05 : .85, wait.includes(e[1]) && u > .7 ? 1 : 0]; }
   const chs = [...document.querySelectorAll('.ch')];
   const easeIO = t => t < .5 ? 4*t*t*t : 1 - Math.pow(-2*t + 2, 3)/2;
-  const stageR = c => { const r = c.querySelector('.stage-box').getBoundingClientRect(), mob = W < 860; return {x0:r.left + (mob ? 10 : 24), x1:r.right - (mob ? 10 : 24), y0:r.top + (mob ? 30 : 46), y1:r.bottom - (mob ? 34 : 44)}; };
+  const BOUNDS = {}; Object.entries(SYS).forEach(([k, sy]) => { let x0 = 1e9, x1 = -1e9, y0 = 1e9, y1 = -1e9; const add = (x, y, z) => { const rx = x*ISO_C - y*ISO_S, ry = x*ISO_S + y*ISO_C, px = rx, py = ry*.5 - z*.62; x0 = Math.min(x0, px); x1 = Math.max(x1, px); y0 = Math.min(y0, py); y1 = Math.max(y1, py); };
+    Object.values(sy.nodes).forEach(n => { for (const dx of [-.5,.5]) for (const dy of [-.5,.5]) { add(n[0] + dx*n[2], n[1] + dy*n[3], 0); add(n[0] + dx*n[2], n[1] + dy*n[3], n[4]); } });
+    (sy.areas || []).forEach(a => { for (const dx of [-.5,.5]) for (const dy of [-.5,.5]) add(a[0] + dx*a[2], a[1] + dy*a[3], 0); }); BOUNDS[k] = {x0, x1, y0, y1}; });
+  const stageR = c => { const key = c.dataset.scene, r = c.querySelector('.stage-box').getBoundingClientRect(), mob = W < 860, lab = c.querySelector('.stage-lab').getBoundingClientRect(), stk = c.querySelector('.ch-stk').getBoundingClientRect();
+    const padX = mob ? 40 : 34, x0 = r.left + padX, x1 = r.right - padX, y0 = Math.max(r.top, lab.height ? lab.bottom : r.top) + (mob ? 30 : 40), y1 = Math.min(r.bottom, stk.height ? stk.top : r.bottom) - (mob ? (key === 'cg' ? 34 : 12) : 16);
+    const B = BOUNDS[key], bw = B.x1 - B.x0, bh = B.y1 - B.y0, S = Math.max(10, Math.min((x1 - x0)/bw, (y1 - y0)/bh));
+    return {x0, x1, y0, y1, S, ox: x0 + ((x1 - x0) - bw*S)/2 - B.x0*S, oy: y0 + ((y1 - y0) - bh*S)/2 - B.y0*S}; };
   // the whole transition is a pure function of the scroll position: scroll back and it reverses
   function plan(){ const y = scrollY, vh = innerHeight, L = chs.map(c => { const top = c.getBoundingClientRect().top + y; return {top, end: top + c.offsetHeight - vh}; });
     for (let i=0;i<L.length;i++){ if (y >= L[i].top && y <= L[i].end) return {mode:'hold', a:i};
@@ -494,7 +515,7 @@ section{position:relative;z-index:2}
     fx.globalAlpha = 1; }
   function floorArea(R, ar, a, bad){ const [x,y,w,d,lab] = ar, P4 = [[x-w/2,y-d/2],[x+w/2,y-d/2],[x+w/2,y+d/2],[x-w/2,y+d/2]].map(([px,py]) => isoP(R, px, py, 0));
     fx.globalAlpha = a; fx.setLineDash([5,5]); fx.lineWidth = 1; fx.strokeStyle = bad ? 'rgba(123,30,46,.9)' : 'rgba(21,21,21,.35)'; fx.beginPath(); P4.forEach(([px,py],q) => q ? fx.lineTo(px,py) : fx.moveTo(px,py)); fx.closePath(); fx.stroke(); fx.setLineDash([]);
-    fx.font = '500 11px "Geist Mono", ui-monospace, monospace'; fx.textAlign = 'left'; fx.textBaseline = 'bottom'; fx.fillStyle = bad ? 'rgba(123,30,46,1)' : 'rgba(21,21,21,.55)'; fx.fillText(bad ? lab + ' · down' : lab, P4[0][0] + 6, P4[0][1] - 4); fx.globalAlpha = 1; }
+    fx.font = '500 11px "Geist Mono", ui-monospace, monospace'; fx.textAlign = 'left'; fx.textBaseline = 'bottom'; fx.fillStyle = bad ? 'rgba(123,30,46,1)' : 'rgba(21,21,21,.55)'; if (!(W < 860 && /^zone/.test(lab) && !bad)) fx.fillText(bad ? lab + ' · down' : lab, P4[0][0] + 6, P4[0][1] - 4); fx.globalAlpha = 1; }
   function frame(dt){ time += dt; flowT += dt*(performance.now() < spikeUntil ? 3 : 1); fx.clearRect(0,0,W,H);
     const pl = plan(), kA = pl.a != null ? chs[pl.a].dataset.scene : null, kB = pl.b != null ? chs[pl.b].dataset.scene : null;
     const RA = kA ? stageR(chs[pl.a]) : null, RB = kB ? stageR(chs[pl.b]) : null, t = pl.t || 0;
@@ -524,10 +545,10 @@ section{position:relative;z-index:2}
       fx.fillStyle = `rgba(${p.g > .5 ? GAR : INK},${a})`; const s2 = p.z < .58 ? 1.9 : 2.8; fx.fillRect(p.x - s2/2, p.y - s2/2, s2, s2); }
     // labels follow the boxes
     [[kA, RA, wA], [kB, RB, wB]].forEach(([key, R, w]) => { if (!key || w < .05) return; const sy = SYS[key], st = stateOf(key, sy), fail = st.fail || [], good = st.good || [];
-      fx.font = '500 12px "Geist Mono", ui-monospace, monospace'; fx.textAlign = 'center'; fx.textBaseline = 'bottom';
-      Object.entries(sy.nodes).forEach(([id,n]) => { if (n[6] && !(st.show || []).includes(id)) return; const lbl = (st.labels && st.labels[id]) || n[5]; if (!lbl) return; const [X,Y] = isoP(R, n[0], n[1] - n[3]/2, n[4]); const bad = fail.includes(id), gd = good.includes(id);
+      fx.font = `500 ${W < 860 ? 10 : 12}px "Geist Mono", ui-monospace, monospace`; fx.textAlign = 'center'; fx.textBaseline = 'bottom';
+      Object.entries(sy.nodes).forEach(([id,n]) => { if (n[6] && !(st.show || []).includes(id)) return; const lbl = (st.labels && st.labels[id]) || n[5]; if (!lbl) return; let [X,Y] = isoP(R, n[0], n[1] - n[3]/2, n[4]); if (key === 'cg' && W < 860 && (id === 'g2' || id === 'g4')){ [X,Y] = isoP(R, n[0], n[1] + n[3]/2, 0); Y += 34; } const bad = fail.includes(id), gd = good.includes(id);
         const txt = st.labels && st.labels[id] ? lbl : bad ? n[5] + ' · down' : gd ? n[5] + (key === 'cg' ? ' · 200 OK' : ' · ✓') : n[5];
-        const tw = fx.measureText(txt).width + 12; fx.globalAlpha = w; fx.fillStyle = '#f3f0e8'; fx.fillRect(X - tw/2, Y - 26, tw, 18);
+        const tw = fx.measureText(txt).width + 12; X = Math.max(tw/2 + 4, Math.min(W - tw/2 - 4, X)); fx.globalAlpha = w; fx.fillStyle = '#f3f0e8'; fx.fillRect(X - tw/2, Y - 26, tw, 18);
         fx.fillStyle = bad ? `rgb(${GAR})` : gd ? 'rgb(47,107,79)' : `rgba(${INK},.85)`; fx.fillText(txt, X, Y - 10); fx.globalAlpha = 1; }); });
   }
 
@@ -564,13 +585,13 @@ section{position:relative;z-index:2}
   const ACTS = {
     git:{ crash:{fail:['w2'], wait:['w2'], labels:{w2:'worker 2 · down'}, label:'WORKER 2 DOWN · P2 WAITS · 0 EVENTS LOST'}, spike:'spike',
       lookup:{good:['pg'], labels:{pg:'PostgreSQL · 1 row · 3 ms'}, label:'LOOK UP ONE EVENT · ONE INDEXED ROW · 3 MS'},
-      sum:{good:['ch'], labels:{ch:'ClickHouse · 1 column scanned'}, label:'ADD UP THE LAST HOUR · ONE COLUMN, NOT EVERY ROW'} },
-    cloud:{ a:{fail:['a1','a2'], show:['b3','c3'], good:['b3','c3'], labels:{a1:'v1 · down', a2:'v1 · down', b3:'new', c3:'new'}, label:'CLOUDWATCH ALARM · ZONE A DOWN · AUTO SCALING +2 · 0 FAILED'},
-      b:{fail:['b1','b2'], show:['b3','c3'], good:['c3'], labels:{b1:'v1 · down', b2:'v1 · down', c3:'new'}, label:'CLOUDWATCH ALARM · ZONE B DOWN · AUTO SCALING +1 · 0 FAILED'}, deploy:'deploy' },
-    ik:{ q1:{off:[['chk','no']], good:['star','n1'], labels:{n1:'migration-memory-ceiling.md'}, label:'ANSWERED · CITES MIGRATION-MEMORY-CEILING.MD'},
-      q2:{off:[['chk','no']], good:['star','n2'], labels:{n2:'throughput-partitions.md'}, label:'ANSWERED · CITES THROUGHPUT-PARTITIONS.MD'},
+      sum:{good:['ch'], labels:{ch:'ClickHouse · 1 column'}, label:'ADD UP THE LAST HOUR · ONE COLUMN, NOT EVERY ROW'} },
+    cloud:{ a:{fail:['a1','a2'], show:['b3','c3'], good:['b3','c3'], labels:{a1:'down', a2:'down', b3:'new', c3:'new'}, label:'CLOUDWATCH ALARM · ZONE A DOWN · AUTO SCALING +2 · 0 FAILED'},
+      b:{fail:['b1','b2'], show:['b3','c3'], good:['c3'], labels:{b1:'down', b2:'down', c3:'new'}, label:'CLOUDWATCH ALARM · ZONE B DOWN · AUTO SCALING +1 · 0 FAILED'}, deploy:'deploy' },
+    ik:{ q1:{off:[['chk','no']], good:['star','n1'], labels:{n1:'memory-ceiling.md'}, label:'ANSWERED · CITES MIGRATION-MEMORY-CEILING.MD'},
+      q2:{off:[['chk','no']], good:['star','n2'], labels:{n2:'throughput.md'}, label:'ANSWERED · CITES THROUGHPUT-PARTITIONS.MD'},
       q3:{off:[['chk','no']], good:['star','n3'], labels:{n3:'customer-portal.md'}, label:'ANSWERED · CITES CUSTOMER-PORTAL.MD'},
-      q4:{off:[['chk','star']], fail:['no'], labels:{no:'refuse · no note backs this'}, label:'NO NOTE BACKS THIS · REFUSED · NOTHING INVENTED'} },
+      q4:{off:[['chk','star']], fail:['no'], labels:{no:'refused'}, label:'NO NOTE BACKS THIS · REFUSED · NOTHING INVENTED'} },
     cg:{ ok:{good:['db'], label:'ALL 6 CHECKS PASSED · 200 OK · SAVED IN MONGODB'},
       origin:{fail:['g1'], wait:['g1'], off:[['g1','g2'],['g2','g3'],['g3','g4'],['g4','g5'],['g5','db']], labels:{g1:'Origin · blocked'}, label:'UNKNOWN SITE · BLOCKED AT ORIGIN'},
       script:{good:['g3','db'], labels:{g3:'Sanitize · script removed'}, label:'SCRIPT STRIPPED · SAFE TEXT SAVED · 200 OK'},
