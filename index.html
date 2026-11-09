@@ -330,6 +330,63 @@ mark.hl{background:none;color:inherit;padding:0 .08em;margin:0 -.04em;box-shadow
 }
 
 .ch .pull{max-width:30ch!important}
+
+/* option 3: strengths in the margin, sentences left clean */
+.mk-y{margin:18px 0 0;font-family:var(--mono);font-size:11px;line-height:1.85;letter-spacing:.08em;text-transform:uppercase;color:var(--gar)}
+.mk-y span{display:block}
+.ch-mk{margin:-6px 0 14px;font-family:var(--mono);font-size:11px;line-height:1.6;letter-spacing:.08em;text-transform:uppercase;color:var(--gar)}
+.ch-mk i{font-style:normal;color:var(--faint)}
+@media (max-width:860px){.mk-y{margin:10px 0 0}.mk-y span{display:inline}.mk-y span+span::before{content:" · ";color:var(--faint)}.ch-mk{margin:0 0 10px}}
+
+/* strengths in the margin: Path under each year, projects under each title */
+.lg-y .mk{margin-top:18px;display:flex;flex-direction:column;gap:5px}
+.lg-y .mk span{font-family:var(--mono);font-size:11px;line-height:15px;letter-spacing:.08em;text-transform:uppercase;color:var(--gar)}
+.ch-mk{margin:-6px 0 14px;font-family:var(--mono);font-size:11px;line-height:17px;letter-spacing:.08em;text-transform:uppercase;color:var(--gar)}
+@media (max-width:860px){
+  .lg-y .mk{flex-direction:row;flex-wrap:wrap;gap:4px 0;margin-top:12px}
+  .lg-y .mk span:not(:last-child)::after{content:"·";margin:0 8px;color:var(--faint)}
+  .ch-mk{margin:-2px 0 10px;font-size:10px}
+}
+
+@media (max-width:860px){.lg-y{flex-wrap:wrap!important;min-width:0}.lg-y .mk{flex-basis:100%;width:100%;min-width:0}.lg-y .mk span{white-space:nowrap}}
+@media (min-width:861px) and (max-height:780px){.ch .steps li{padding:6px 0!important;font-size:14px!important;line-height:19px!important}.ch .pull{margin-bottom:12px!important}.ch .stats{margin-top:12px!important}.ch-mk{margin-bottom:10px}}
+
+/* the AI proof, with room to breathe */
+.how h3{margin-bottom:48px!important}
+.sl{padding:28px 0!important;align-items:start}
+.sl .new{line-height:1.22!important}
+.sl .new small{margin-top:10px!important;font-size:14.5px!important;line-height:23px!important;max-width:44ch}
+@media (max-width:860px){.sl{padding:22px 0!important}.sl .new{margin-top:12px!important}}
+
+/* strike exactly the words, not the whole column */
+.sl .old::after{display:none!important}
+.sl .old{text-decoration:line-through;text-decoration-color:transparent;text-decoration-thickness:1.5px;transition:text-decoration-color .8s var(--ease),color .8s var(--ease)!important}
+.sl.on .old{text-decoration-color:var(--gar)}
+
+/* skills under the role line */
+.lg-b .mk-row{display:flex;flex-wrap:wrap;gap:4px 0;margin:-6px 0 16px}
+.lg-b .mk-row span{font-family:var(--mono);font-size:11px;line-height:16px;letter-spacing:.08em;text-transform:uppercase;color:var(--gar);white-space:nowrap}
+.lg-b .mk-row span:not(:last-child)::after{content:"·";margin:0 9px;color:var(--faint)}
+
+.lg-b .mk-row{margin:16px 0 6px!important}
+.lg-b .mk-row + .lg-t{margin-top:4px!important}
+
+/* one calm type system per Path entry: title, meta, text, footer */
+.lg-b .lg-r{font-size:14px!important;line-height:22px!important;margin:8px 0 14px!important}
+.lg-b .lg-l,.lg-b p:not(.lg-r):not(.lg-t):not(.lg-aw){font-family:var(--sans)!important;font-size:17px!important;line-height:27px!important;max-width:60ch!important;margin:0 0 4px!important}
+.lg-b .lg-l{color:var(--ink)!important}
+.lg-b p:not(.lg-r):not(.lg-t):not(.lg-aw):not(.lg-l){color:var(--soft)!important}
+.lg-b .lg-aw{font-size:14px!important;margin:14px 0 0!important}
+.lg-b .mk-row{margin:16px 0 2px!important}
+.lg-b .mk-row span,.lg-b .lg-t{font-family:var(--mono)!important;font-size:12px!important;line-height:19px!important;letter-spacing:.02em!important;text-transform:none!important}
+.lg-b .mk-row span{color:var(--gar)!important}
+.lg-b .lg-t{color:var(--faint)!important;margin-top:2px!important}
+
+.lg-b p b.aw-in{color:var(--ink);font-weight:500}
+
+/* the award as a small tag beside the company name */
+.lg-b h4 .aw-tag{display:inline-block;vertical-align:middle;margin:0 0 6px 14px;padding:3px 9px;border:1px solid rgba(123,30,46,.45);border-radius:999px;font-family:var(--mono);font-size:11px;line-height:15px;letter-spacing:.04em;color:var(--gar);white-space:nowrap}
+@media (max-width:860px){.lg-b h4 .aw-tag{display:table;margin:10px 0 0}}
 </style>
 </head>
 <body>
@@ -366,71 +423,79 @@ mark.hl{background:none;color:inherit;padding:0 .08em;margin:0 -.04em;box-shadow
     </article>
     <article class="lg">
       <div class="lg-y"><span>2021</span><small>to 2023</small></div>
-      <div class="lg-b"><h4>Collabera Digital</h4><p class="lg-r">Software Engineer (Analyst, then Associate Data Engineer) · Bangalore</p>
-        <p class="lg-l"><mark class="hl">Full stack apps</mark>, <mark class="hl">backend services</mark> and <mark class="hl">high volume data pipelines</mark> for an enterprise bank.</p>
-        <p>I owned features <mark class="hl">from the front end to the back end</mark>, then kept a <mark class="hl">large core banking migration</mark> fast and reliable in production.</p>
-        <p class="lg-aw"><span class="aw-k">Award</span><span>Named <b>Best Talent</b></span></p>
-        <p class="lg-t">TypeScript · C# · Java · Python · SQL · AWS · EC2 · Lambda</p></div>
+      <div class="lg-b"><h4>Collabera Digital<span class="aw-tag">Best Talent award</span></h4><p class="lg-r">Software Engineer (Analyst, then Associate Data Engineer) · Bangalore</p>
+        <p class="lg-l">Two years, two roles, one habit: ship it, then keep it running.</p>
+        <p>Started on client web apps, then moved to a large core banking migration and kept it fast under heavy load.</p>
+        <div class="mk mk-row"><span>Full stack</span><span>Backend services</span><span>Data pipelines</span><span>Production support</span></div></div>
+    </article>
+    <article class="lg">
+      <div class="lg-y"><span>2024</span><small>to 2025</small></div>
+      <div class="lg-b"><h4>Northeastern University</h4><p class="lg-r">MS in Computer Software Engineering · GPA 3.78 · Boston</p>
+        <p class="lg-l">Coursework paired with hands-on builds, finished alongside an internship at Amazon.</p><div class="mk mk-row"><span>Web applications</span><span>Cloud infrastructure</span><span>Distributed systems</span><span>AI</span></div></div>
     </article>
     <article class="lg">
       <div class="lg-y"><span>2025</span><small>summer</small></div>
       <div class="lg-b"><h4>Amazon</h4><p class="lg-r">Software Development Engineer Intern · Arlington, VA</p>
-        <p class="lg-l">Built <mark class="hl">distributed, event driven systems</mark> <mark class="hl">from first design to deploy</mark>, and <mark class="hl">LLM systems</mark> with guardrails and evaluation.</p>
-        <p>Most of the work was <mark class="hl">designing for failure</mark>: duplicates, safe retries, rate limits and close monitoring.</p>
-        <p class="lg-t">Python · Kotlin · AWS · DynamoDB · SQS · CloudWatch</p></div>
-    </article>
-    <article class="lg">
-      <div class="lg-y"><span>2025</span><small>December</small></div>
-      <div class="lg-b"><h4>Northeastern University</h4><p class="lg-r">MS in Computer Software Engineering · GPA 3.78</p>
-        <p class="lg-l">Took courses and built projects across <mark class="hl">web applications</mark>, <mark class="hl">cloud infrastructure</mark>, <mark class="hl">distributed systems</mark> and <mark class="hl">AI</mark>.</p></div>
+        <p class="lg-l">Took a high traffic service from first design to deploy, plus an AI feature with guardrails and evaluation.</p>
+        <p>Most of the work was designing for failure: duplicates, safe retries, rate limits and close monitoring.</p>
+        <div class="mk mk-row"><span>Distributed systems</span><span>Event driven design</span><span>LLM systems</span><span>Reliability</span></div></div>
     </article>
     <article class="lg">
       <div class="lg-y"><span>2026</span><small>to now</small></div>
       <div class="lg-b"><h4>bigonotes</h4><p class="lg-r">Creator and Engineer · <a href="https://bigonotes.com" target="_blank" rel="noopener noreferrer">bigonotes.com</a></p>
         <p class="lg-l">My personal notes on DSA, core CS concepts, design patterns, system design, cloud, Linux and AI, shared free for anyone.</p>
-        <p>I write the notes, and I <mark class="hl">designed and built the site</mark> that holds them.</p>
-        <p class="lg-t">Next.js · React · TypeScript · Tailwind CSS · Python</p></div>
+        <div class="mk mk-row"><span>Front end</span><span>Design</span><span>Technical writing</span></div></div>
     </article>
   </div></section>
 
   <section class="how" data-scene="drift" data-name="HOW I WORK"><div class="stick"><div class="wrap">
     <span class="no">HOW I WORK</span><h3>I don’t ship what the AI writes.<br>I ship what I’ve checked.</h3>
     <div class="sheet" id="sheet">
-      <div class="sl"><span class="old">I am a passionate and highly motivated developer</span><span class="new">I ship <mark class="hl">every layer</mark>.<small>“Passionate” isn’t a skill. Name the layers you’ve shipped.</small></span></div>
-      <div class="sl"><span class="old">who is a fast learner</span><span class="new">I <mark class="hl">learn fast</mark> and <mark class="hl">ship fast</mark>.<small>A fast learner needs an outcome. Shipping is the outcome.</small></span></div>
-      <div class="sl"><span class="old">and is familiar with AI tools</span><span class="new">I get real speed from AI, and <mark class="hl">verify every line</mark>.<small>Everyone is familiar with AI tools. Checking its work is the skill.</small></span></div>
-      <div class="sl"><span class="old">with a strong skill set in many technologies.</span><span class="new">I make systems <mark class="hl">talk to each other</mark>.<small>Many technologies says nothing. Integrating them is the hard part.</small></span></div>
+      <div class="sl"><span class="old">I am a passionate and highly motivated developer</span><span class="new">I ship every layer.<small>“Passionate” isn’t a skill. Name the layers you’ve shipped.</small></span></div>
+      <div class="sl"><span class="old">who is a fast learner</span><span class="new">I learn fast and ship fast.<small>A fast learner needs an outcome. Shipping is the outcome.</small></span></div>
+      <div class="sl"><span class="old">and is familiar with AI tools</span><span class="new">I get real speed from AI, and verify every line.<small>Everyone is familiar with AI tools. Checking its work is the skill.</small></span></div>
+      <div class="sl"><span class="old">with a strong skill set in many technologies.</span><span class="new">I make systems talk to each other.<small>Many technologies says nothing. Integrating them is the hard part.</small></span></div>
     </div>
   </div></div></section>
 
+  <section class="stk" data-scene="drift" data-name="STACK"><div class="wrap">
+    <h3>Stack</h3>
+    <div class="sk"><b>Languages</b><p>Strong in Python · Java · TypeScript · JavaScript · SQL<br><span class="fam">Familiar with Go · Kotlin · C#</span></p></div>
+    <div class="sk"><b>Backend</b><p>Spring Boot · FastAPI · Node.js · .NET Core · Django</p></div>
+    <div class="sk"><b>Frontend</b><p>React · Next.js · Redux · Angular · Tailwind CSS</p></div>
+    <div class="sk"><b>Data and streaming</b><p>PostgreSQL · MySQL · MongoDB · Redis · Elasticsearch · ClickHouse · Kafka</p></div>
+    <div class="sk"><b>Cloud and DevOps</b><p>AWS · Azure · Docker · Kubernetes · Terraform · Git · Linux</p></div>
+    <div class="sk"><b>AI</b><p>LangGraph · LangChain · pgvector · LLMs · MCP · RAG</p></div>
+  </div></section>
+
   <div id="work">
   <section class="ch" data-scene="git" data-name="GITSTREAM" aria-labelledby="c1"><div class="stick"><div class="wrap"><div class="txt">
-    <span class="no">SELECTED WORK</span><h2 id="c1">GitStream</h2><p class="pull">A real-time pipeline that takes in a live stream of events, processes it safely and makes it fast to query.</p>
-    <ol class="steps"><li><em>01</em><span>Events arrive through Kafka, and a pool of Go workers handles them <mark class="hl">in parallel</mark>, slowing down gracefully when load spikes.</span></li><li><em>02</em><span>Failed events are <mark class="hl">retried</mark>, and ones that keep failing are <mark class="hl">set aside</mark> instead of blocking everything else.</span></li><li><em>03</em><span>Progress only moves forward once every earlier event is done, so <mark class="hl">a crash never loses data</mark>.</span></li><li><em>04</em><span>Results land in <mark class="hl">two stores</mark>: PostgreSQL to look up one event, ClickHouse for totals over millions, with Prometheus watching it all.</span></li></ol>
+    <span class="no">SELECTED WORK</span><h2 id="c1">GitStream</h2><p class="ch-mk">Stream processing · Concurrency · Fault tolerance · OLTP and OLAP</p><p class="pull">Live events in, fast answers out, nothing lost.</p>
+    <ol class="steps"><li><em>01</em><span>Kafka feeds events to Go workers running side by side.</span></li><li><em>02</em><span>Failures retry, and repeat offenders are set aside.</span></li><li><em>03</em><span>Progress moves only once every earlier event is done.</span></li><li><em>04</em><span>PostgreSQL answers lookups, ClickHouse answers totals.</span></li></ol>
     <div class="stats"><div><b>0</b>events lost</div><div><b>10–100×</b>faster analytics</div></div>
     <div class="try"><button class="try-b" type="button" data-try="git" aria-expanded="false">Interact <span aria-hidden="true">↗</span></button><div class="try-c" data-for="git" hidden><button type="button" data-act="crash">Crash worker 2</button><button type="button" data-act="spike">Spike traffic</button><button type="button" data-act="lookup">Look up one event</button><button type="button" data-act="sum">Add up the last hour</button><button type="button" data-act="reset">Reset</button></div>
     </div>
   </div><div class="stage-box" data-box="git"><span class="stage-lab" id="gitLab">COMMITTED ← 48,213</span><p class="ch-stk">Go · Kafka · PostgreSQL · ClickHouse · Prometheus · Docker</p></div></div></div></section>
 
   <section class="ch" data-scene="cloud" data-name="CLOUD NATIVE" aria-labelledby="c2"><div class="stick"><div class="wrap"><div class="txt">
-    <span class="no">SELECTED WORK</span><h2 id="c2">Cloud Native</h2><p class="pull">A web app on AWS, built and run the way production systems are: always available, secure and deployed automatically.</p>
-    <ol class="steps"><li><em>01</em><span>The <mark class="hl">whole infrastructure is code</mark>: a private network, a load balancer and servers across three zones that <mark class="hl">scale with traffic</mark>.</span></li><li><em>02</em><span>The Spring Boot app keeps its data in a separate, <mark class="hl">encrypted</mark> PostgreSQL database.</span></li><li><em>03</em><span>Verification emails are sent <mark class="hl">in the background</mark> through SNS and Lambda, so the app stays fast.</span></li><li><em>04</em><span>Every push builds a new image and rolls it out <mark class="hl">one server at a time</mark>, with logs and metrics watching health.</span></li></ol>
+    <span class="no">SELECTED WORK</span><h2 id="c2">Cloud Native</h2><p class="ch-mk">Infrastructure as code · High availability · Autoscaling · Rolling deploys</p><p class="pull">A web app on AWS that stays up through outages and deploys.</p>
+    <ol class="steps"><li><em>01</em><span>Three zones behind a load balancer, all defined in Terraform.</span></li><li><em>02</em><span>Servers add and remove themselves as traffic changes.</span></li><li><em>03</em><span>Data lives in a separate, encrypted PostgreSQL database.</span></li><li><em>04</em><span>Emails send through SNS and Lambda, off the main path.</span></li></ol>
     <div class="stats"><div><b>0</b>failed requests</div><div><b>35%</b>faster responses</div></div>
     <div class="try"><button class="try-b" type="button" data-try="cloud" aria-expanded="false">Interact <span aria-hidden="true">↗</span></button><div class="try-c" data-for="cloud" hidden><button type="button" data-act="a">Take zone A down</button><button type="button" data-act="b">Take zone B down</button><button type="button" data-act="deploy">Deploy version 2</button><button type="button" data-act="reset">Reset</button></div>
     </div>
   </div><div class="stage-box" data-box="cloud"><span class="stage-lab" id="cloudLab">ALL ZONES HEALTHY · 0 FAILED REQUESTS</span><p class="ch-stk">Java · Spring Boot · AWS · Azure · PostgreSQL · Terraform · Packer · Docker · GitHub Actions</p></div></div></div></section>
 
   <section class="ch" data-scene="ik" data-name="INTERVIEWKIT" aria-labelledby="c3"><div class="stick"><div class="wrap"><div class="txt">
-    <span class="no">SELECTED WORK</span><h2 id="c3">InterviewKit</h2><p class="pull">An AI assistant that prepares you for interviews using only your own notes and experiences.</p>
-    <ol class="steps"><li><em>01</em><span>Your notes are split into pieces, turned into embeddings and stored in a <mark class="hl">vector database</mark>.</span></li><li><em>02</em><span>Each question runs through a <mark class="hl">step by step workflow</mark>: find the closest notes, check they support an answer, then draft it in STAR format <mark class="hl">with sources</mark>.</span></li><li><em>03</em><span>If nothing supports it, the assistant <mark class="hl">refuses</mark> rather than inventing a story.</span></li><li><em>04</em><span>It works with <mark class="hl">OpenAI or Claude</mark>, and plugs into Claude Code as an <mark class="hl">MCP tool</mark>.</span></li></ol>
+    <span class="no">SELECTED WORK</span><h2 id="c3">InterviewKit</h2><p class="ch-mk">RAG · Agent workflows · Guardrails · MCP</p><p class="pull">Interview answers built only from your own notes.</p>
+    <ol class="steps"><li><em>01</em><span>Notes are split, embedded and stored in pgvector.</span></li><li><em>02</em><span>A LangGraph flow drafts STAR answers that cite their notes.</span></li><li><em>03</em><span>No supporting note? It says so instead of inventing one.</span></li><li><em>04</em><span>Works with OpenAI or Claude, and plugs into Claude Code.</span></li></ol>
     <div class="stats"><div><b>MCP</b>callable from Claude Code</div><div><b>0</b>invented stories</div></div>
     <div class="try"><button class="try-b" type="button" data-try="ik" aria-expanded="false">Interact <span aria-hidden="true">↗</span></button><div class="try-c" data-for="ik" hidden><button type="button" data-act="q1">Tell me about a hard production issue</button><button type="button" data-act="q2">Tell me about improving performance</button><button type="button" data-act="q3">Tell me about something you owned end to end</button><button type="button" data-act="q4">Tell me about a time you disobeyed an order</button><button type="button" data-act="reset">Reset</button></div>
     </div>
   </div><div class="stage-box" data-box="ik"><span class="stage-lab" id="ikLab">MATCH · STAR ANSWER · 3 SOURCES CITED</span><p class="ch-stk">Python · Typer · LangChain · LangGraph · OpenAI · PostgreSQL · pgvector · Pydantic · Docker Compose · pytest</p></div></div></div></section>
 
   <section class="ch" data-scene="cg" data-name="CHILDGUARD" aria-labelledby="c4"><div class="stick"><div class="wrap"><div class="txt">
-    <span class="no">SELECTED WORK</span><h2 id="c4">ChildGuard</h2><p class="pull">A child welfare platform, from the dashboard people use to the API and database behind it, built to protect sensitive data.</p>
-    <ol class="steps"><li><em>01</em><span>A <mark class="hl">React and Redux dashboard</mark> that loads only what it needs, so it stays quick.</span></li><li><em>02</em><span>A <mark class="hl">Node and Express API</mark> on MongoDB, with indexed queries for fast responses.</span></li><li><em>03</em><span>Every request is <mark class="hl">screened</mark>: unknown sites blocked, headers locked down, input cleaned.</span></li><li><em>04</em><span>Logins run through Auth0, and each person <mark class="hl">only sees what their role allows</mark>.</span></li></ol>
+    <span class="no">SELECTED WORK</span><h2 id="c4">ChildGuard</h2><p class="ch-mk">Full stack · API security · Auth and RBAC · Performance</p><p class="pull">A child welfare platform that keeps sensitive data safe.</p>
+    <ol class="steps"><li><em>01</em><span>A React and Redux dashboard that loads only what it needs.</span></li><li><em>02</em><span>A Node and Express API on MongoDB, with indexed queries.</span></li><li><em>03</em><span>Every request is screened for origin, headers and bad input.</span></li><li><em>04</em><span>Auth0 logins, and each role sees only its own data.</span></li></ol>
     <div class="stats"><div><b>6</b>checks per request</div><div><b>403</b>for the wrong role</div></div>
     <div class="try"><button class="try-b" type="button" data-try="cg" aria-expanded="false">Interact <span aria-hidden="true">↗</span></button><div class="try-c" data-for="cg" hidden><button type="button" data-act="ok">Volunteer views their sign ups</button><button type="button" data-act="role">Volunteer opens safety reports</button><button type="button" data-act="login">Expired login</button><button type="button" data-act="origin">Request from an unknown site</button><button type="button" data-act="script">Script in a form field</button><button type="button" data-act="reset">Reset</button></div>
     </div>
@@ -447,15 +512,7 @@ mark.hl{background:none;color:inherit;padding:0 .08em;margin:0 -.04em;box-shadow
 
 
 
-  <section class="stk" data-scene="drift" data-name="STACK"><div class="wrap">
-    <h3>Stack</h3>
-    <div class="sk"><b>Languages</b><p>Strong in Python · Java · TypeScript · JavaScript · SQL<br><span class="fam">Familiar with Go · Kotlin · C#</span></p></div>
-    <div class="sk"><b>Backend</b><p>Spring Boot · FastAPI · Node.js · .NET Core · Django</p></div>
-    <div class="sk"><b>Frontend</b><p>React · Next.js · Redux · Angular · Tailwind CSS</p></div>
-    <div class="sk"><b>Data and streaming</b><p>PostgreSQL · MySQL · MongoDB · Redis · Elasticsearch · ClickHouse · Kafka</p></div>
-    <div class="sk"><b>Cloud and DevOps</b><p>AWS · Azure · Docker · Kubernetes · Terraform · Git · Linux</p></div>
-    <div class="sk"><b>AI</b><p>LangGraph · LangChain · pgvector · LLMs · MCP · RAG</p></div>
-  </div></section>
+
 
   <section class="off" data-scene="drift" data-name="OFF DUTY"><div class="wrap">
     <h3>Off duty</h3>
@@ -540,12 +597,19 @@ mark.hl{background:none;color:inherit;padding:0 .08em;margin:0 -.04em;box-shadow
   const stateOf = (key, sy) => manual[key] || sy.state(prog);
   // where a particle belongs in one system, drawn inside that chapter's (invisible) stage
   function targetFor(key, p, R){ const sys = SYS[key], st = stateOf(key, sys), fail = st.fail || [], wait = st.wait || [], off = st.off || [];
-    if (p.z < .58){ const nodes = SEGS[key], nd = nodes[Math.floor(p.k*nodes.length) % nodes.length], sg = nd.segs[Math.floor(p.q*nd.segs.length) % nd.segs.length], t = (p.k*7.3 + p.q*3.1) % 1;
-      const a = sg[0], b = sg[1], [X,Y] = isoP(R, lerp(a[0],b[0],t), lerp(a[1],b[1],t), lerp(a[2],b[2],t)); const hid = nd.n[6] && !(st.show || []).includes(nd.id); return [X, Y, hid ? 0 : .75, fail.includes(nd.id) ? 1 : 0]; }
+    if (p.z < .58){ const nodes = SEGS[key], nd = nodes[Math.floor(p.k*nodes.length) % nodes.length], hid = nd.n[6] && !(st.show || []).includes(nd.id), g = fail.includes(nd.id) ? 1 : 0;
+      if (p.z < .29){ const sg = nd.segs[Math.floor(p.q*nd.segs.length) % nd.segs.length], t = (p.k*7.3 + p.q*3.1) % 1, a = sg[0], b = sg[1], [X,Y] = isoP(R, lerp(a[0],b[0],t), lerp(a[1],b[1],t), lerp(a[2],b[2],t)); return [X, Y, hid ? 0 : .8, g]; }
+      // a point on one of the three visible faces
+      const [cx,cy,w,d,h] = nd.n, X0 = cx - w/2, X1 = cx + w/2, Y0 = cy - d/2, Y1 = cy + d/2, u = (p.k*13.7) % 1, v = (p.q*17.3) % 1, f = Math.floor((p.z*97) % 3);
+      const pt = f === 0 ? [lerp(X0,X1,u), lerp(Y0,Y1,v), h] : f === 1 ? [lerp(X0,X1,u), Y1, h*v] : [X1, lerp(Y0,Y1,u), h*v];
+      const [X,Y] = isoP(R, pt[0], pt[1], pt[2]); return [X, Y, hid ? 0 : .5, g]; }
     const e = sys.edges[Math.floor(p.q*sys.edges.length) % sys.edges.length], A = sys.nodes[e[0]], B = sys.nodes[e[1]];
     const shown = st.show || [], dead = fail.includes(e[0]) && !wait.includes(e[0]) || fail.includes(e[1]) && !wait.includes(e[1]) || off.some(o => o[0] === e[0] && o[1] === e[1]) || wait.includes(e[0]) || (A[6] && !shown.includes(e[0])) || (B[6] && !shown.includes(e[1]));
     let u = (p.k + flowT*.16) % 1; if (wait.includes(e[1])) u = Math.min(u, .78 + p.z*.06);
-    const [X,Y] = isoP(R, lerp(A[0],B[0],u), lerp(A[1],B[1],u), .02 + Math.sin(u*Math.PI)*.04);
+    const dx = B[0] - A[0], dy = B[1] - A[1], ax = Math.abs(dx) || 1e-6, ay = Math.abs(dy) || 1e-6;
+    const s0 = Math.min((A[2]/2)/ax, (A[3]/2)/ay), s1 = Math.min((B[2]/2)/ax, (B[3]/2)/ay);
+    const sx = A[0] + dx*s0, sy = A[1] + dy*s0, ex = B[0] - dx*s1, ey = B[1] - dy*s1, z0 = A[4]*.5, z1 = B[4]*.5;
+    const [X,Y] = isoP(R, lerp(sx,ex,u), lerp(sy,ey,u), lerp(z0,z1,u) + Math.sin(u*Math.PI)*.015);
     return [X, Y + (p.z - .5)*6, dead ? .05 : .85, wait.includes(e[1]) && u > .7 ? 1 : 0]; }
   const chs = [...document.querySelectorAll('.ch')];
   const easeIO = t => t < .5 ? 4*t*t*t : 1 - Math.pow(-2*t + 2, 3)/2;
@@ -559,14 +623,14 @@ mark.hl{background:none;color:inherit;padding:0 .08em;margin:0 -.04em;box-shadow
   // the whole transition is a pure function of the scroll position: scroll back and it reverses
   function plan(){ const y = scrollY, vh = innerHeight;
     // laptops: a project holds while its pinned screen is on; phones: while its graphic sits near the middle of the screen
-    const L = W < 860 ? chs.map(c => { const r = c.querySelector('.stage-box').getBoundingClientRect(), mid = r.top + y + r.height/2 - vh/2, hw = vh*.16; return {top: mid - hw, end: mid + hw}; })
-                      : chs.map(c => { const top = c.getBoundingClientRect().top + y; return {top, end: top + c.offsetHeight - vh}; });
+    const L = W < 860 ? chs.map(c => { const r = c.querySelector('.stage-box').getBoundingClientRect(), mid = r.top + y + r.height/2 - vh/2, hw = 0; return {top: mid - hw, end: mid + hw}; })
+                      : chs.map(c => { const mid = c.getBoundingClientRect().top + y + (c.offsetHeight - vh)/2; return {top: mid, end: mid}; });
     for (let i=0;i<L.length;i++){ if (y >= L[i].top && y <= L[i].end) return {mode:'hold', a:i};
       if (i + 1 < L.length && y > L[i].end && y < L[i+1].top) return {mode:'trans', a:i, b:i+1, t:(y - L[i].end)/Math.max(1, L[i+1].top - L[i].end)}; }
     if (y < L[0].top && y >= L[0].top - vh) return {mode:'pre', b:0, t:(y - (L[0].top - vh))/vh};
     const n = L.length - 1; if (y > L[n].end && y <= L[n].end + vh) return {mode:'post', a:n, t:(y - L[n].end)/vh};
     return {mode:'none'}; }
-  function solidBox(R, n, a, bad, good){ const [x,y,w,d,h] = n, X0 = x - w/2, X1 = x + w/2, Y0 = y - d/2, Y1 = y + d/2;
+  function solidBox(R, n, a, bad, good, grow){ const [x,y,w,d,h0] = n, h = h0*(grow == null ? 1 : grow), X0 = x - w/2, X1 = x + w/2, Y0 = y - d/2, Y1 = y + d/2;
     const P3 = (px,py,pz) => isoP(R, px, py, pz);
     const top = [P3(X0,Y0,h),P3(X1,Y0,h),P3(X1,Y1,h),P3(X0,Y1,h)], front = [P3(X0,Y1,0),P3(X1,Y1,0),P3(X1,Y1,h),P3(X0,Y1,h)], right = [P3(X1,Y0,0),P3(X1,Y1,0),P3(X1,Y1,h),P3(X1,Y0,h)];
     const face = (pts, fill) => { fx.beginPath(); pts.forEach(([px,py],q) => q ? fx.lineTo(px,py) : fx.moveTo(px,py)); fx.closePath(); fx.fillStyle = fill; fx.fill(); fx.stroke(); };
@@ -577,31 +641,61 @@ mark.hl{background:none;color:inherit;padding:0 .08em;margin:0 -.04em;box-shadow
   function floorArea(R, ar, a, bad){ const [x,y,w,d,lab] = ar, P4 = [[x-w/2,y-d/2],[x+w/2,y-d/2],[x+w/2,y+d/2],[x-w/2,y+d/2]].map(([px,py]) => isoP(R, px, py, 0));
     fx.globalAlpha = a; fx.setLineDash([5,5]); fx.lineWidth = 1; fx.strokeStyle = bad ? 'rgba(123,30,46,.9)' : 'rgba(21,21,21,.35)'; fx.beginPath(); P4.forEach(([px,py],q) => q ? fx.lineTo(px,py) : fx.moveTo(px,py)); fx.closePath(); fx.stroke(); fx.setLineDash([]);
     fx.font = '500 11px "Geist Mono", ui-monospace, monospace'; fx.textAlign = 'left'; fx.textBaseline = 'bottom'; fx.fillStyle = bad ? 'rgba(123,30,46,1)' : 'rgba(21,21,21,.55)'; if (!(W < 860 && /^zone/.test(lab) && !bad)) fx.fillText(bad ? lab + ' · down' : lab, P4[0][0] + 6, P4[0][1] - 4); fx.globalAlpha = 1; }
+  let arriveIdx = null, arriveAt = 0, settle = 0, nearA = false, nearB = false, lastScrollT = performance.now(); const built = {};
+  addEventListener('scroll', () => { lastScrollT = performance.now(); }, {passive:true});
   function frame(dt){ time += dt; flowT += dt*(performance.now() < spikeUntil ? 3 : 1); fx.clearRect(0,0,W,H);
     const pl = plan(), kA = pl.a != null ? chs[pl.a].dataset.scene : null, kB = pl.b != null ? chs[pl.b].dataset.scene : null;
-    const RA = kA ? stageR(chs[pl.a]) : null, RB = kB ? stageR(chs[pl.b]) : null, t = pl.t || 0;
+    let RA = kA ? stageR(chs[pl.a]) : null, RB = kB ? stageR(chs[pl.b]) : null; const t = pl.t || 0;
+    // when you stop between projects, the settling system also glides fully into view
+    const shiftIn = (R, e) => { if (!R || e <= 0) return R; const top = W < 860 ? 76 : 86, bot = H - 24; let dy = 0; if (R.y0 < top) dy = top - R.y0; if (R.y1 + dy > bot) dy = bot - R.y1; return Object.assign({}, R, {y0:R.y0 + dy*e, y1:R.y1 + dy*e, oy:R.oy + dy*e}); };
+    if (settle > .001 && pl.mode !== 'hold'){ const e = easeIO(settle); if (nearA) RA = shiftIn(RA, e); if (nearB) RB = shiftIn(RB, e); }
     // how solid each system is right now
     let wA = 0, wB = 0;
     if (pl.mode === 'hold') wA = 1;
-    if (pl.mode === 'trans'){ wA = 1 - easeIO(clamp(t*2.4)); wB = easeIO(clamp(t*2.4 - 1.4)); }
-    if (pl.mode === 'pre') wB = easeIO(clamp((t - .7)/.3));
-    if (pl.mode === 'post') wA = 1 - easeIO(clamp(t*2.4));
+    // blocks dissolve in place over the first 20%, dots travel through the middle, blocks build over the last 24%
+    if (pl.mode === 'trans'){ wA = 1 - clamp(t/.06); wB = 1; }
+    if (pl.mode === 'pre') wB = 1;
+    if (pl.mode === 'post') wA = 1 - clamp(t/.06);
+    // wherever you stop, the dots glide to the nearest system; its blocks arrive 1.5 seconds later
+    { const now = performance.now(), idle = now - lastScrollT > 180;
+      settle = lerp(settle, idle && pl.mode !== 'none' && pl.mode !== 'hold' ? 1 : 0, 1 - Math.pow(idle ? .12 : .00001, dt));
+      if (RM) settle = idle ? 1 : 0;
+      // the system whose area is more visible on screen
+      const vis = R => R ? clamp((Math.min(R.y1, H) - Math.max(R.y0, 0))/Math.max(1, R.y1 - R.y0)) : 0, vA = vis(RA), vB = vis(RB);
+      nearA = pl.mode === 'post' || (pl.mode === 'trans' && vA >= vB); nearB = pl.mode === 'pre' || (pl.mode === 'trans' && vB > vA);
+      const atA = pl.mode === 'hold' || ((pl.mode === 'trans' || pl.mode === 'post') && t <= .06), atB = (pl.mode === 'trans' || pl.mode === 'pre') && t >= .94;
+      const idx = atA ? pl.a : atB ? pl.b : settle > .85 ? (nearA ? pl.a : nearB ? pl.b : null) : null;
+      if (idx !== arriveIdx){ arriveIdx = idx; arriveAt = now; }
+      const tf = idx == null ? 0 : clamp((now - arriveAt - 1500)/1600);
+      if (idx != null) built[idx] = Math.max(built[idx] || 0, tf);
+      const sA = nearA ? settle : 0, sB = nearB ? settle : 0;
+      if (pl.mode === 'hold') wA = built[pl.a] || 0;
+      if (pl.mode === 'trans'){ wA = Math.max(1 - clamp(t/.06), sA)*(built[pl.a] || 0); wB = Math.max(t >= .94 ? 1 : 0, sB)*(built[pl.b] || 0); }
+      if (pl.mode === 'pre') wB = Math.max(t >= .94 ? 1 : 0, sB)*(built[pl.b] || 0);
+      if (pl.mode === 'post') wA = Math.max(1 - clamp(t/.06), sA)*(built[pl.a] || 0);
+      // forget a system once it has fully left, so it builds again next time
+      Object.keys(built).forEach(k => { k = +k; if (k !== idx && !(pl.mode !== 'none' && (k === pl.a || k === pl.b))) built[k] = 0; });
+      if ((pl.mode === 'trans' || pl.mode === 'post') && t > .06 && sA < .02) built[pl.a] = 0;
+      if ((pl.mode === 'trans' || pl.mode === 'pre') && t < .94 && sB < .02) built[pl.b] = 0; }
+    const tm = pl.mode === 'trans' || pl.mode === 'pre' || pl.mode === 'post' ? t : 0;
     if (RM){ wA = pl.mode === 'hold' || (pl.mode === 'trans' && t < .5) ? 1 : 0; wB = pl.mode === 'trans' && t >= .5 ? 1 : 0; }
     const follow = RM ? 1 : 1 - Math.pow(1e-6, dt);
     for (let i=0;i<N;i++){ const p = P[i]; let x = p.x, y = p.y, a = 0, g = 0;
       if (pl.mode === 'hold'){ [x,y,a,g] = targetFor(kA, p, RA); }
       else if (pl.mode === 'trans'){ const A = targetFor(kA, p, RA), B = targetFor(kB, p, RB), sx = (A[0] + B[0])/2 + (p.k - .5)*W*.42, sy = (A[1] + B[1])/2 + (p.q - .5)*H*.5;
-        if (t < .5){ const e = easeIO(t*2); x = lerp(A[0], sx, e); y = lerp(A[1], sy, e); a = lerp(A[2], .4, e); g = A[3]*(1 - e); }
-        else { const e = easeIO(t*2 - 1); x = lerp(sx, B[0], e); y = lerp(sy, B[1], e); a = lerp(.4, B[2], e); g = B[3]*e; } }
-      else if (pl.mode === 'pre'){ const B = targetFor(kB, p, RB), e = easeIO(t), sx = B[0] + (p.k - .5)*W*.7, sy = B[1] + (p.q - .5)*H*.9 + H*.25; x = lerp(sx, B[0], e); y = lerp(sy, B[1], e); a = B[2]*e; g = B[3]*e; }
-      else if (pl.mode === 'post'){ const A = targetFor(kA, p, RA), e = easeIO(t), sx = A[0] + (p.k - .5)*W*.7, sy = A[1] + (p.q - .5)*H*.9 - H*.25; x = lerp(A[0], sx, e); y = lerp(A[1], sy, e); a = A[2]*(1 - e); g = A[3]*(1 - e); }
+        if (tm < .5){ const e = easeIO(tm*2); x = lerp(A[0], sx, e); y = lerp(A[1], sy, e); a = lerp(A[2], .4, e); g = A[3]*(1 - e); }
+        else { const e = easeIO(tm*2 - 1); x = lerp(sx, B[0], e); y = lerp(sy, B[1], e); a = lerp(.4, B[2], e); g = B[3]*e; } }
+      else if (pl.mode === 'pre'){ const B = targetFor(kB, p, RB), e = easeIO(tm), sx = B[0] + (p.k - .5)*W*.7, sy = B[1] + (p.q - .5)*H*.9 + H*.25; x = lerp(sx, B[0], e); y = lerp(sy, B[1], e); a = B[2]*e; g = B[3]*e; }
+      else if (pl.mode === 'post'){ const A = targetFor(kA, p, RA), e = easeIO(tm), sx = A[0] + (p.k - .5)*W*.7, sy = A[1] + (p.q - .5)*H*.9 - H*.25; x = lerp(A[0], sx, e); y = lerp(A[1], sy, e); a = A[2]*(1 - e); g = A[3]*(1 - e); }
+      if (settle > .001 && (nearA || nearB)){ const T = nearA ? targetFor(kA, p, RA) : targetFor(kB, p, RB), e = easeIO(settle); x = lerp(x, T[0], e); y = lerp(y, T[1], e); a = lerp(a, T[2], e); g = lerp(g, T[3], e); }
       p.x = lerp(p.x, x, follow); p.y = lerp(p.y, y, follow); p.a = lerp(p.a, a, follow); p.g = g; }
     // solid boxes for whichever systems are (partly) assembled
     [[kA, RA, wA], [kB, RB, wB]].forEach(([key, R, w]) => { if (!key || w < .01) return; const sy = SYS[key], st = stateOf(key, sy), fail = st.fail || [], good = st.good || [];
       (sy.areas || []).forEach(ar => floorArea(R, ar, w, key === 'cloud' && ar[4] === 'zone A' && fail.includes('a1') || key === 'cloud' && ar[4] === 'zone B' && fail.includes('b1')));
-      const shown = st.show || []; Object.entries(sy.nodes).filter(([id,n]) => !n[6] || shown.includes(id)).map(([id,n]) => ({id, n, d: n[0]*ISO_S + n[1]*ISO_C})).sort((q,r) => q.d - r.d).forEach(({id,n}) => solidBox(R, n, w, fail.includes(id), good.includes(id))); });
+      const shown = st.show || []; Object.entries(sy.nodes).filter(([id,n]) => !n[6] || shown.includes(id)).map(([id,n]) => ({id, n, d: n[0]*ISO_S + n[1]*ISO_C})).sort((q,r) => q.d - r.d)// blocks are placed one at a time, at full size, each fading in where its dots already are
+        .forEach(({id,n}, i, arr) => { const lw = RM ? w : clamp((w - (i/arr.length)*.6)/.4); if (lw > .01) solidBox(R, n, easeIO(lw), fail.includes(id), good.includes(id), 1); }); });
     // particles: outline dots show only where the boxes have come apart; traffic flows on top
-    const ba = pl.mode === 'hold' ? wA : pl.mode === 'trans' ? (t < .5 ? wA : wB) : pl.mode === 'pre' ? wB : wA;
+    const ba = pl.mode === 'hold' ? wA : pl.mode === 'trans' ? Math.max(wA, wB) : pl.mode === 'pre' ? wB : wA;
     for (let i=0;i<N;i++){ const p = P[i]; let a = p.a; if (p.z < .58) a *= (1 - ba); if (a < .01) continue;
       fx.fillStyle = `rgba(${p.g > .5 ? GAR : INK},${a})`; const s2 = p.z < .58 ? 1.9 : 2.8; fx.fillRect(p.x - s2/2, p.y - s2/2, s2, s2); }
     // labels follow the boxes
