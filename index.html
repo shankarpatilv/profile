@@ -296,6 +296,40 @@ section{position:relative;z-index:2}
   .ch .stats{display:flex!important}
   .ch .ch-stk{display:block!important}
 }
+
+/* 60 / 30 / 10: paper and ink harmonise, garnet marks status, and one odd accent, teal, marks only what you can click */
+:root{--act:#0d6b6a;--actNight:#5fd0c9}
+.cta,.try-b,.lg-b a,.mast nav a#toContact{color:var(--act)!important}
+.cta{background-image:linear-gradient(var(--act),var(--act))!important}
+.lg-b a{background-image:linear-gradient(var(--act),var(--act))!important}
+.try-b{border-bottom-color:var(--act)!important}
+.try-b[aria-expanded="true"]{color:var(--ink)!important;border-bottom-color:var(--ink)!important}
+.try-c button:hover{color:var(--act)!important;border-color:var(--act)!important}
+.try-c button[aria-pressed="true"]{color:var(--act)!important;border-color:var(--act)!important}
+.mast nav a#toContact{opacity:1!important;border-bottom:1px solid var(--act);padding-bottom:1px}
+.row:hover .t{color:var(--act)}
+.close a.m{color:var(--actNight)!important;background-image:linear-gradient(var(--actNight),var(--actNight))!important}
+:focus-visible{outline:2px solid var(--act)!important;outline-offset:3px}
+
+/* recruiter highlights: a soft garnet marker behind the strengths, never teal, which means clickable */
+mark.hl{background:none;color:inherit;padding:0 .08em;margin:0 -.04em;box-shadow:inset 0 -.4em 0 rgba(123,30,46,.17);border-radius:2px}
+.lg-b p mark.hl{color:var(--ink);font-weight:500}
+.lg-b .lg-l mark.hl{font-weight:400}
+/* the award stands on its own line with a small label */
+.lg-b .lg-aw{display:inline-flex!important;align-items:center;gap:10px;margin:8px 0 4px!important;padding:7px 12px 7px 8px!important;background:rgba(123,30,46,.07)!important;border:1px solid rgba(123,30,46,.28);border-radius:3px;color:var(--gar)!important;font-size:14.5px!important;opacity:1!important;background-image:none!important}
+.lg-b .lg-aw b{font-weight:600;color:var(--gar)}
+.aw-k{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:#f3f0e8;background:var(--gar);padding:2px 7px;border-radius:2px}
+
+/* shorter laptop screens: the chapter text tightens so it always fits the pinned screen */
+@media (min-width:861px) and (max-height:980px){
+  .ch h2{font-size:clamp(48px,5.6vw,84px)!important;margin:10px 0 12px!important}
+  .ch .pull{font-size:clamp(20px,1.8vw,26px)!important;margin:0 0 18px!important}
+  .ch .steps li{padding:9px 0!important;font-size:14.5px!important;line-height:21px!important}
+  .ch .stats{margin-top:18px!important}.ch .stats b{font-size:36px!important;line-height:40px!important}
+  .ch .try{margin-top:14px!important}
+}
+
+.ch .pull{max-width:30ch!important}
 </style>
 </head>
 <body>
@@ -333,28 +367,28 @@ section{position:relative;z-index:2}
     <article class="lg">
       <div class="lg-y"><span>2021</span><small>to 2023</small></div>
       <div class="lg-b"><h4>Collabera Digital</h4><p class="lg-r">Software Engineer (Analyst, then Associate Data Engineer) · Bangalore</p>
-        <p class="lg-l">Full stack apps, backend services and high volume data pipelines for an enterprise bank.</p>
-        <p>I owned features from the front end to the back end, then kept a large core banking migration fast and reliable in production.</p>
-        <p class="lg-aw">Named Best Talent, 2021 to 2022</p>
+        <p class="lg-l"><mark class="hl">Full stack apps</mark>, <mark class="hl">backend services</mark> and <mark class="hl">high volume data pipelines</mark> for an enterprise bank.</p>
+        <p>I owned features <mark class="hl">from the front end to the back end</mark>, then kept a <mark class="hl">large core banking migration</mark> fast and reliable in production.</p>
+        <p class="lg-aw"><span class="aw-k">Award</span><span>Named <b>Best Talent</b>, 2021 to 2022</span></p>
         <p class="lg-t">TypeScript · C# · Java · Python · SQL</p></div>
     </article>
     <article class="lg">
       <div class="lg-y"><span>2025</span><small>summer</small></div>
       <div class="lg-b"><h4>Amazon</h4><p class="lg-r">Software Development Engineer Intern · Arlington, VA</p>
-        <p class="lg-l">Built distributed, event driven systems from first design to deploy, and LLM systems with guardrails and evaluation.</p>
-        <p>Most of the work was designing for failure: duplicates, safe retries, rate limits and close monitoring.</p>
+        <p class="lg-l">Built <mark class="hl">distributed, event driven systems</mark> <mark class="hl">from first design to deploy</mark>, and <mark class="hl">LLM systems</mark> with guardrails and evaluation.</p>
+        <p>Most of the work was <mark class="hl">designing for failure</mark>: duplicates, safe retries, rate limits and close monitoring.</p>
         <p class="lg-t">Python · Kotlin · AWS · DynamoDB · SQS · CloudWatch</p></div>
     </article>
     <article class="lg">
       <div class="lg-y"><span>2025</span><small>December</small></div>
       <div class="lg-b"><h4>Northeastern University</h4><p class="lg-r">MS in Computer Software Engineering · GPA 3.78</p>
-        <p class="lg-l">Took courses and built projects across web applications, cloud infrastructure, distributed systems and AI.</p></div>
+        <p class="lg-l">Took courses and built projects across <mark class="hl">web applications</mark>, <mark class="hl">cloud infrastructure</mark>, <mark class="hl">distributed systems</mark> and <mark class="hl">AI</mark>.</p></div>
     </article>
     <article class="lg">
       <div class="lg-y"><span>2026</span><small>to now</small></div>
       <div class="lg-b"><h4>bigonotes</h4><p class="lg-r">Creator and Engineer · <a href="https://bigonotes.com" target="_blank" rel="noopener noreferrer">bigonotes.com</a></p>
         <p class="lg-l">My personal notes on DSA, core CS concepts, design patterns, system design, cloud, Linux and AI, shared free for anyone.</p>
-        <p>I write the notes, and I designed and built the site that holds them.</p>
+        <p>I write the notes, and I <mark class="hl">designed and built the site</mark> that holds them.</p>
         <p class="lg-t">Next.js · React · TypeScript · Tailwind CSS · Python</p></div>
     </article>
   </div></section>
@@ -362,41 +396,41 @@ section{position:relative;z-index:2}
   <section class="how" data-scene="drift" data-name="HOW I WORK"><div class="stick"><div class="wrap">
     <span class="no">HOW I WORK</span><h3>I don’t ship what the AI writes.<br>I ship what I’ve checked.</h3>
     <div class="sheet" id="sheet">
-      <div class="sl"><span class="old">I am a passionate and highly motivated developer</span><span class="new">I ship every layer.<small>“Passionate” isn’t a skill. Name the layers you’ve shipped.</small></span></div>
-      <div class="sl"><span class="old">who is a fast learner</span><span class="new">I learn fast and ship fast.<small>A fast learner needs an outcome. Shipping is the outcome.</small></span></div>
-      <div class="sl"><span class="old">and is familiar with AI tools</span><span class="new">I get real speed from AI, and verify every line.<small>Everyone is familiar with AI tools. Checking its work is the skill.</small></span></div>
-      <div class="sl"><span class="old">with a strong skill set in many technologies.</span><span class="new">I make systems talk to each other.<small>Many technologies says nothing. Integrating them is the hard part.</small></span></div>
+      <div class="sl"><span class="old">I am a passionate and highly motivated developer</span><span class="new">I ship <mark class="hl">every layer</mark>.<small>“Passionate” isn’t a skill. Name the layers you’ve shipped.</small></span></div>
+      <div class="sl"><span class="old">who is a fast learner</span><span class="new">I <mark class="hl">learn fast</mark> and <mark class="hl">ship fast</mark>.<small>A fast learner needs an outcome. Shipping is the outcome.</small></span></div>
+      <div class="sl"><span class="old">and is familiar with AI tools</span><span class="new">I get real speed from AI, and <mark class="hl">verify every line</mark>.<small>Everyone is familiar with AI tools. Checking its work is the skill.</small></span></div>
+      <div class="sl"><span class="old">with a strong skill set in many technologies.</span><span class="new">I make systems <mark class="hl">talk to each other</mark>.<small>Many technologies says nothing. Integrating them is the hard part.</small></span></div>
     </div>
   </div></div></section>
 
   <div id="work">
   <section class="ch" data-scene="git" data-name="GITSTREAM" aria-labelledby="c1"><div class="stick"><div class="wrap"><div class="txt">
-    <span class="no">SELECTED WORK</span><h2 id="c1">GitStream</h2><p class="pull">Many workers, one rule: never lose an event.</p>
-    <ol class="steps"><li><em>01</em>Events arrive in order, across three Kafka partitions.</li><li><em>02</em>Workers finish out of order, in parallel.</li><li><em>03</em>The marker only moves once everything before it is done. Crash a worker to see it.</li></ol>
+    <span class="no">SELECTED WORK</span><h2 id="c1">GitStream</h2><p class="pull">A real-time pipeline that takes in a live stream of events, processes it safely and makes it fast to query.</p>
+    <ol class="steps"><li><em>01</em><span>Events arrive through Kafka, and a pool of Go workers handles them <mark class="hl">in parallel</mark>, slowing down gracefully when load spikes.</span></li><li><em>02</em><span>Failed events are <mark class="hl">retried</mark>, and ones that keep failing are <mark class="hl">set aside</mark> instead of blocking everything else.</span></li><li><em>03</em><span>Progress only moves forward once every earlier event is done, so <mark class="hl">a crash never loses data</mark>.</span></li><li><em>04</em><span>Results land in <mark class="hl">two stores</mark>: PostgreSQL to look up one event, ClickHouse for totals over millions, with Prometheus watching it all.</span></li></ol>
     <div class="stats"><div><b>0</b>events lost</div><div><b>10–100×</b>faster analytics</div></div>
     <div class="try"><button class="try-b" type="button" data-try="git" aria-expanded="false">Interact <span aria-hidden="true">↗</span></button><div class="try-c" data-for="git" hidden><button type="button" data-act="crash">Crash worker 2</button><button type="button" data-act="spike">Spike traffic</button><button type="button" data-act="lookup">Look up one event</button><button type="button" data-act="sum">Add up the last hour</button><button type="button" data-act="reset">Reset</button></div>
     </div>
   </div><div class="stage-box" data-box="git"><span class="stage-lab" id="gitLab">COMMITTED ← 48,213</span><p class="ch-stk">Go · Kafka · PostgreSQL · ClickHouse · Prometheus · Docker</p></div></div></div></section>
 
   <section class="ch" data-scene="cloud" data-name="CLOUD NATIVE" aria-labelledby="c2"><div class="stick"><div class="wrap"><div class="txt">
-    <span class="no">SELECTED WORK</span><h2 id="c2">Cloud Native</h2><p class="pull">Outages and releases should be boring.</p>
-    <ol class="steps"><li><em>01</em>Copies run in three zones inside one VPC, behind a load balancer.</li><li><em>02</em>Health checks decide who gets traffic.</li><li><em>03</em>If a zone fails, traffic reroutes. Try it.</li></ol>
+    <span class="no">SELECTED WORK</span><h2 id="c2">Cloud Native</h2><p class="pull">A web app on AWS, built and run the way production systems are: always available, secure and deployed automatically.</p>
+    <ol class="steps"><li><em>01</em><span>The <mark class="hl">whole infrastructure is code</mark>: a private network, a load balancer and servers across three zones that <mark class="hl">scale with traffic</mark>.</span></li><li><em>02</em><span>The Spring Boot app keeps its data in a separate, <mark class="hl">encrypted</mark> PostgreSQL database.</span></li><li><em>03</em><span>Verification emails are sent <mark class="hl">in the background</mark> through SNS and Lambda, so the app stays fast.</span></li><li><em>04</em><span>Every push builds a new image and rolls it out <mark class="hl">one server at a time</mark>, with logs and metrics watching health.</span></li></ol>
     <div class="stats"><div><b>0</b>failed requests</div><div><b>35%</b>faster responses</div></div>
     <div class="try"><button class="try-b" type="button" data-try="cloud" aria-expanded="false">Interact <span aria-hidden="true">↗</span></button><div class="try-c" data-for="cloud" hidden><button type="button" data-act="a">Take zone A down</button><button type="button" data-act="b">Take zone B down</button><button type="button" data-act="deploy">Deploy version 2</button><button type="button" data-act="reset">Reset</button></div>
     </div>
   </div><div class="stage-box" data-box="cloud"><span class="stage-lab" id="cloudLab">ALL ZONES HEALTHY · 0 FAILED REQUESTS</span><p class="ch-stk">Java · Spring Boot · AWS · Azure · PostgreSQL · Terraform · Packer · Docker · GitHub Actions</p></div></div></div></section>
 
   <section class="ch" data-scene="ik" data-name="INTERVIEWKIT" aria-labelledby="c3"><div class="stick"><div class="wrap"><div class="txt">
-    <span class="no">SELECTED WORK</span><h2 id="c3">InterviewKit</h2><p class="pull">Your real stories, or no answer at all.</p>
-    <ol class="steps"><li><em>01</em>Your notes become searchable by meaning.</li><li><em>02</em>A question finds its closest notes.</li><li><em>03</em>No good match? It refuses instead of inventing one. Try it.</li></ol>
-    <div class="stats"><div><b>3</b>sources cited per answer</div><div><b>0</b>invented stories</div></div>
+    <span class="no">SELECTED WORK</span><h2 id="c3">InterviewKit</h2><p class="pull">An AI assistant that prepares you for interviews using only your own notes and experiences.</p>
+    <ol class="steps"><li><em>01</em><span>Your notes are split into pieces, turned into embeddings and stored in a <mark class="hl">vector database</mark>.</span></li><li><em>02</em><span>Each question runs through a <mark class="hl">step by step workflow</mark>: find the closest notes, check they support an answer, then draft it in STAR format <mark class="hl">with sources</mark>.</span></li><li><em>03</em><span>If nothing supports it, the assistant <mark class="hl">refuses</mark> rather than inventing a story.</span></li><li><em>04</em><span>It works with <mark class="hl">OpenAI or Claude</mark>, and plugs into Claude Code as an <mark class="hl">MCP tool</mark>.</span></li></ol>
+    <div class="stats"><div><b>MCP</b>callable from Claude Code</div><div><b>0</b>invented stories</div></div>
     <div class="try"><button class="try-b" type="button" data-try="ik" aria-expanded="false">Interact <span aria-hidden="true">↗</span></button><div class="try-c" data-for="ik" hidden><button type="button" data-act="q1">Tell me about a hard production issue</button><button type="button" data-act="q2">Tell me about improving performance</button><button type="button" data-act="q3">Tell me about something you owned end to end</button><button type="button" data-act="q4">Tell me about a time you disobeyed an order</button><button type="button" data-act="reset">Reset</button></div>
     </div>
   </div><div class="stage-box" data-box="ik"><span class="stage-lab" id="ikLab">MATCH · STAR ANSWER · 3 SOURCES CITED</span><p class="ch-stk">Python · Typer · LangChain · LangGraph · OpenAI · PostgreSQL · pgvector · Pydantic · Docker Compose · pytest</p></div></div></div></section>
 
   <section class="ch" data-scene="cg" data-name="CHILDGUARD" aria-labelledby="c4"><div class="stick"><div class="wrap"><div class="txt">
-    <span class="no">SELECTED WORK</span><h2 id="c4">ChildGuard</h2><p class="pull">With data this sensitive, every request gets checked.</p>
-    <ol class="steps"><li><em>01</em>A request arrives from the browser.</li><li><em>02</em>It passes Origin, Headers, Sanitize and JWT auth checks.</li><li><em>03</em>The wrong role is stopped before it touches any data. Try it.</li></ol>
+    <span class="no">SELECTED WORK</span><h2 id="c4">ChildGuard</h2><p class="pull">A child welfare platform, from the dashboard people use to the API and database behind it, built to protect sensitive data.</p>
+    <ol class="steps"><li><em>01</em><span>A <mark class="hl">React and Redux dashboard</mark> that loads only what it needs, so it stays quick.</span></li><li><em>02</em><span>A <mark class="hl">Node and Express API</mark> on MongoDB, with indexed queries for fast responses.</span></li><li><em>03</em><span>Every request is <mark class="hl">screened</mark>: unknown sites blocked, headers locked down, input cleaned.</span></li><li><em>04</em><span>Logins run through Auth0, and each person <mark class="hl">only sees what their role allows</mark>.</span></li></ol>
     <div class="stats"><div><b>6</b>checks per request</div><div><b>403</b>for the wrong role</div></div>
     <div class="try"><button class="try-b" type="button" data-try="cg" aria-expanded="false">Interact <span aria-hidden="true">↗</span></button><div class="try-c" data-for="cg" hidden><button type="button" data-act="ok">Volunteer views their sign ups</button><button type="button" data-act="role">Volunteer opens safety reports</button><button type="button" data-act="login">Expired login</button><button type="button" data-act="origin">Request from an unknown site</button><button type="button" data-act="script">Script in a form field</button><button type="button" data-act="reset">Reset</button></div>
     </div>
