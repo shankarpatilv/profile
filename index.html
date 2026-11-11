@@ -199,7 +199,7 @@ h1,h2,h3{font-family:var(--display);font-weight:700;margin:0;letter-spacing:-.03
 
 
 /* ---------- split-text headings ---------- */
-.sw{display:inline-block;overflow:hidden;vertical-align:top;padding-bottom:.1em;margin-bottom:-.1em}.sw>span{display:inline-block;will-change:transform}
+.sw{display:inline-block;vertical-align:top;perspective:700px;padding-bottom:.1em;margin-bottom:-.1em}.sw .ch{display:inline-block;will-change:transform,opacity;backface-visibility:hidden}
 
 /* ---------- cursor: a soft ring that follows the pointer (the system cursor stays) ---------- */
 .cursor{position:fixed;left:0;top:0;z-index:60;width:30px;height:30px;margin:-15px 0 0 -15px;border-radius:50%;border:1.5px solid rgba(233,238,255,.55);pointer-events:none;opacity:0;transition:opacity .3s,width .3s var(--ease),height .3s var(--ease),margin .3s var(--ease),border-color .3s}
@@ -301,11 +301,14 @@ const CONFIG = {
   grid: { size: .5, fade: 120, opacity: .22 },
   // the craft layer: small details that make the world feel alive
   craft: {
-    halo: { on: true, size: 2.7, alpha: .075 },          // a soft glow pass on everything amber (off on phones)
+    halo: { on: true, size: 2.9, alpha: .11 },          // a soft glow pass on everything amber (off on phones)
     fog: { near: 7, far: 42 },                         // distant zones fade into the blue
     lamp: { on: true, radius: 2.2, strength: .5 },     // the drafting lamp that follows the cursor across the grid
     scan: { on: false, period: 9, width: .32 },         // a faint scan pass across the grid near you (off: it reads as glare from far away)
     speed: { fovKick: 5, rush: 4 },                    // fast scrolling widens the lens and surges the traffic
+    assemble: 2.2,                                     // how loose a system's particles get before it forms (and after you leave)
+    stardust: { near: 15, far: 27 },                   // zones this far behind you drift apart into stardust
+    flow: { radius: .2, push: .065 },                  // how strongly the cursor bends traffic and dust
     bank: .9,                                          // how much the camera leans into its moves
     gridReveal: 2.6,                                   // seconds for the grid to spread out on load
   },
@@ -391,7 +394,11 @@ const hex = h => { const n = parseInt(h.slice(1), 16); return [(n >> 16 & 255)/2
 const VS = `
 precision highp float;
 uniform mat4 modelViewMatrix, projectionMatrix;
-uniform float uT, uPx, uK, uIntro, uDim, uRush, uBurst, uHalo, uHaloS, uHaloA, uHover, uFogN, uFogF;
+uniform float uT, uPx, uK, uIntro, uDim, uRush, uBurst, uHalo, uHaloS, uHaloA, uHover, uFogN, uFogF, uAsm, uMouseOn, uAspect, uNight, uFlowR, uFlowP;
+uniform float uDis[16];
+uniform vec3 uZC[16];
+uniform vec2 uMouse;
+uniform vec3 uRight, uUp;
 uniform float uLift[16];
 uniform vec4 uNode[32];
 uniform vec4 uEdge[32];
@@ -437,6 +444,19 @@ void main(){
   } else {                              // the column of light rising from it
     float u = fract(uT*.2 + aMove.x); p = position + vec3(0., u*4.6*(1. + uBurst*3.2), 0.); col = uAmber; size = uSize2.x*1.3*(1. + uBurst*.8); a = (1. - u)*(.75 + uBurst*.25);
   }
+  // systems swirl together as you approach, loosen as you leave, and drift into stardust far behind you
+  if (kind < 1.5 || (kind > 3.5 && kind < 4.5)){
+    int zi = int(aInfo.y + .5); float dis = uDis[zi], loose = (1. - lift)*uAsm + dis*4.;
+    if (loose > .001){ vec3 c0 = uZC[zi], rd = normalize(vec3(sin(r*91.7 + 1.3), .55 + .45*cos(r*47.3), sin(r*23.1 + .7)));
+      p += rd*loose*(.5 + r);
+      float ang = loose*.32 + dis*uT*.12; vec2 q = p.xz - c0.xz; q = mat2(cos(ang), -sin(ang), sin(ang), cos(ang))*q; p.xz = c0.xz + q;
+      a *= 1. - min(.55, (1. - lift)*.45 + dis*.35); }
+  }
+  // the night sky: the dust becomes twinkling stars
+  if (kind > 2.5 && kind < 3.5){ a = mix(a, .35 + .55*(.5 + .5*sin(uT*1.6 + r*60.)), uNight); size *= 1. + uNight*.55; col = mix(col, vec3(.86, .9, 1.), uNight*.6); }
+  // the cursor bends the traffic and the dust around it, like water around a hand
+  if ((kind > .5 && kind < 3.5) && uMouseOn > .01){ vec4 cp = projectionMatrix*modelViewMatrix*vec4(p, 1.); vec2 dv = cp.xy/cp.w - uMouse; dv.x *= uAspect; float dl = length(dv);
+    float f = (1. - smoothstep(0., uFlowR, dl))*uMouseOn; if (f > 0.){ vec2 nd = dv/max(dl, .001); p += (uRight*nd.x + uUp*nd.y)*f*cp.w*uFlowP; } }
   // hovering a part lights it amber before you click it
   bool hov = kind < .5 && aInfo.z > -.5 && abs(aInfo.z - uHover) < .5;
   if (hov && size > 0.){ col = mix(col, uAmber, .8); size *= 1.2; a = 1.; }
@@ -505,6 +525,8 @@ function createWorld({ canvas, mobile, reducedMotion, onTele, onLine, onRev, onA
     edgeState[i] = (s === 2 || s === 4) ? s : (A === 1 || A === 2 || B === 1 || B === 2) ? 1 : s; });
   syncEdges();
 
+  const extents = key => { let x0 = 1e9, x1 = -1e9, z0 = 1e9, z1 = -1e9, h = 0; Object.values(SYSTEMS[key].nodes).forEach(n => { x0 = Math.min(x0, n[0] - n[2]/2); x1 = Math.max(x1, n[0] + n[2]/2); z0 = Math.min(z0, n[1] - n[3]/2); z1 = Math.max(z1, n[1] + n[3]/2); h = Math.max(h, n[4]); });
+    return { cx:(x0 + x1)/2, cz:(z0 + z1)/2, hx:(x1 - x0)/2, hz:(z1 - z0)/2, h }; };
   /* ---------- build every point in the world ---------- */
   const TOTAL = mobile ? CONFIG.particles.mobile : CONFIG.particles.desktop;
   const pos = new Float32Array(TOTAL*3), pB = new Float32Array(TOTAL*3), info = new Float32Array(TOTAL*4), mov = new Float32Array(TOTAL*2), sc = new Float32Array(TOTAL*3);
@@ -568,9 +590,10 @@ function createWorld({ canvas, mobile, reducedMotion, onTele, onLine, onRev, onA
   geo.setAttribute('aInfo', new THREE.BufferAttribute(info, 4)); geo.setAttribute('aMove', new THREE.BufferAttribute(mov, 2)); geo.setAttribute('aScatter', new THREE.BufferAttribute(sc, 3));
   const C = CONFIG.colors, S = CONFIG.sizes, lifts = new Float32Array(16).fill(1);
   const mat = new THREE.RawShaderMaterial({ vertexShader:VS, fragmentShader:FS, transparent:true, depthTest:false, depthWrite:false, blending:THREE.AdditiveBlending,
-    uniforms:{ uT:{value:0}, uRush:{value:0}, uBurst:{value:0}, uHalo:{value:0}, uHaloS:{value:CONFIG.craft.halo.size}, uHaloA:{value:CONFIG.craft.halo.alpha}, uHover:{value:-1}, uFogN:{value:CONFIG.craft.fog.near}, uFogF:{value:CONFIG.craft.fog.far}, uPx:{value:DPR}, uK:{value:9}, uIntro:{value:reducedMotion ? 1 : 0}, uDim:{value:1}, uLift:{value:lifts}, uNode:{value:nodeState}, uEdge:{value:edgeState},
+    uniforms:{ uT:{value:0}, uRush:{value:0}, uBurst:{value:0}, uHalo:{value:0}, uHaloS:{value:CONFIG.craft.halo.size}, uHaloA:{value:CONFIG.craft.halo.alpha}, uHover:{value:-1}, uAsm:{value:reducedMotion ? 0 : CONFIG.craft.assemble}, uMouseOn:{value:0}, uAspect:{value:1}, uNight:{value:0}, uFlowR:{value:CONFIG.craft.flow.radius}, uFlowP:{value:CONFIG.craft.flow.push}, uDis:{value:new Float32Array(16)}, uZC:{value:new Float32Array(48)}, uMouse:{value:new THREE.Vector2(9, 9)}, uRight:{value:new THREE.Vector3(1, 0, 0)}, uUp:{value:new THREE.Vector3(0, 1, 0)}, uFogN:{value:CONFIG.craft.fog.near}, uFogF:{value:CONFIG.craft.fog.far}, uPx:{value:DPR}, uK:{value:9}, uIntro:{value:reducedMotion ? 1 : 0}, uDim:{value:1}, uLift:{value:lifts}, uNode:{value:nodeState}, uEdge:{value:edgeState},
       uLine:{value:new THREE.Vector3(...hex(C.line))}, uCyan:{value:new THREE.Vector3(...hex(C.cyan))}, uAmber:{value:new THREE.Vector3(...hex(C.amber))}, uCoral:{value:new THREE.Vector3(...hex(C.coral))}, uFresh:{value:new THREE.Vector3(...hex(C.fresh))},
       uSize:{value:new THREE.Vector4(S.line, S.traffic, S.road, S.dust)}, uSize2:{value:new THREE.Vector2(S.area, S.beacon)} } });
+  ZONES.forEach((z, i) => { const c = z.sys ? (() => { const e = extents(z.sys); return [e.cx + z.at[0], .3, e.cz + z.at[1]]; })() : z.look || [z.at ? z.at[0] : 0, 0, 0]; mat.uniforms.uZC.value.set(c, i*3); });
   const points = new THREE.Points(geo, mat); points.frustumCulled = false; points.renderOrder = 1;
   // the drafting plane, drawn by a shader so it costs two triangles
   const gq = new Float32Array([-140,0,-160, 240,0,-160, 240,0,160, -140,0,-160, 240,0,160, -140,0,160]);
@@ -585,8 +608,6 @@ function createWorld({ canvas, mobile, reducedMotion, onTele, onLine, onRev, onA
   /* ---------- camera stations: one (or two) per zone, joined by a spline ---------- */
   const sections = ZONES.map(z => document.getElementById(z.id));
   let ST = [], eyeCurve = null, lookCurve = null, secInfo = [];
-  const extents = key => { let x0 = 1e9, x1 = -1e9, z0 = 1e9, z1 = -1e9, h = 0; Object.values(SYSTEMS[key].nodes).forEach(n => { x0 = Math.min(x0, n[0] - n[2]/2); x1 = Math.max(x1, n[0] + n[2]/2); z0 = Math.min(z0, n[1] - n[3]/2); z1 = Math.max(z1, n[1] + n[3]/2); h = Math.max(h, n[4]); });
-    return { cx:(x0 + x1)/2, cz:(z0 + z1)/2, hx:(x1 - x0)/2, hz:(z1 - z0)/2, h }; };
   const dirOf = (yaw, el) => [Math.sin(yaw)*Math.cos(el), Math.sin(el), Math.cos(yaw)*Math.cos(el)];
   function fitStation(z, sec){
     const e = extents(z.sys), W = W0(), H = H0(), st = sec.querySelector('.stage'), sr = st.getBoundingClientRect(), r0 = sec.getBoundingClientRect();
@@ -702,6 +723,14 @@ function createWorld({ canvas, mobile, reducedMotion, onTele, onLine, onRev, onA
   function hitServer(x, y){ const zi = zoneIndex['s-cover']; if (lifts[zi] < .8) return null;
     for (const id of ['a1','a2','b1','b2','c1','c2']){ const n = NODES[N('s-cover', id)], b = boxScreen(n, lifts[zi]); if (b && x > b.x0 - 8 && x < b.x1 + 8 && y > b.y0 - 8 && y < b.y1 + 8) return id; } return null; }
 
+  /* ---------- the sky: day blueprint, dusk at Off duty, night at the end ---------- */
+  const SKY = [[0, ['#173d88','#0F2E6B','#0A2152']], [.72, ['#173d88','#0F2E6B','#0A2152']], [.86, ['#2a3a8a','#1a2466','#0d1442']], [1, ['#0e1d4c','#071234','#030a1e']]];
+  const mixHex = (a, b, t) => '#' + [0, 2, 4].map(i => Math.round(lerp(parseInt(a.substr(1 + i, 2), 16), parseInt(b.substr(1 + i, 2), 16), t)).toString(16).padStart(2, '0')).join('');
+  let skyKey = '';
+  function sky(p){ let k = 0; while (k < SKY.length - 2 && p > SKY[k + 1][0]) k++; const [p0, c0] = SKY[k], [p1, c1] = SKY[k + 1], f = clamp((p - p0)/Math.max(.001, p1 - p0));
+    const c = c0.map((h, i) => mixHex(h, c1[i], f)), key = c.join(); if (key === skyKey) return; skyKey = key;
+    document.body.style.background = `radial-gradient(110% 90% at 60% 0%, ${c[0]}, ${c[1]} 55%, ${c[2]}) fixed`; }
+
   /* ---------- the loop ---------- */
   const eye = new THREE.Vector3(), look = new THREE.Vector3(), tE = new THREE.Vector3(), tL = new THREE.Vector3(), off = [0, 0];
   let ptr = [0, 0], pp = [0, 0], intro0 = null, started = false, last = 0, arriveT0 = null, rush = 0, lastY = scrollY, vs = 0, fovNow = CONFIG.camera.fov, bankNow = 0, hasPtr = false;
@@ -737,8 +766,14 @@ function createWorld({ canvas, mobile, reducedMotion, onTele, onLine, onRev, onA
     gmat.uniforms.uReveal.value = reducedMotion ? 999 : easeIO(clamp((t - intro0)/CONFIG.craft.gridReveal))*170;
     if (CONFIG.craft.scan.on && !reducedMotion){ gmat.uniforms.uScanOn.value = 1; gmat.uniforms.uScanX.value = look.x - 7 + ((t/CONFIG.craft.scan.period) % 1)*14; gmat.uniforms.uScanC.value.x = look.x; gmat.uniforms.uScanC.value.y = look.z; }
     // plans lift into 3D as the camera's focus approaches them
-    ZONES.forEach((z, i) => { if (!z.sys) { lifts[i] = 1; return; } const d = Math.hypot(look.x - (z.at[0] + extents(z.sys).cx), look.z - z.at[1]);
-      lifts[i] = reducedMotion ? 1 : 1 - smooth(CONFIG.lift.near, CONFIG.lift.far, d); });
+    const dis = mat.uniforms.uDis.value;
+    ZONES.forEach((z, i) => { if (!z.sys) { lifts[i] = 1; dis[i] = 0; return; } const d = Math.hypot(look.x - (z.at[0] + extents(z.sys).cx), look.z - z.at[1]);
+      lifts[i] = reducedMotion ? 1 : 1 - smooth(CONFIG.lift.near, CONFIG.lift.far, d); dis[i] = reducedMotion ? 0 : smooth(CONFIG.craft.stardust.near, CONFIG.craft.stardust.far, d); });
+    mat.uniforms.uMouse.value.set((ptr[0] + .5)*2 - 1, -((ptr[1] + .5)*2 - 1)); mat.uniforms.uAspect.value = W/H;
+    mat.uniforms.uMouseOn.value = lerp(mat.uniforms.uMouseOn.value, hasPtr && !mobile && !reducedMotion ? 1 : 0, .05);
+    mat.uniforms.uRight.value.copy(right); mat.uniforms.uUp.value.copy(upv);
+    // day to dusk to night across the journey
+    const prog = clamp(scrollY/Math.max(1, document.documentElement.scrollHeight - H)); mat.uniforms.uNight.value = smooth(.84, .98, prog); sky(prog);
     const dim = lerp(mat.uniforms.uDim.value, ZONES[sp.zi].dim ?? 1, .06);
     Object.assign(mat.uniforms.uT, { value:reducedMotion ? 0 : t*CONFIG.speeds.dust }); mat.uniforms.uIntro.value = intro; mat.uniforms.uDim.value = dim;
     gmat.uniforms.uCam.value.copy(camera.position); gmat.uniforms.uDim.value = dim*intro;
@@ -810,7 +845,8 @@ function createUI({ world, mobile, reducedMotion }){
   $$('.review .ed').forEach((e, i) => { const d = .25 + i*.45; e.style.setProperty('--sd', d + 's'); const w = $('.why', e); if (w) w.style.setProperty('--hd', (d + .9) + 's'); });
 
   /* ---------- split-text headings: words rise into place when their section arrives ---------- */
-  const split = el => { const words = el.textContent.trim().split(/\s+/); el.setAttribute('aria-label', el.textContent.trim()); el.innerHTML = words.map(w => `<span class="sw" aria-hidden="true"><span>${w}</span></span>`).join(' '); return $$('.sw > span', el); };
+  const split = el => { const words = el.textContent.trim().split(/\s+/); el.setAttribute('aria-label', el.textContent.trim());
+    el.innerHTML = words.map(w => `<span class="sw" aria-hidden="true">${[...w].map(ch => `<span class="ch">${ch}</span>`).join('')}</span>`).join(' '); return $$('.ch', el); };
   const heads = CONFIG.effects.splitText && libs && !reducedMotion ? $$('.sh-t, .contact .big') : [];
   const headWords = heads.map(h => split(h));
 
@@ -857,7 +893,7 @@ function createUI({ world, mobile, reducedMotion }){
     gsap.ticker.lagSmoothing(0);
     ST.create({ start:0, end:'max', onUpdate:s => solid(s.scroll()) });
     $$('.sheet, .work-intro').forEach(s => ST.create({ trigger:s, start:'top 65%', once:true, onEnter:() => { s.classList.add('drawn'); if (s.id === 's-off') sweep(s.id); } }));
-    heads.forEach((h, i) => gsap.from(headWords[i], { yPercent:110, duration:.9, ease:'power3.out', stagger:.06, scrollTrigger:{ trigger:h, start:'top 85%', once:true } }));
+    heads.forEach((h, i) => gsap.from(headWords[i], { yPercent:105, rotateX:-85, opacity:0, transformOrigin:'50% 100%', duration:1.1, ease:'expo.out', stagger:.022, scrollTrigger:{ trigger:h, start:'top 85%', once:true } }));
     stepSecs.forEach(o => ST.create({ trigger:o.S, start:'top top', end:'bottom bottom', onUpdate:s => o.show(s.progress) }));
     if (world){ ST.addEventListener('refresh', () => world.refresh()); world.refresh(); }
     ST.refresh();
