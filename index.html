@@ -238,7 +238,7 @@ html:not(.js) .part{opacity:1;transform:none}
 @media (max-width:900px){.off{padding-top:46vh}.offs,.off .note{width:auto}}
 
 /* ---------- tech stack: a pinned scroll-through, one part at a time ---------- */
-.bom.steps{padding:0;min-height:0;height:calc(100svh + 5*70svh)}
+.bom.steps{padding:0;min-height:0;height:calc(100svh + 6*70svh)}
 .bom .cards{left:56px;right:auto;width:min(520px,40vw);top:230px;bottom:80px}
 .bom .card h3{font-size:clamp(40px,4.6vw,72px)}
 .bom .card .x{font-size:clamp(17px,1.4vw,21px);max-width:30ch;margin-top:18px}.bom .card .x.dim{color:var(--cyan);margin-top:8px}
@@ -329,7 +329,7 @@ const CONFIG = {
 const srv = (x, z, label = '', hidden = 0) => [x, z, .2, .2, .42, label, hidden];
 
 const SYSTEMS = {
-  hero: { nodes: { u:[-2.8,0,.16,.16,.1,'users'], fe:[-2.08,0,.3,.22,.2,'web app, React'], lb:[-1.3,0,.22,.22,.36,'load balancer'],
+  hero: { nodes: { u:[-2.8,0,.16,.16,.1,'users'], fe:[-2.08,0,.3,.22,.2,'web app'], lb:[-1.3,0,.22,.22,.36,'load balancer'],
       a1:srv(-.4,-.9), a2:srv(.05,-.9), a3:srv(.5,-.9,'new',1), b1:srv(-.4,0), b2:srv(.05,0,'app servers'), b3:srv(.5,0,'new',1), c1:srv(-.4,.9), c2:srv(.05,.9), c3:srv(.5,.9,'new',1),
       q:[1.15,-.6,.36,.18,.16,'queue'], w:[1.85,-.6,.2,.2,.3,'workers'], db:[1.3,.55,.38,.38,.36,'primary'], rp:[2.0,.55,.3,.3,.3,'replica'],
       ai:[.55,1.62,.34,.34,.34,'AI service, LLM'], vs:[1.35,1.62,.3,.3,.2,'vector store'] },
@@ -357,8 +357,8 @@ const SYSTEMS = {
     dim: { a:[-2.2,0,.7], b:[1.95,0,.7], text:'6 checks before any data' } },
   also: { nodes: { api:[-1.1,0,.4,.4,.42,'health records API'], mq:[-.2,-.55,.34,.18,.16,'RabbitMQ'], rd:[-.2,.55,.26,.26,.26,'Redis'], es:[.7,-.55,.36,.36,.32,'Elasticsearch'], bn:[1.7,.45,.5,.42,.3,'bigonotes'] },
     edges: 'api-mq mq-es api-rd' },
-  bom: { nodes: { l1:[-1.4,-.6,.34,.34,.34,'languages'], b1:[-.2,-.6,.36,.26,.44,'backend'], f1:[1.0,-.6,.52,.32,.08,'frontend'], d1:[-1.4,.6,.36,.36,.4,'data and streaming'], c1:[-.2,.6,.46,.46,.22,'cloud and DevOps'], ai:[1.0,.6,.32,.32,.32,'AI'] },
-    areas: [[-.2,0,3.4,2.3]], edges: 'l1-b1 b1-f1 b1-d1 d1-c1 c1-ai b1-ai' },
+  bom: { nodes: { l1:[-1.4,-.6,.34,.34,.34,'languages'], b1:[-.2,-.6,.36,.26,.44,'backend'], f1:[1.0,-.6,.52,.32,.08,'frontend'], d1:[-1.4,.6,.36,.36,.4,'data and streaming'], c1:[-.2,.6,.46,.46,.22,'cloud and DevOps'], ai:[1.0,.6,.32,.32,.32,'AI'], sec:[2.2,0,.34,.34,.42,'security'] },
+    areas: [[.4,0,4.6,2.3]], edges: 'l1-b1 b1-f1 b1-d1 d1-c1 c1-ai b1-ai f1-sec ai-sec' },
 };
 
 /* The zones, in page order. `at` places a system on the plane. `cam` is either
@@ -369,7 +369,7 @@ const ZONES = [
   { id:'s-cover',   sys:'hero',  at:[0,0],   cam:'fit', dim:1 },
   { id:'s-path',    track:true,  at:[7,0],   dim:.55,
     markers:[7,9,11,13,15,17] },                       // one marker per step on the thread, the last is "your team"
-  { id:'s-bom',     sys:'bom',   at:[23,0],  tour:['l1','b1','f1','d1','c1','ai'], shift:[.27,-.06], mshift:[0,.22], dim:1 },
+  { id:'s-bom',     sys:'bom',   at:[23,0],  tour:['l1','b1','f1','d1','c1','ai','sec'], shift:[.31,-.06], mshift:[0,.22], dim:1 },
   { id:'work',      look:[45,0,0], eye:[37,15,17], dim:.9 },
   { id:'s-git',     sys:'git',   at:[32,0],  cam:'fit', dim:1 },
   { id:'s-cloud',   sys:'cloud', at:[41,0],  cam:'fit', dim:1 },
@@ -969,7 +969,7 @@ root.classList.add('app');
 <section class="sheet bom steps" id="s-bom" aria-labelledby="h-bom">
   <div class="pin">
     <h2 id="h-bom" class="sh-t">Tech stack</h2>
-    <div class="cards"><article class="card" data-part="l1"><p class="step">Part 1 of 6</p><h3>Languages</h3><p class="x">Strong in Python, Java, TypeScript, JavaScript and SQL.</p><p class="x dim">Familiar with Go, Kotlin and C#.</p></article><article class="card" data-part="b1"><p class="step">Part 2 of 6</p><h3>Backend</h3><p class="x">Spring Boot, FastAPI, Node.js, .NET Core and Django.</p></article><article class="card" data-part="f1"><p class="step">Part 3 of 6</p><h3>Frontend</h3><p class="x">React, Next.js, Redux, Angular and Tailwind CSS.</p></article><article class="card" data-part="d1"><p class="step">Part 4 of 6</p><h3>Data and streaming</h3><p class="x">PostgreSQL, MySQL, MongoDB, Redis, Elasticsearch, ClickHouse and Kafka.</p></article><article class="card" data-part="c1"><p class="step">Part 5 of 6</p><h3>Cloud and DevOps</h3><p class="x">AWS, Azure, Docker, Kubernetes, Terraform, Git and Linux.</p></article><article class="card" data-part="ai"><p class="step">Part 6 of 6</p><h3>AI</h3><p class="x">LangGraph, LangChain, pgvector, LLMs, MCP and RAG.</p></article></div>
+    <div class="cards"><article class="card" data-part="l1"><p class="step">Part 1 of 7</p><h3>Languages</h3><p class="x">Strong in Python, Java, TypeScript, JavaScript and SQL.</p><p class="x dim">Familiar with Go, Kotlin and C#.</p></article><article class="card" data-part="b1"><p class="step">Part 2 of 7</p><h3>Backend</h3><p class="x">Spring Boot, FastAPI, Node.js, .NET Core and Django.</p></article><article class="card" data-part="f1"><p class="step">Part 3 of 7</p><h3>Frontend</h3><p class="x">React, Next.js, Redux, Angular and Tailwind CSS.</p></article><article class="card" data-part="d1"><p class="step">Part 4 of 7</p><h3>Data and streaming</h3><p class="x">PostgreSQL, MySQL, MongoDB, Redis, Elasticsearch, ClickHouse and Kafka.</p></article><article class="card" data-part="c1"><p class="step">Part 5 of 7</p><h3>Cloud and DevOps</h3><p class="x">AWS, Azure, Docker, Kubernetes, Terraform, Git and Linux.</p></article><article class="card" data-part="ai"><p class="step">Part 6 of 7</p><h3>AI</h3><p class="x">LangGraph, LangChain, pgvector, LLMs, MCP and RAG.</p></article><article class="card" data-part="sec"><p class="step">Part 7 of 7</p><h3>Security</h3><p class="x">Authentication (JWT, OAuth 2.0), RBAC, encryption, IAM and input validation.</p></article></div>
     <p class="scrollhint" aria-hidden="true">scroll</p>
   </div>
 </section>
