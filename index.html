@@ -75,7 +75,6 @@ h1,h2,h3{font-family:var(--display);font-weight:700;margin:0;letter-spacing:-.03
 .hint{margin:16px 0 0;font-size:21px;--hd:1.4s}
 
 /* how I got here: growth marks */
-  background:repeating-linear-gradient(to bottom,transparent 0 12px,rgba(233,238,255,.38) 12px 13px),repeating-linear-gradient(to bottom,transparent 0 64px,rgba(233,238,255,.75) 64px 65px);background-size:12px 100%,20px 100%;background-repeat:repeat-y;background-position:0 0,0 0}
 .drawn .mk .ent{opacity:1;transform:none}
 .drawn .mk::before,.drawn .mk::after{transform:scaleX(1)}
 .ent h3{font-size:clamp(22px,2vw,28px);letter-spacing:-.025em;display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
@@ -247,7 +246,6 @@ html:not(.js) .part{opacity:1;transform:none}
 
 /* ---------- tech stack: jump to any part, from the row of names or by clicking its box ---------- */
 body.over-part{cursor:pointer}body.over-part .cursor{width:54px;height:54px;margin:-27px 0 0 -27px;border-color:var(--amber)}
-@media (max-width:900px){
 /* ---------- the last section: lower on the page, and the arrival ---------- */
 .contact{min-height:100svh;display:flex;flex-direction:column;justify-content:flex-end;padding-top:14vh;padding-bottom:13vh}
 .mail{display:inline-block;align-self:flex-start;position:relative;z-index:4;margin-top:26px;font-family:var(--display);font-weight:700;font-size:clamp(22px,2.7vw,42px);letter-spacing:-.03em;color:var(--amber);text-decoration:none;overflow-wrap:anywhere}
@@ -301,6 +299,16 @@ const CONFIG = {
   intro: { duration: 2.4 },       // the opening assembly, in seconds
   dpr: { desktop: 2, mobile: 1.5 },
   grid: { size: .5, fade: 120, opacity: .22 },
+  // the craft layer: small details that make the world feel alive
+  craft: {
+    halo: { on: true, size: 2.7, alpha: .075 },          // a soft glow pass on everything amber (off on phones)
+    fog: { near: 7, far: 42 },                         // distant zones fade into the blue
+    lamp: { on: true, radius: 2.2, strength: .5 },     // the drafting lamp that follows the cursor across the grid
+    scan: { on: false, period: 9, width: .32 },         // a faint scan pass across the grid near you (off: it reads as glare from far away)
+    speed: { fovKick: 5, rush: 4 },                    // fast scrolling widens the lens and surges the traffic
+    bank: .9,                                          // how much the camera leans into its moves
+    gridReveal: 2.6,                                   // seconds for the grid to spread out on load
+  },
   effects: {
     cursor: true,       // the custom cursor ring (hidden on touch screens and reduced motion)
     magnetic: true,     // primary buttons lean toward the pointer
@@ -383,7 +391,7 @@ const hex = h => { const n = parseInt(h.slice(1), 16); return [(n >> 16 & 255)/2
 const VS = `
 precision highp float;
 uniform mat4 modelViewMatrix, projectionMatrix;
-uniform float uT, uPx, uK, uIntro, uDim, uRush, uBurst;
+uniform float uT, uPx, uK, uIntro, uDim, uRush, uBurst, uHalo, uHaloS, uHaloA, uHover, uFogN, uFogF;
 uniform float uLift[16];
 uniform vec4 uNode[32];
 uniform vec4 uEdge[32];
@@ -401,9 +409,9 @@ float nodeSt(float i){ if (i < 0.) return 0.; return pick(uNode[int(floor(i/4.))
 float edgeSt(float i){ if (i < 0.) return 0.; return pick(uEdge[int(floor(i/4.))], mod(i, 4.)); }
 void main(){
   float kind = aInfo.x, lift = uLift[int(aInfo.y + .5)], r = aInfo.w;
-  vec3 p = position; float size = uSize.x; vec3 col = uLine; float a = .82;
+  vec3 p = position; float size = uSize.x; vec3 col = uLine; float a = .82, stv = 0.;
   if (kind < .5){                       // structure linework
-    float st = nodeSt(aInfo.z); p.y *= lift;
+    float st = nodeSt(aInfo.z); stv = st; p.y *= lift;
     if (st > 1.5 && st < 2.5) size = 0.;
     else if (st > .5 && st < 1.5){ col = uCoral; size *= 1.25; a = .95; }
     else if (st > 3.5){ col = uAmber; size *= 1.3; a = 1.; }
@@ -429,16 +437,25 @@ void main(){
   } else {                              // the column of light rising from it
     float u = fract(uT*.2 + aMove.x); p = position + vec3(0., u*4.6*(1. + uBurst*3.2), 0.); col = uAmber; size = uSize2.x*1.3*(1. + uBurst*.8); a = (1. - u)*(.75 + uBurst*.25);
   }
+  // hovering a part lights it amber before you click it
+  bool hov = kind < .5 && aInfo.z > -.5 && abs(aInfo.z - uHover) < .5;
+  if (hov && size > 0.){ col = mix(col, uAmber, .8); size *= 1.2; a = 1.; }
+  // the glow pass keeps only what is amber, drawn large and faint
+  if (uHalo > .5){ bool amber = (kind > .5 && kind < 2.5) || kind > 4.5 || (kind < .5 && (stv > 3.5 || hov)); if (!amber) size = 0.; size *= uHaloS; a *= uHaloA; col = uAmber*uDim; }
   p = mix(p + aScatter, p, uIntro);
   vec4 mv = modelViewMatrix*vec4(p, 1.);
   gl_Position = projectionMatrix*mv;
   gl_PointSize = size*uPx*clamp(uK/max(-mv.z, .1), .32, 2.2);
+  // distance haze: far zones fade into the blue
+  float haze = smoothstep(uFogN, uFogF, -mv.z); a *= 1. - haze*(kind > 2.5 && kind < 3.5 ? 1. : .82);
   vCol = vec4(col*uDim, a);
 }`;
 const FS = `
 precision mediump float;
+uniform highp float uHalo;
 varying vec4 vCol;
-void main(){ vec2 c = gl_PointCoord - .5; float d = length(c); if (d > .5) discard; gl_FragColor = vec4(vCol.rgb, vCol.a*smoothstep(.5, .08, d)); }`;
+void main(){ vec2 c = gl_PointCoord - .5; float d = length(c); if (d > .5) discard;
+  float f = uHalo > .5 ? exp(-d*d*16.) : smoothstep(.5, .08, d); gl_FragColor = vec4(vCol.rgb, vCol.a*f); }`;
 const GRID_VS = `
 precision highp float;
 uniform mat4 modelViewMatrix, projectionMatrix;
@@ -447,16 +464,20 @@ varying vec3 vW;
 void main(){ vW = position; gl_Position = projectionMatrix*modelViewMatrix*vec4(position, 1.); }`;
 const GRID_FS = `
 precision highp float;
-uniform vec3 uCam, uCyan; uniform float uSizeG, uFade, uOp, uDim;
+uniform vec3 uCam, uCyan, uLamp; uniform float uSizeG, uFade, uOp, uDim, uLampR, uLampS, uScanX, uScanW, uScanOn, uReveal; uniform vec2 uScanC;
 varying vec3 vW;
 float line(float v, float w){ float f = abs(fract(v) - .5); return 1. - smoothstep(.5 - w, .5, f); }
 void main(){
   float dist = distance(vW, uCam), w = clamp(.0016*dist/uSizeG, .006, .45), w5 = clamp(.0016*dist/(uSizeG*5.), .003, .45);
   float minor = max(line(vW.x/uSizeG, w), line(vW.z/uSizeG, w))*(1. - smoothstep(9., 34., dist));
   float major = max(line(vW.x/(uSizeG*5.), w5), line(vW.z/(uSizeG*5.), w5));
-  float g = minor*.5 + major*.6;
+  float g = minor*.5 + major*.6;   // (the scan pass below only brightens the major lines)
   float fade = 1. - smoothstep(uFade*.35, uFade, dist);
-  gl_FragColor = vec4(uCyan*uDim, g*fade*uOp);
+  float reveal = 1. - smoothstep(uReveal - 4., uReveal, length(vW.xz));                 // the sheet spreads out from the hero
+  float lamp = (1. - smoothstep(0., uLampR, distance(vW.xz, uLamp.xz)))*uLampS;         // the drafting lamp under the cursor
+  float scan = uScanOn*exp(-pow((vW.x - uScanX)/uScanW, 2.))*(1. - smoothstep(3., 7., distance(vW.xz, uScanC)));   // a short scan pass near you
+  vec3 col = mix(uCyan, vec3(1.), lamp*.35);
+  gl_FragColor = vec4(col*uDim, (g*(1. + lamp*1.5) + major*scan*.9 + lamp*.012)*fade*uOp*reveal);
 }`;
 
 function createWorld({ canvas, mobile, reducedMotion, onTele, onLine, onRev, onArrive = () => {} }){
@@ -547,7 +568,7 @@ function createWorld({ canvas, mobile, reducedMotion, onTele, onLine, onRev, onA
   geo.setAttribute('aInfo', new THREE.BufferAttribute(info, 4)); geo.setAttribute('aMove', new THREE.BufferAttribute(mov, 2)); geo.setAttribute('aScatter', new THREE.BufferAttribute(sc, 3));
   const C = CONFIG.colors, S = CONFIG.sizes, lifts = new Float32Array(16).fill(1);
   const mat = new THREE.RawShaderMaterial({ vertexShader:VS, fragmentShader:FS, transparent:true, depthTest:false, depthWrite:false, blending:THREE.AdditiveBlending,
-    uniforms:{ uT:{value:0}, uRush:{value:0}, uBurst:{value:0}, uPx:{value:DPR}, uK:{value:9}, uIntro:{value:reducedMotion ? 1 : 0}, uDim:{value:1}, uLift:{value:lifts}, uNode:{value:nodeState}, uEdge:{value:edgeState},
+    uniforms:{ uT:{value:0}, uRush:{value:0}, uBurst:{value:0}, uHalo:{value:0}, uHaloS:{value:CONFIG.craft.halo.size}, uHaloA:{value:CONFIG.craft.halo.alpha}, uHover:{value:-1}, uFogN:{value:CONFIG.craft.fog.near}, uFogF:{value:CONFIG.craft.fog.far}, uPx:{value:DPR}, uK:{value:9}, uIntro:{value:reducedMotion ? 1 : 0}, uDim:{value:1}, uLift:{value:lifts}, uNode:{value:nodeState}, uEdge:{value:edgeState},
       uLine:{value:new THREE.Vector3(...hex(C.line))}, uCyan:{value:new THREE.Vector3(...hex(C.cyan))}, uAmber:{value:new THREE.Vector3(...hex(C.amber))}, uCoral:{value:new THREE.Vector3(...hex(C.coral))}, uFresh:{value:new THREE.Vector3(...hex(C.fresh))},
       uSize:{value:new THREE.Vector4(S.line, S.traffic, S.road, S.dust)}, uSize2:{value:new THREE.Vector2(S.area, S.beacon)} } });
   const points = new THREE.Points(geo, mat); points.frustumCulled = false; points.renderOrder = 1;
@@ -555,9 +576,11 @@ function createWorld({ canvas, mobile, reducedMotion, onTele, onLine, onRev, onA
   const gq = new Float32Array([-140,0,-160, 240,0,-160, 240,0,160, -140,0,-160, 240,0,160, -140,0,160]);
   const ggeo = new THREE.BufferGeometry(); ggeo.setAttribute('position', new THREE.BufferAttribute(gq, 3));
   const gmat = new THREE.RawShaderMaterial({ vertexShader:GRID_VS, fragmentShader:GRID_FS, transparent:true, depthTest:false, depthWrite:false,
-    uniforms:{ uCam:{value:new THREE.Vector3()}, uCyan:{value:new THREE.Vector3(...hex(C.cyan))}, uSizeG:{value:CONFIG.grid.size}, uFade:{value:CONFIG.grid.fade}, uOp:{value:CONFIG.grid.opacity}, uDim:{value:1} } });
+    uniforms:{ uCam:{value:new THREE.Vector3()}, uLamp:{value:new THREE.Vector3(0, -99, 0)}, uLampR:{value:CONFIG.craft.lamp.radius}, uLampS:{value:0}, uScanX:{value:0}, uScanW:{value:CONFIG.craft.scan.width}, uScanOn:{value:0}, uScanC:{value:new THREE.Vector2()}, uReveal:{value:reducedMotion ? 999 : 0}, uCyan:{value:new THREE.Vector3(...hex(C.cyan))}, uSizeG:{value:CONFIG.grid.size}, uFade:{value:CONFIG.grid.fade}, uOp:{value:CONFIG.grid.opacity}, uDim:{value:1} } });
   const grid = new THREE.Mesh(ggeo, gmat); grid.frustumCulled = false; grid.renderOrder = 0;
   scene.add(grid); scene.add(points);
+  if (CONFIG.craft.halo.on && !mobile){ const hmat = new THREE.RawShaderMaterial({ vertexShader:VS, fragmentShader:FS, transparent:true, depthTest:false, depthWrite:false, blending:THREE.AdditiveBlending,
+      uniforms:{ ...mat.uniforms, uHalo:{value:1} } }); const halo = new THREE.Points(geo, hmat); halo.frustumCulled = false; halo.renderOrder = .5; scene.add(halo); }
 
   /* ---------- camera stations: one (or two) per zone, joined by a spline ---------- */
   const sections = ZONES.map(z => document.getElementById(z.id));
@@ -681,7 +704,8 @@ function createWorld({ canvas, mobile, reducedMotion, onTele, onLine, onRev, onA
 
   /* ---------- the loop ---------- */
   const eye = new THREE.Vector3(), look = new THREE.Vector3(), tE = new THREE.Vector3(), tL = new THREE.Vector3(), off = [0, 0];
-  let ptr = [0, 0], pp = [0, 0], intro0 = null, started = false, last = 0, arriveT0 = null, rush = 0;
+  let ptr = [0, 0], pp = [0, 0], intro0 = null, started = false, last = 0, arriveT0 = null, rush = 0, lastY = scrollY, vs = 0, fovNow = CONFIG.camera.fov, bankNow = 0, hasPtr = false;
+  const prevEye = new THREE.Vector3(), lampW = new THREE.Vector3(0, -99, 0);
   function tick(t){
     if (!eyeCurve) return; const W = W0(), H = H0();
     const dt = Math.min(.05, last ? t - last : .016); last = t;
@@ -695,9 +719,23 @@ function createWorld({ canvas, mobile, reducedMotion, onTele, onLine, onRev, onA
     eye.lerp(tE, k); look.lerp(tL, k); off[0] = lerp(off[0], oT[0], k); off[1] = lerp(off[1], oT[1], k);
     // a gentle tilt with the mouse, never a drag or an orbit
     pp[0] = lerp(pp[0], ptr[0], .05); pp[1] = lerp(pp[1], ptr[1], .05);
-    const fwd = tL.clone().sub(tE), dist = fwd.length(); fwd.normalize(); const right = new THREE.Vector3().crossVectors(fwd, camera.up).normalize(), upv = new THREE.Vector3().crossVectors(right, fwd);
+    const fwd = tL.clone().sub(tE), dist = fwd.length(); fwd.normalize(); const right = new THREE.Vector3().crossVectors(fwd, new THREE.Vector3(0, 1, 0)).normalize(), upv = new THREE.Vector3().crossVectors(right, fwd);
     camera.position.copy(eye).addScaledVector(right, pp[0]*CONFIG.camera.parallax*dist).addScaledVector(upv, -pp[1]*CONFIG.camera.parallax*dist*.6);
+    // speed you can feel: fast scrolling widens the lens a touch and surges the traffic
+    const vy = Math.abs(scrollY - lastY)/Math.max(dt, .001); lastY = scrollY; vs = lerp(vs, reducedMotion ? 0 : vy, .08);
+    const kick = Math.min(1, vs/4000); fovNow = lerp(fovNow, CONFIG.camera.fov + kick*CONFIG.craft.speed.fovKick, .1); camera.fov = fovNow;
+    // banking: the camera leans gently into sideways moves
+    const lat = prevEye.lengthSq() ? (eye.x - prevEye.x)*right.x + (eye.z - prevEye.z)*right.z : 0; prevEye.copy(eye);
+    bankNow = lerp(bankNow, reducedMotion ? 0 : clamp(lat/Math.max(dt, .001)*.004*CONFIG.craft.bank, -.045, .045), .06);
+    camera.up.set(0, 1, 0).multiplyScalar(Math.cos(bankNow)).addScaledVector(right, Math.sin(bankNow));
     camera.lookAt(look); camera.setViewOffset(W, H, -off[0], off[1], W, H); camera.updateMatrixWorld();
+    // the drafting lamp: where the cursor meets the plane
+    if (hasPtr && CONFIG.craft.lamp.on && !mobile && !reducedMotion){ const tanH = Math.tan(fovNow*Math.PI/360), nx = ((ptr[0] + .5)*W - (W/2 + off[0]))/(W/2), ny = -((ptr[1] + .5)*H - (H/2 - off[1]))/(H/2);
+      const dir = fwd.clone().addScaledVector(right, nx*tanH*(W/H)).addScaledVector(upv, ny*tanH);
+      if (dir.y < -.01){ const tt2 = -camera.position.y/dir.y; lampW.lerp(new THREE.Vector3(camera.position.x + dir.x*tt2, 0, camera.position.z + dir.z*tt2), .25); }
+      gmat.uniforms.uLampS.value = lerp(gmat.uniforms.uLampS.value, dir.y < -.01 ? CONFIG.craft.lamp.strength : 0, .1); gmat.uniforms.uLamp.value.copy(lampW); }
+    gmat.uniforms.uReveal.value = reducedMotion ? 999 : easeIO(clamp((t - intro0)/CONFIG.craft.gridReveal))*170;
+    if (CONFIG.craft.scan.on && !reducedMotion){ gmat.uniforms.uScanOn.value = 1; gmat.uniforms.uScanX.value = look.x - 7 + ((t/CONFIG.craft.scan.period) % 1)*14; gmat.uniforms.uScanC.value.x = look.x; gmat.uniforms.uScanC.value.y = look.z; }
     // plans lift into 3D as the camera's focus approaches them
     ZONES.forEach((z, i) => { if (!z.sys) { lifts[i] = 1; return; } const d = Math.hypot(look.x - (z.at[0] + extents(z.sys).cx), look.z - z.at[1]);
       lifts[i] = reducedMotion ? 1 : 1 - smooth(CONFIG.lift.near, CONFIG.lift.far, d); });
@@ -708,7 +746,7 @@ function createWorld({ canvas, mobile, reducedMotion, onTele, onLine, onRev, onA
     const atEnd = ZONES[sp.zi].finale && scrollY >= document.documentElement.scrollHeight - H0() - 40;
     if (atEnd && arriveT0 === null){ arriveT0 = t; onArrive(); }
     const at = arriveT0 === null || reducedMotion ? 0 : t - arriveT0, burst = at > 0 && at < 2.6 ? Math.sin(Math.PI*Math.min(1, at/2.6))*(at < .5 ? at/.5 : 1) : 0;
-    rush += dt*burst*11; mat.uniforms.uRush.value = rush; mat.uniforms.uBurst.value = burst;
+    rush += dt*(burst*11 + kick*CONFIG.craft.speed.rush); mat.uniforms.uRush.value = rush; mat.uniforms.uBurst.value = burst;
     renderer.render(scene, camera);
     overlay(sp.zi);
   }
@@ -717,7 +755,8 @@ function createWorld({ canvas, mobile, reducedMotion, onTele, onLine, onRev, onA
   function hitNode(zid, ids, x, y){ const zi = zoneIndex[zid]; if (lifts[zi] < .6) return null; let best = null, area = 1e12;
     for (const id of ids){ const k = N(zid, id); if (k === undefined) continue; const b = boxScreen(NODES[k], lifts[zi]); if (!b) continue;
       if (x > b.x0 - 10 && x < b.x1 + 10 && y > b.y0 - 10 && y < b.y1 + 10){ const a = (b.x1 - b.x0)*(b.y1 - b.y0); if (a < area){ area = a; best = id; } } } return best; }
-  return { tick, refresh, breakZone, resetZone, hitServer, hitNode, highlight, setPointer:(x, y) => { ptr = [x, y]; }, activeZone:() => stationParam().zi, zoneIndex, renderer };
+  const setHover = (zid, id) => { mat.uniforms.uHover.value = zid && id ? N(zid, id) ?? -1 : -1; };
+  return { tick, refresh, breakZone, resetZone, hitServer, hitNode, highlight, setHover, setPointer:(x, y) => { ptr = [x, y]; hasPtr = true; }, activeZone:() => stationParam().zi, zoneIndex, renderer };
 }
 /* =====================================================================
    ui.js: ONE scroll system and everything that reacts to it.
@@ -755,8 +794,9 @@ function createUI({ world, mobile, reducedMotion }){
       if (z === w.zoneIndex['s-cover']){ const id = w.hitServer(e.clientX, e.clientY); if (id) w.breakZone('s-cover', id); }
       if (z === w.zoneIndex['s-bom']){ const id = w.hitNode('s-bom', stackIds, e.clientX, e.clientY); if (id) jumpStep('s-bom', stackIds.indexOf(id)); } });
     if (!touch) addEventListener('pointermove', e => { const z = w.activeZone(); let over = false;
-      if (!e.target.closest('a,button')){ if (z === w.zoneIndex['s-bom']) over = !!w.hitNode('s-bom', stackIds, e.clientX, e.clientY); else if (z === w.zoneIndex['s-cover']) over = !!w.hitServer(e.clientX, e.clientY); }
-      document.body.classList.toggle('over-part', over); }, { passive:true });
+      let hid = null, hz = null;
+      if (!e.target.closest('a,button')){ if (z === w.zoneIndex['s-bom']){ hid = w.hitNode('s-bom', stackIds, e.clientX, e.clientY); hz = 's-bom'; } else if (z === w.zoneIndex['s-cover']){ hid = w.hitServer(e.clientX, e.clientY); hz = 's-cover'; } }
+      over = !!hid; w.setHover(hz, hid); document.body.classList.toggle('over-part', over); }, { passive:true });
     if (!touch && !reducedMotion) addEventListener('pointermove', e => w.setPointer(e.clientX/innerWidth - .5, e.clientY/innerHeight - .5), { passive:true });
   }
   // tiles linked to a piece of the drawing: the Off duty interests
