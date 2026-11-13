@@ -258,3 +258,19 @@ body.over-part{cursor:pointer}body.over-part .cursor{width:54px;height:54px;marg
 .snd:focus-visible{outline:2px solid var(--amber);outline-offset:3px}
 /* With WebGL running, the film grain is drawn on the GPU (js/post.js), so the CSS grain steps aside */
 html.webgl body::after{display:none}
+
+/* No-WebGL fallback drawings (js/fallback.js): one isometric drawing per system */
+.no-webgl .stage.fb{background:none}
+.fb svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.fb .bx{fill:none;stroke:var(--line);stroke-width:1.3;stroke-dasharray:2 3;vector-effect:non-scaling-stroke}
+.fb .bx.top{fill:rgba(143,178,240,.06)}
+.fb .ghost .bx{stroke:var(--cyan);opacity:.5}
+.fb .down .bx{stroke:var(--coral)}
+.fb .ln{fill:none;stroke:var(--amber);stroke-width:2;stroke-dasharray:1 6;stroke-linecap:round;vector-effect:non-scaling-stroke}
+.fb .ln.off{stroke:var(--coral)}
+.fb text{font-family:var(--tech);font-size:11px;fill:var(--line);letter-spacing:.02em}
+.fb .down text{fill:var(--coral)}
+/* if the GPU drops its context, the canvas hides until it is back */
+.gl-lost #gl,.gl-lost #labels{opacity:0}
+/* the fallback drawing leaves room for the readouts, so they show (and the break switches update them) */
+.no-webgl .stage.fb .tele{display:block}

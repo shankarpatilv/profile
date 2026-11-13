@@ -92,7 +92,7 @@ export function createUI({ world, mobile, reducedMotion, sound = null }){
 
   /* ---------- the sound toggle: added only when scripting works; off until clicked ---------- */
   if (sound){ const nav = $('.top nav'), b = document.createElement('button');
-    b.className = 'snd'; b.type = 'button'; b.setAttribute('aria-pressed', 'false'); b.setAttribute('aria-label', 'Sound');
+    b.className = 'snd'; b.type = 'button'; b.setAttribute('aria-pressed', String(sound.on)); b.setAttribute('aria-label', 'Sound');
     b.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9z"/><path class="w" d="M16 9a4 4 0 0 1 0 6M18.5 6.5a7.5 7.5 0 0 1 0 11"/></svg>';
     b.addEventListener('click', () => b.setAttribute('aria-pressed', String(sound.toggle())));
     if (nav) nav.appendChild(b); }

@@ -1,8 +1,9 @@
 /* =====================================================================
-   sound.js: optional, subtle sound, off by default (CONFIG.sound).
+   sound.js: subtle sound, on by default (CONFIG.sound.on).
    Everything is synthesised with the Web Audio API, so there are no files
-   to download. Nothing is created until the visitor turns sound on with
-   the header toggle (browsers only allow audio after a click anyway).
+   to download. Browsers only allow audio after the visitor interacts, so
+   nothing is created until the first click, tap or key press; the header
+   toggle mutes and unmutes.
 
      fail()   a low, soft thud when a break test takes something down
      heal()   two quiet rising notes when it heals
@@ -13,7 +14,7 @@ import { CONFIG } from './config.js';
 
 export function createSound(){
   const S = CONFIG.sound;
-  let ctx = null, master = null, hum = null, humGain = null, on = false;
+  let ctx = null, master = null, hum = null, humGain = null, on = !!S.on;
 
   function start(){
     if (ctx) return;
@@ -33,6 +34,10 @@ export function createSound(){
     o.type = type; o.frequency.setValueAtTime(freq, t0); o.connect(g); g.connect(master); env(g, peak, attack, decay, t0); o.start(t0); o.stop(t0 + attack + decay + .05);
     return o;
   };
+
+  // the first gesture unlocks audio (if sound is on)
+  const unlock = () => { if (on){ start(); ctx.resume(); } ['pointerdown', 'keydown', 'touchstart'].forEach(e => removeEventListener(e, unlock, true)); };
+  ['pointerdown', 'keydown', 'touchstart'].forEach(e => addEventListener(e, unlock, true));
 
   return {
     get on(){ return on; },

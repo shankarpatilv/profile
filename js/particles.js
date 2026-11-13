@@ -122,7 +122,9 @@ export function createParticles({ renderer, NODES, mobile }){
     const [, , w, d, h] = n.n, X0 = n.x - w/2, X1 = n.x + w/2, Z0 = n.z - d/2, Z1 = n.z + d/2, c = [[X0, Z0], [X1, Z0], [X1, Z1], [X0, Z1]];
     for (let i = 0; i < 4; i++){ const a = c[i], b = c[(i + 1) % 4]; edges.push([a[0], 0, a[1], b[0], 0, b[1], n.zone], [a[0], h, a[1], b[0], h, b[1], n.zone], [a[0], 0, a[1], a[0], h, a[1], n.zone]); } });
   const eLen = edges.map(e => Math.hypot(e[3] - e[0], e[4] - e[1], e[5] - e[2])), eTot = eLen.reduce((a, b) => a + b, 0);
-  const pickEdge = () => { let r = rnd()*eTot; for (let i = 0; i < edges.length; i++){ r -= eLen[i]; if (r <= 0) return edges[i]; } return edges[edges.length - 1]; };
+  // pick an edge in proportion to its length: binary search over cumulative lengths (keeps start-up fast)
+  const cum = []; eLen.reduce((a, l, i) => (cum[i] = a + l), 0);
+  const pickEdge = () => { const r = rnd()*eTot; let lo = 0, hi = cum.length - 1; while (lo < hi){ const m = (lo + hi) >> 1; if (cum[m] < r) lo = m + 1; else hi = m; } return edges[lo]; };
 
   const nS = edges.length ? Math.floor(N*G.share.structure) : 0, nT = Math.floor(N*G.share.thread), roadX = [-3.4, 102];
   const look0 = [0, 0, 0], box = G.dustBox;
@@ -175,6 +177,7 @@ export function createParticles({ renderer, NODES, mobile }){
       gpu.compute();
       mat.uniforms.tPos.value = gpu.getCurrentRenderTarget(pVar).texture; mat.uniforms.uIntro.value = intro; mat.uniforms.uDim.value = dim;
     },
+    setPx(v){ mat.uniforms.uPx.value = v; },
     dispose(){ gpu.dispose(); geo.dispose(); mat.dispose(); },
   };
   return api;

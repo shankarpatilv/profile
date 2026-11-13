@@ -67,8 +67,11 @@ export const CONFIG = {
     alpha: { dust: .045, thread: .3, structure: .5 },   // dust is many points added together: keep it faint or the sky lifts
   },
   // quality tier: 'medium' (default), 'high' (adds ambient occlusion and depth of field), or 'auto'.
-  // A ?quality=high|medium URL parameter overrides it. Phones always use the phone tier.
-  quality: { tier: 'medium' },
+  // A ?quality=high|medium URL parameter fixes the tier and turns the governor off. Phones always use the phone tier.
+  quality: {
+    tier: 'auto',            // 'auto': start medium and let the governor decide; or force 'high' / 'medium'
+    governor: { on: true, warmup: 4.5, window: 90, dropShare: .12, cleanShare: .03, log: true },   // js/quality.js
+  },
   // the post stack beyond the basics (js/post.js); AO and depth of field run on the high tier only
   post: {
     grain: .05,                              // GPU film grain (replaces the CSS grain whenever WebGL runs)
@@ -88,8 +91,8 @@ export const CONFIG = {
     nav: { duration: 1.6 },                  // header links: a quartic ease-out, precise rather than springy
     nudge: { amount: .045, duration: .9 },   // the camera leans in a touch when a break test fires
   },
-  // optional sound (js/sound.js): off by default, toggled from the header
-  sound: { volume: .5, hum: 55, humGain: 4 },
+  // sound (js/sound.js): on by default; browsers only allow audio after a click, tap or key, so it starts then. Muted from the header.
+  sound: { on: true, volume: .5, hum: 55, humGain: 4 },
   // rendering: how the 3D frame is finished (pmndrs/postprocessing)
   render: {
     toneMapping: 'neutral',   // 'neutral' (brand-safe, no toe) keeps the brand colours true; 'agx' or 'aces' for a filmic look

@@ -11,6 +11,7 @@ import { createBuilt } from './built.js';
 import { createPost } from './post.js';
 import { createFloor } from './floor.js';
 import { createParticles } from './particles.js';
+import { createGovernor } from './quality.js';
 // world.js is imported dynamically by main.js, so if the CDN fails the page falls back to the static version
 
 const clamp = (v, a = 0, b = 1) => Math.max(a, Math.min(b, v));
@@ -126,9 +127,9 @@ export function createWorld({ canvas, mobile, reducedMotion, onTele, onLine, onR
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(CONFIG.camera.fov, W0()/H0(), .1, 400);
   // quality tier: phones get the phone tier; desktops medium unless CONFIG or ?quality= says high
-  const qp = (location.search.match(/[?&]quality=(high|medium)/) || [])[1];
-  const tier = mobile ? 'phone' : (qp || (CONFIG.quality.tier === 'high' ? 'high' : 'medium'));
-  const post = createPost({ renderer, scene, camera, mobile, tier });
+  const qp = (location.search.match(/[?&]quality=(high|medium)/) || [])[1], fixed = qp || (CONFIG.quality.tier !== 'auto' ? CONFIG.quality.tier : null);
+  const tier = mobile ? 'phone' : (fixed === 'high' ? 'high' : 'medium');
+  const post = createPost({ renderer, scene, camera, mobile, tier, reducedMotion });
   // choreography values the GSAP timelines animate (js/config.js → choreo)
   const cam = { intro:reducedMotion ? 0 : 1, nudge:0 };
   const gs = window.gsap, CH = CONFIG.choreo;
@@ -152,8 +153,9 @@ export function createWorld({ canvas, mobile, reducedMotion, onTele, onLine, onR
   /* ---------- light: a studio HDRI for reflections (streams in; the scene is usable before it arrives) and a cool key ---------- */
   const L = CONFIG.light;
   scene.environmentIntensity = L.envIntensity; scene.environmentRotation.set(0, L.envRotation, 0);
-  new HDRLoader().load(L.env, tex => { const pm = new THREE.PMREMGenerator(renderer); scene.environment = pm.fromEquirectangular(tex).texture; tex.dispose(); pm.dispose(); },
+  const loadEnv = () => new HDRLoader().load(L.env, tex => { const pm = new THREE.PMREMGenerator(renderer); scene.environment = pm.fromEquirectangular(tex).texture; tex.dispose(); pm.dispose(); },
     undefined, err => console.warn('Environment map unavailable:', err));
+  loadEnv();
   const key = new THREE.DirectionalLight(L.key.color, L.key.intensity); key.position.set(...L.key.position); scene.add(key);
 
   /* ---------- registries: every node and edge in the world gets an index ---------- */
@@ -247,8 +249,22 @@ export function createWorld({ canvas, mobile, reducedMotion, onTele, onLine, onR
   const floor = createFloor({ renderer, mobile, reducedMotion, onMirror:on => { mat.uniforms.uMirror.value = on ? 1 : 0; } }), gmat = { uniforms:floor.uniforms };
   scene.add(floor.mesh); scene.add(points);
   // the GPU particle layer: flow-field dust, traffic on the thread, assembly into systems (off with reduced motion)
-  const gpu = CONFIG.gpu.on && !reducedMotion ? createParticles({ renderer, NODES, mobile }) : null;
-  if (gpu) scene.add(gpu.points);
+  // created a few frames after the first render, so the page paints first (see tick)
+  let gpu = null, governor = null, frameN = 0;
+  const startLate = () => {
+    if (CONFIG.gpu.on && !reducedMotion){ gpu = createParticles({ renderer, NODES, mobile }); if (gpu) scene.add(gpu.points); }
+    governor = createGovernor({ post, floor, gpu, dpr:DPR, startTier:tier, mobile, setDPR });
+    if (fixed) CONFIG.quality.governor.on = false;
+  };
+  // the governor can lower the resolution at runtime
+  function setDPR(d){ renderer.setPixelRatio(d); mat.uniforms.uPx.value = d; if (gpu) gpu.setPx(d); refresh(); }
+
+  /* the GPU can drop the context (sleep, driver reset, too many tabs): pause, then rebuild what lives only on the GPU */
+  let lost = false;
+  canvas.addEventListener('webglcontextlost', e => { e.preventDefault(); lost = true; document.documentElement.classList.add('gl-lost'); });
+  canvas.addEventListener('webglcontextrestored', () => {
+    if (gpu){ scene.remove(gpu.points); gpu.dispose(); gpu = createParticles({ renderer, NODES, mobile }); if (gpu) scene.add(gpu.points); }
+    loadEnv(); lost = false; document.documentElement.classList.remove('gl-lost'); });
   if (CONFIG.craft.halo.on && !mobile){ const hmat = new THREE.RawShaderMaterial({ vertexShader:VS, fragmentShader:FS, transparent:true, depthTest:false, depthWrite:false, blending:THREE.AdditiveBlending,
       uniforms:{ ...mat.uniforms, uHalo:{value:1} } }); const halo = new THREE.Points(geo, hmat); halo.frustumCulled = false; halo.renderOrder = .5; scene.add(halo); }
 
@@ -266,14 +282,15 @@ export function createWorld({ canvas, mobile, reducedMotion, onTele, onLine, onR
   }
   const shiftOff = s => s ? [s[0]*W0(), s[1]*H0()] : [0, 0];
   function refresh(){
-    const W = W0(), H = H0(); renderer.setSize(W, H, false); post.setSize(W, H); floor.resize(); camera.aspect = W/H; ST = []; secInfo = [];
+    const W = W0(), H = H0(), narrow = W < 900; renderer.setSize(W, H, false); post.setSize(W, H); floor.resize(); camera.aspect = W/H; ST = []; secInfo = [];
+    labelled.forEach(o => { o.w = 0; }); blockers = sections.map(sec => sec ? [...sec.querySelectorAll(BLOCK)] : []);   // re-measure labels, re-find blockers
     ZONES.forEach((z, i) => { const sec = sections[i]; if (!sec) return; const r = sec.getBoundingClientRect(), top = r.top + scrollY, first = ST.length;
       if (z.cam === 'fit') ST.push(fitStation(z, sec));
-      else if (z.track){ const off = mobile ? [0, -H*.32] : [W*.16, -H*.3], dir = [-2.6, 2.1, 5.4];
+      else if (z.track){ const off = narrow ? [0, -H*.32] : [W*.16, -H*.3], dir = [-2.6, 2.1, 5.4];
         z.markers.forEach(mx => { const look = [mx, .2, ROAD_Z - .5]; ST.push({ look, eye:look.map((v, k) => v + dir[k]), off }); }); }
-      else if (z.tour){ const dir = dirOf(CONFIG.camera.yaw, CONFIG.camera.elevation), off = mobile ? shiftOff(z.mshift) : shiftOff(z.shift), d = mobile ? 4.6 : 4.1;
+      else if (z.tour){ const dir = dirOf(CONFIG.camera.yaw, CONFIG.camera.elevation), off = narrow ? shiftOff(z.mshift) : shiftOff(z.shift), d = narrow ? 4.6 : 4.1;
         z.tour.forEach(id => { const n = SYSTEMS[z.sys].nodes[id], look = [n[0] + z.at[0], n[4]*.5, n[1] + z.at[1]]; ST.push({ look, eye:look.map((v, k) => v + dir[k]*d), off, part:id }); }); }
-      else (z.shots || [z]).forEach(s => { const far = mobile && z.mfar ? z.mfar : 1, eye = s.look.map((v, k) => v + (s.eye[k] - v)*far); ST.push({ eye, look:s.look, off:mobile ? shiftOff(z.mshift) : shiftOff(z.shift) }); });
+      else (z.shots || [z]).forEach(s => { const far = narrow && z.mfar ? z.mfar : 1, eye = s.look.map((v, k) => v + (s.eye[k] - v)*far); ST.push({ eye, look:s.look, off:narrow ? shiftOff(z.mshift) : shiftOff(z.shift) }); });
       secInfo.push({ top, h:r.height, first, count:ST.length - first, zi:i, z }); });
     eyeCurve = new THREE.CatmullRomCurve3(ST.map(s => new THREE.Vector3(...s.eye)), false, 'centripetal');
     lookCurve = new THREE.CatmullRomCurve3(ST.map(s => new THREE.Vector3(...s.look)), false, 'centripetal');
@@ -301,6 +318,8 @@ export function createWorld({ canvas, mobile, reducedMotion, onTele, onLine, onR
   /* ---------- labels and the drawing overlay (dimension lines, revision clouds) ---------- */
   const labelRoot = document.getElementById('labels'), ov = document.getElementById('ov'), NS = 'http://www.w3.org/2000/svg';
   const labelled = NODES.map((n, i) => ({ i, n })).filter(o => o.n.label && o.n.label !== 'new');
+  const BLOCK = '.pj-copy,.cv-copy,.tele,.tb,.detail,.card,.rail,.row,.edits,.bomt,.offs,.note,.big,.mail';   // page text labels must never cover
+  let blockers = [];
   labelled.forEach(o => { const el = document.createElement('span'); el.textContent = o.n.label; labelRoot.appendChild(el); o.el = el; });
   const tmp = new THREE.Vector3();
   const toScreen = (x, y, z) => { tmp.set(x, y, z).project(camera); if (tmp.z > 1 || tmp.z < -1) return null; return [(tmp.x*.5 + .5)*W0(), (-tmp.y*.5 + .5)*H0()]; };
@@ -312,12 +331,14 @@ export function createWorld({ canvas, mobile, reducedMotion, onTele, onLine, onR
   function overlay(zi){
     const W = W0(), H = H0(), z = ZONES[zi], sec = sections[zi], lift = lifts[zi];
     // labels: drawn in priority order, and never on top of words, readouts or each other
-    const blk = sec ? [...sec.querySelectorAll('.pj-copy,.cv-copy,.tele,.tb,.detail,.card.on,.rail,.row,.edits,.bomt,.offs,.note,.big,.mail')].map(e => e.getBoundingClientRect()).filter(r => r.width) : [];
+    // reads first (blocker boxes, cached label sizes), writes after, so the browser lays out once per frame
+    const blk = (blockers[zi] || []).filter(e => !e.classList.contains('card') || e.classList.contains('on')).map(e => e.getBoundingClientRect()).filter(r => r.width);
+    labelled.forEach(o => { if (!o.w){ o.w = o.el.offsetWidth; o.h = o.el.offsetHeight; } });
     const placed = [];
     labelled.forEach(o => { const n = o.n, L = lifts[n.zone], near = n.zone === zi && L > .55 && nodeState[o.i] !== 2;
       const p = near ? toScreen(n.x, n.n[4]*L + .07, n.z) : null; if (!p){ o.el.style.opacity = 0; return; }
       o.el.style.transform = `translate(${p[0]}px,${p[1]}px) translate(-50%,-100%)`;
-      const w = o.el.offsetWidth, h = o.el.offsetHeight, b = { x0:p[0] - w/2, x1:p[0] + w/2, y0:p[1] - h, y1:p[1] };
+      const w = o.w, h = o.h, b = { x0:p[0] - w/2, x1:p[0] + w/2, y0:p[1] - h, y1:p[1] };
       const clash = b.x0 < 4 || b.x1 > W - 4 || b.y0 < 62 || b.y1 > H - 4 || blk.some(r => b.x0 < r.right + 4 && b.x1 > r.left - 4 && b.y0 < r.bottom + 3 && b.y1 > r.top - 3) || placed.some(q => b.x0 < q.x1 + 4 && b.x1 > q.x0 - 4 && b.y0 < q.y1 + 2 && b.y1 > q.y0 - 2);
       if (!clash) placed.push(b);
       o.el.classList.toggle('down', nodeState[o.i] === 1); o.el.classList.toggle('new', nodeState[o.i] === 3); o.el.classList.toggle('good', nodeState[o.i] === 4);
@@ -386,7 +407,8 @@ export function createWorld({ canvas, mobile, reducedMotion, onTele, onLine, onR
   let ptr = [0, 0], pp = [0, 0], intro0 = null, started = false, last = 0, arriveT0 = null, rush = 0, lastY = scrollY, vs = 0, fovNow = CONFIG.camera.fov, bankNow = 0, hasPtr = false;
   const prevEye = new THREE.Vector3(), lampW = new THREE.Vector3(0, -99, 0);
   function tick(t){
-    if (!eyeCurve) return; const W = W0(), H = H0();
+    if (!eyeCurve || lost) return; const W = W0(), H = H0();
+    if (++frameN === 4) startLate();
     const dt = Math.min(.05, last ? t - last : .016); last = t;
     if (intro0 === null) intro0 = t;
     const intro = reducedMotion ? 1 : easeIO(clamp((t - intro0)/CONFIG.intro.duration));
@@ -437,12 +459,13 @@ export function createWorld({ canvas, mobile, reducedMotion, onTele, onLine, onR
     if (atEnd && arriveT0 === null){ arriveT0 = t; onArrive(); }
     const at = arriveT0 === null || reducedMotion ? 0 : t - arriveT0, burst = at > 0 && at < 2.6 ? Math.sin(Math.PI*Math.min(1, at/2.6))*(at < .5 ? at/.5 : 1) : 0;
     rush += dt*(burst*11 + kick*CONFIG.craft.speed.rush); mat.uniforms.uRush.value = rush; mat.uniforms.uBurst.value = burst;
-    if (gpu) gpu.update(t, dt, { look, lifts, zoneBuild:built.zoneBuild, cursor:lampW, cursorOn:hasPtr && !mobile, intro, dim });
+    if (gpu && gpu.active !== undefined) gpu.update(t, dt, { look, lifts, zoneBuild:built.zoneBuild, cursor:lampW, cursorOn:hasPtr && !mobile, intro, dim });
     // the post stack follows the zone: focus on what you are looking at, per-zone bloom and vignette
     post.setFocus(look); post.setZone(ZONES[sp.zi].id, reducedMotion ? 1 : .05);
     // how fast systems are being built right now (the optional sound hums with it)
     let rate = 0; built.zoneBuild.forEach((b, i) => { rate += Math.abs(b - (prevBuild[i] || 0)); prevBuild[i] = b; }); onBuild(rate/Math.max(dt, .001));
     post.render(dt);
+    if (governor) governor.frame(dt, t - intro0);
     overlay(sp.zi);
   }
   // light up one part of a system (the stack tiles use this), or none
@@ -452,6 +475,6 @@ export function createWorld({ canvas, mobile, reducedMotion, onTele, onLine, onR
       if (x > b.x0 - 10 && x < b.x1 + 10 && y > b.y0 - 10 && y < b.y1 + 10){ const a = (b.x1 - b.x0)*(b.y1 - b.y0); if (a < area){ area = a; best = id; } } } return best; }
   const setHover = (zid, id) => { mat.uniforms.uHover.value = zid && id ? N(zid, id) ?? -1 : -1; };
   // ?debug in the URL exposes the render pieces for measurement (scripts in the README use it)
-  if (/[?&]debug\b/.test(location.search)) window.__debug = { floor, built, post, gpu, renderer, scene, points, CONFIG };
+  if (/[?&]debug\b/.test(location.search)) window.__debug = { floor, built, post, get gpu(){ return gpu; }, get governor(){ return governor; }, renderer, scene, points, CONFIG };
   return { tick, refresh, breakZone, resetZone, hitServer, hitNode, highlight, setHover, setPointer:(x, y) => { ptr = [x, y]; hasPtr = true; }, activeZone:() => stationParam().zi, zoneIndex, renderer };
 }

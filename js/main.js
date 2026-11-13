@@ -23,6 +23,7 @@ try {
 } catch (err){
   console.warn('Static fallback:', err);
   root.classList.add('no-webgl');
+  import('./fallback.js').then(m => m.drawFallback()).catch(() => {});   // a drawing of each system, in plain SVG
 }
 Object.assign(hooks, createUI({ world, mobile, reducedMotion, sound }));
 root.classList.add('app');
