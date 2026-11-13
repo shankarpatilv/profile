@@ -25,7 +25,7 @@ uniform sampler2D tDiffuse;
 uniform vec3 uCam, uCyan, uLamp; uniform vec2 uScanC;
 uniform float uSizeG, uFade, uOp, uDim, uLampR, uLampS, uScanX, uScanW, uScanOn, uReveal, uRefl, uBlur, uReflFade;
 varying vec4 vUv; varying vec3 vW;
-float line(float v, float w){ float f = abs(fract(v) - .5); return 1. - smoothstep(.5 - w, .5, f); }
+float line(float v, float w){ float f = abs(fract(v) - .5); return smoothstep(.5 - w, .5, f); }   // 1 on a grid line, 0 between lines
 vec3 toLinear(vec3 c){ return mix(c/12.92, pow((c + .055)/1.055, vec3(2.4)), step(.04045, c)); }
 void main(){
   float dist = distance(vW, uCam), w = clamp(.0016*dist/uSizeG, .006, .45), w5 = clamp(.0016*dist/(uSizeG*5.), .003, .45);

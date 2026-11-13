@@ -10,6 +10,7 @@ import { HDRLoader } from 'three/addons/loaders/HDRLoader.js';
 import { createBuilt } from './built.js';
 import { createPost } from './post.js';
 import { createFloor } from './floor.js';
+import { createParticles } from './particles.js';
 // world.js is imported dynamically by main.js, so if the CDN fails the page falls back to the static version
 
 const clamp = (v, a = 0, b = 1) => Math.max(a, Math.min(b, v));
@@ -237,6 +238,9 @@ export function createWorld({ canvas, mobile, reducedMotion, onTele, onLine, onR
   // the drafting floor: the grid plus a lacquer reflection of the world (js/floor.js)
   const floor = createFloor({ renderer, mobile, reducedMotion, onMirror:on => { mat.uniforms.uMirror.value = on ? 1 : 0; } }), gmat = { uniforms:floor.uniforms };
   scene.add(floor.mesh); scene.add(points);
+  // the GPU particle layer: flow-field dust, traffic on the thread, assembly into systems (off with reduced motion)
+  const gpu = CONFIG.gpu.on && !reducedMotion ? createParticles({ renderer, NODES, mobile }) : null;
+  if (gpu) scene.add(gpu.points);
   if (CONFIG.craft.halo.on && !mobile){ const hmat = new THREE.RawShaderMaterial({ vertexShader:VS, fragmentShader:FS, transparent:true, depthTest:false, depthWrite:false, blending:THREE.AdditiveBlending,
       uniforms:{ ...mat.uniforms, uHalo:{value:1} } }); const halo = new THREE.Points(geo, hmat); halo.frustumCulled = false; halo.renderOrder = .5; scene.add(halo); }
 
@@ -420,6 +424,7 @@ export function createWorld({ canvas, mobile, reducedMotion, onTele, onLine, onR
     if (atEnd && arriveT0 === null){ arriveT0 = t; onArrive(); }
     const at = arriveT0 === null || reducedMotion ? 0 : t - arriveT0, burst = at > 0 && at < 2.6 ? Math.sin(Math.PI*Math.min(1, at/2.6))*(at < .5 ? at/.5 : 1) : 0;
     rush += dt*(burst*11 + kick*CONFIG.craft.speed.rush); mat.uniforms.uRush.value = rush; mat.uniforms.uBurst.value = burst;
+    if (gpu) gpu.update(t, dt, { look, lifts, zoneBuild:built.zoneBuild, cursor:lampW, cursorOn:hasPtr && !mobile, intro, dim });
     post.render(dt);
     overlay(sp.zi);
   }
@@ -430,6 +435,6 @@ export function createWorld({ canvas, mobile, reducedMotion, onTele, onLine, onR
       if (x > b.x0 - 10 && x < b.x1 + 10 && y > b.y0 - 10 && y < b.y1 + 10){ const a = (b.x1 - b.x0)*(b.y1 - b.y0); if (a < area){ area = a; best = id; } } } return best; }
   const setHover = (zid, id) => { mat.uniforms.uHover.value = zid && id ? N(zid, id) ?? -1 : -1; };
   // ?debug in the URL exposes the render pieces for measurement (scripts in the README use it)
-  if (/[?&]debug\b/.test(location.search)) window.__debug = { floor, built, post, renderer, scene, points, CONFIG };
+  if (/[?&]debug\b/.test(location.search)) window.__debug = { floor, built, post, gpu, renderer, scene, points, CONFIG };
   return { tick, refresh, breakZone, resetZone, hitServer, hitNode, highlight, setHover, setPointer:(x, y) => { ptr = [x, y]; hasPtr = true; }, activeZone:() => stationParam().zi, zoneIndex, renderer };
 }

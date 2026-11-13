@@ -177,6 +177,7 @@ export function createBuilt({ scene, NODES, nodeState, reducedMotion }){
   });
 
   /* per-node animation: new or healed parts build again over CONFIG.build.rebuild seconds */
+  const zoneBuild = new Float32Array(16);   // how built each zone is (the GPU particles fade as a zone completes)
   const prev = new Float32Array(128).fill(-1),  // node state last frame
          rebuildT = new Float32Array(128).fill(-1);
   function update(t, lifts, introBuild){
@@ -184,7 +185,7 @@ export function createBuilt({ scene, NODES, nodeState, reducedMotion }){
       const k = smooth(.55, .9, nodeBuild[s.userData.node]); s.scale.setScalar(Math.max(.001, k)); s.visible = k > .001; });
     zones.forEach(Z => {
       const lift = lifts[Z.zi], zb = reducedMotion ? 1 : smooth(B.from, B.to, lift)*introBuild(Z.zi);
-      Z.group.visible = zb > .001; Z.group.scale.y = Math.max(.001, lift);
+      zoneBuild[Z.zi] = zb; Z.group.visible = zb > .001; Z.group.scale.y = Math.max(.001, lift);
       Z.shadow.material.opacity = zb*B.shadow; Z.shadow.visible = zb > .001;
       Z.members.forEach(i => {
         const st = nodeState[i];
@@ -197,5 +198,5 @@ export function createBuilt({ scene, NODES, nodeState, reducedMotion }){
       });
     });
   }
-  return { update, nodeBuild, materials:M };
+  return { update, nodeBuild, zoneBuild, materials:M };
 }

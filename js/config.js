@@ -30,7 +30,7 @@ export const CONFIG = {
   lift: { near: 3.2, far: 10 },   // a plan lifts into 3D as the camera's focus comes within these distances
   intro: { duration: 2.4 },       // the opening assembly, in seconds
   dpr: { desktop: 1.5, mobile: 1.5 },   // resolution cap (the medium tier); never above 2
-  grid: { size: .5, fade: 120, opacity: .22 },
+  grid: { size: .5, fade: 120, opacity: .13 },
   // the drafting floor's lacquer reflection (js/floor.js)
   floor: {
     reflect: .42,           // strength of the reflection (0 turns the mirror off)
@@ -52,6 +52,19 @@ export const CONFIG = {
     flow: { radius: .2, push: .065 },                  // how strongly the cursor bends traffic and dust
     bank: .9,                                          // how much the camera leans into its moves
     gridReveal: 2.6,                                   // seconds for the grid to spread out on load
+  },
+  // GPU particles (js/particles.js): simulated on the GPU, off with reduced motion
+  gpu: {
+    on: true,
+    desktop: 512, mobile: 256,              // simulation texture size: 512 = 262,144 particles, 256 = 65,536
+    share: { structure: .4, thread: .14 },  // the rest is flow-field dust
+    flow: { scale: .35, amp: .32, speed: .22 },   // curl-noise flow: feature size, strength, how fast it evolves
+    threadSpeed: .9,                        // how fast traffic flows along the road (world units a second)
+    assemble: [.15, .75],                   // a zone's particles stream onto its structure as its lift goes from..to
+    cursor: { radius: 1.3, push: 2.4 },     // the cursor's force field on the floor plane
+    dustBox: [26, 9, 22],                   // dust lives in a box this size around where the camera looks
+    size: { dust: 1.0, thread: 1.5, structure: 1.3 },
+    alpha: { dust: .045, thread: .3, structure: .5 },   // dust is many points added together: keep it faint or the sky lifts
   },
   // rendering: how the 3D frame is finished (pmndrs/postprocessing)
   render: {
