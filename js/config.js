@@ -66,6 +66,30 @@ export const CONFIG = {
     size: { dust: 1.0, thread: 1.5, structure: 1.3 },
     alpha: { dust: .045, thread: .3, structure: .5 },   // dust is many points added together: keep it faint or the sky lifts
   },
+  // quality tier: 'medium' (default), 'high' (adds ambient occlusion and depth of field), or 'auto'.
+  // A ?quality=high|medium URL parameter overrides it. Phones always use the phone tier.
+  quality: { tier: 'medium' },
+  // the post stack beyond the basics (js/post.js); AO and depth of field run on the high tier only
+  post: {
+    grain: .05,                              // GPU film grain (replaces the CSS grain whenever WebGL runs)
+    dof: { on: true, range: 4, bokeh: 1.4 }, // focus follows the zone you are looking at
+    ao: { on: true, radius: .25, falloff: 1, intensity: 2, color: '#06142F' },
+    zones: {                                 // per-zone look, eased as you scroll between zones
+      default:     { bloom: 1.0, vignette: .42, dofRange: 4 },
+      's-path':    { bloom: .8,  vignette: .36, dofRange: 6 },
+      'work':      { bloom: .9,  vignette: .4,  dofRange: 14 },
+      's-off':     { bloom: 1.3, vignette: .5,  dofRange: 6 },
+      's-contact': { bloom: 1.5, vignette: .55, dofRange: 5 },
+    },
+  },
+  // hand-timed camera choreography (GSAP), all off with reduced motion
+  choreo: {
+    intro: { back: .34, rise: .22, duration: 3.2, delay: .1, ease: 'power3.out' },   // the opening dolly into the hero
+    nav: { duration: 1.6 },                  // header links: a quartic ease-out, precise rather than springy
+    nudge: { amount: .045, duration: .9 },   // the camera leans in a touch when a break test fires
+  },
+  // optional sound (js/sound.js): off by default, toggled from the header
+  sound: { volume: .5, hum: 55, humGain: 4 },
   // rendering: how the 3D frame is finished (pmndrs/postprocessing)
   render: {
     toneMapping: 'neutral',   // 'neutral' (brand-safe, no toe) keeps the brand colours true; 'agx' or 'aces' for a filmic look

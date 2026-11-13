@@ -1,13 +1,20 @@
 /* =====================================================================
    post.js: how the 3D frame is finished, using pmndrs/postprocessing.
-   The scene renders in linear HDR into a half-float buffer, then one merged
-   pass applies bloom (only amber and coral are bright enough), tone mapping
-   (a brand-safe Khronos PBR Neutral keeps the brand colours true) and a vignette, and a
-   last pass applies SMAA anti-aliasing. Settings live in CONFIG.render.
+   The scene renders in linear HDR into a half-float buffer, then:
+
+     [high tier]  ambient occlusion (N8AO, loaded only when needed)
+     [high tier]  depth of field, focused on the zone you are looking at
+     always       bloom (only amber and coral are bright enough),
+                  brand-safe tone mapping, vignette, fine film grain
+     always       SMAA anti-aliasing
+
+   Bloom, vignette and the depth-of-field range are tuned per zone
+   (CONFIG.post.zones) and eased between zones as you scroll.
+   Settings live in CONFIG.render and CONFIG.post.
    ===================================================================== */
 import * as THREE from 'three';
-import { EffectComposer, RenderPass, EffectPass, BloomEffect, ToneMappingEffect, ToneMappingMode,
-         VignetteEffect, SMAAEffect, SMAAPreset, Effect, BlendFunction } from 'postprocessing';
+import { EffectComposer, RenderPass, EffectPass, BloomEffect, ToneMappingEffect, ToneMappingMode, DepthOfFieldEffect,
+         VignetteEffect, NoiseEffect, SMAAEffect, SMAAPreset, Effect, BlendFunction } from 'postprocessing';
 import { CONFIG } from './config.js';
 
 /* Brand-safe tone mapping: the Khronos PBR Neutral highlight curve, without its toe.
@@ -23,17 +30,47 @@ class BrandNeutralEffect extends Effect {
       outputColor = vec4(c, inputColor.a); }`, { blendFunction:BlendFunction.SRC }); }
 }
 
-export function createPost({ renderer, scene, camera, mobile }){
-  const R = CONFIG.render;
+export function createPost({ renderer, scene, camera, mobile, tier }){
+  const R = CONFIG.render, PZ = CONFIG.post, high = tier === 'high';
   const composer = new EffectComposer(renderer, { frameBufferType:THREE.HalfFloatType });
   composer.addPass(new RenderPass(scene, camera));
+
+  // depth of field: only on the high tier, focused on a world point the world moves each frame
+  const focus = new THREE.Vector3();
+  let dof = null;
+  if (high && PZ.dof.on){
+    dof = new DepthOfFieldEffect(camera, { worldFocusDistance:8, worldFocusRange:PZ.dof.range, bokehScale:PZ.dof.bokeh, resolutionScale:.5 });
+    dof.target = focus;
+  }
   const mode = { agx:ToneMappingMode.AGX, aces:ToneMappingMode.ACES_FILMIC }[R.toneMapping];
   const bloom = new BloomEffect({ mipmapBlur:true, luminanceThreshold:R.bloom.threshold, luminanceSmoothing:R.bloom.smoothing, intensity:R.bloom.intensity, radius:R.bloom.radius });
-  composer.addPass(new EffectPass(camera, bloom, mode === undefined ? new BrandNeutralEffect() : new ToneMappingEffect({ mode }), new VignetteEffect({ offset:R.vignette.offset, darkness:R.vignette.darkness })));
+  const vignette = new VignetteEffect({ offset:R.vignette.offset, darkness:R.vignette.darkness });
+  const grain = new NoiseEffect({ premultiply:true }); grain.blendMode.opacity.value = PZ.grain;
+  if (dof) composer.addPass(new EffectPass(camera, dof));
+  composer.addPass(new EffectPass(camera, bloom, mode === undefined ? new BrandNeutralEffect() : new ToneMappingEffect({ mode }), vignette, grain));
   if (R.smaa) composer.addPass(new EffectPass(camera, new SMAAEffect({ preset:mobile ? SMAAPreset.MEDIUM : SMAAPreset.HIGH })));
+
+  // ambient occlusion: N8AO is a separate download, fetched only for the high tier, slotted in after the render pass
+  if (high && PZ.ao.on) import('n8ao').then(({ N8AOPostPass }) => {
+    const ao = new N8AOPostPass(scene, camera, innerWidth, innerHeight);
+    Object.assign(ao.configuration, { aoRadius:PZ.ao.radius, distanceFalloff:PZ.ao.falloff, intensity:PZ.ao.intensity, color:new THREE.Color(PZ.ao.color), halfRes:true, gammaCorrection:false });
+    ao.setQualityMode('Performance');
+    composer.addPass(ao, 1);
+  }).catch(err => console.warn('Ambient occlusion unavailable:', err));
+
+  // per-zone look, eased toward the zone you are in
+  const cur = { bloom:R.bloom.intensity, vignette:R.vignette.darkness, range:PZ.dof.range };
+  function setZone(zid, k = .05){
+    const z = { ...PZ.zones.default, ...(PZ.zones[zid] || {}) };
+    cur.bloom += (z.bloom - cur.bloom)*k; cur.vignette += (z.vignette - cur.vignette)*k; cur.range += (z.dofRange - cur.range)*k;
+    bloom.intensity = cur.bloom; vignette.darkness = cur.vignette;
+    if (dof) dof.cocMaterial.focusRange = cur.range;
+  }
   return {
     render: dt => composer.render(dt),
     setSize: (w, h) => composer.setSize(w, h),
-    bloom,
+    setFocus: v => focus.copy(v),
+    setZone,
+    bloom, tier,
   };
 }

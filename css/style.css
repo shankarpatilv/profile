@@ -247,3 +247,14 @@ body.over-part{cursor:pointer}body.over-part .cursor{width:54px;height:54px;marg
 
 /* project titles fit their column, so a long name never runs into the drawing */
 .proj .sh-t{font-size:clamp(42px,4.9vw,86px)}
+
+/* The sound toggle (inserted by js/ui.js): a quiet icon button, amber when on */
+.snd{display:inline-grid;place-items:center;width:32px;height:32px;margin:-6px 0 -6px 2px;padding:0;border:1px solid var(--rule);border-radius:50%;background:none;color:rgba(233,238,255,.7);cursor:pointer;transition:color .2s,border-color .2s}
+.snd svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round}
+.snd path:first-child{fill:currentColor;stroke:none}
+.snd[aria-pressed="false"] .w{opacity:.25}
+.snd[aria-pressed="true"]{color:var(--amber);border-color:var(--amber)}
+.snd:hover{color:var(--line)}
+.snd:focus-visible{outline:2px solid var(--amber);outline-offset:3px}
+/* With WebGL running, the film grain is drawn on the GPU (js/post.js), so the CSS grain steps aside */
+html.webgl body::after{display:none}

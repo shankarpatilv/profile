@@ -11,7 +11,7 @@ const $ = (s, r = document) => r.querySelector(s), $$ = (s, r = document) => [..
 const KEY = { 'hero':'s-cover', 'git':'s-git', 'cloud':'s-cloud', 'ik':'s-ik', 'cg':'s-cg' };
 const TELE = { 's-cover':'tele-hero', 's-git':'tele-git', 's-cloud':'tele-cloud', 's-ik':'tele-ik', 's-cg':'tele-cg' };
 
-export function createUI({ world, mobile, reducedMotion }){
+export function createUI({ world, mobile, reducedMotion, sound = null }){
   const gsap = window.gsap, ST = window.ScrollTrigger, LenisC = window.Lenis, touch = matchMedia('(hover: none)').matches;
   const libs = !!(gsap && ST);
   const root = document.documentElement;
@@ -21,7 +21,8 @@ export function createUI({ world, mobile, reducedMotion }){
   Object.entries(TELE).forEach(([zid, id]) => { const el = document.getElementById(id); if (el) teleDefault[zid] = el.innerHTML; });
   $$('[data-line]').forEach(el => { lineDefault[el.closest('section').id] = el.textContent; });
   const api = {
-    onTele(zid, lines, tone){ const el = document.getElementById(TELE[zid]); if (!el) return; el.innerHTML = lines ? lines.join('<br>') : teleDefault[zid]; el.classList.toggle('alert', tone === 'alert'); el.classList.toggle('calm', tone === 'calm'); },
+    onTele(zid, lines, tone){ if (sound){ if (tone === 'alert' && lines && /down|crashed|expired/i.test(lines[0])) sound.fail(); else if (tone === 'calm') sound.heal(); }
+      const el = document.getElementById(TELE[zid]); if (!el) return; el.innerHTML = lines ? lines.join('<br>') : teleDefault[zid]; el.classList.toggle('alert', tone === 'alert'); el.classList.toggle('calm', tone === 'calm'); },
     onLine(zid, text, tone){ const el = $(`#${zid} [data-line]`); if (!el) return; el.textContent = text || lineDefault[zid]; el.classList.toggle('alert', tone === 'alert'); el.classList.toggle('calm', tone === 'calm'); },
     onRev(zid, isBroken){ const el = $(`#${zid} [data-rev]`); if (!el) return; el.textContent = isBroken ? 'C' : 'B'; el.style.color = isBroken ? 'var(--coral)' : ''; },
   };
@@ -59,7 +60,7 @@ export function createUI({ world, mobile, reducedMotion }){
 
   /* ---------- the pinned scroll-throughs (How I got here, Tech stack): one step at a time ---------- */
   const stepSecs = $$('.steps').map(S => { const lis = $$('.rail li', S), cards = $$('.card', S), rail = $('.rail', S), hint = $('.scrollhint', S), n = cards.length; let cur = -1;
-    const show = p => { const i = Math.min(n - 1, Math.floor(p*n*.999)); if (i === cur) return; cur = i;
+    const show = p => { const i = Math.min(n - 1, Math.floor(p*n*.999)); if (i === cur) return; if (cur >= 0 && sound) sound.tick(); cur = i;
       cards.forEach((c, k) => { c.classList.toggle('on', k === i); c.classList.toggle('past', k < i); c.setAttribute('aria-hidden', k === i ? 'false' : 'true'); });
       lis.forEach((l, k) => { l.classList.toggle('done', k < i); l.classList.toggle('cur', k === i); }); if (rail) rail.style.setProperty('--p', i/(n - 1)); if (hint) hint.style.opacity = i === n - 1 ? 0 : 1;
       if (world && cards[i].dataset.part) world.highlight(S.id, cards[i].dataset.part); };
@@ -72,7 +73,7 @@ export function createUI({ world, mobile, reducedMotion }){
 
   /* ---------- smooth anchor links ---------- */
   let lenis = null;
-  const goTo = y => lenis ? lenis.scrollTo(y, { duration:1.4 }) : scrollTo({ top:y, behavior:reducedMotion ? 'auto' : 'smooth' });
+  const goTo = y => lenis ? lenis.scrollTo(y, { duration:CONFIG.choreo.nav.duration, easing:t => 1 - Math.pow(1 - t, 4) }) : scrollTo({ top:y, behavior:reducedMotion ? 'auto' : 'smooth' });
   $$('a[href^="#"]').forEach(a => a.addEventListener('click', e => { const t = document.querySelector(a.getAttribute('href')); if (!t) return; e.preventDefault(); goTo(t.getBoundingClientRect().top + scrollY); t.setAttribute('tabindex', '-1'); t.focus({ preventScroll:true }); }));
 
   /* ---------- cursor and magnetic buttons (pointer devices only, never with reduced motion) ---------- */
@@ -88,6 +89,13 @@ export function createUI({ world, mobile, reducedMotion }){
   if (CONFIG.effects.magnetic && !touch && !reducedMotion) $$('.btn').forEach(b => {
     b.addEventListener('pointermove', e => { const r = b.getBoundingClientRect(), x = e.clientX - (r.left + r.width/2), y = e.clientY - (r.top + r.height/2); b.style.transform = `translate(${x*.22}px,${y*.3}px)`; });
     b.addEventListener('pointerleave', () => { b.style.transform = ''; }); });
+
+  /* ---------- the sound toggle: added only when scripting works; off until clicked ---------- */
+  if (sound){ const nav = $('.top nav'), b = document.createElement('button');
+    b.className = 'snd'; b.type = 'button'; b.setAttribute('aria-pressed', 'false'); b.setAttribute('aria-label', 'Sound');
+    b.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9z"/><path class="w" d="M16 9a4 4 0 0 1 0 6M18.5 6.5a7.5 7.5 0 0 1 0 11"/></svg>';
+    b.addEventListener('click', () => b.setAttribute('aria-pressed', String(sound.toggle())));
+    if (nav) nav.appendChild(b); }
 
   /* ---------- header ---------- */
   const top = $('#top'), solid = y => top && top.classList.toggle('solid', y > 30);

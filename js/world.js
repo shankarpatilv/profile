@@ -117,7 +117,7 @@ varying vec3 vHot;
 vec3 toLinear(vec3 c){ return mix(c/12.92, pow((c + .055)/1.055, vec3(2.4)), step(.04045, c)); }
 void main(){ vec2 c = gl_PointCoord - .5; float d = length(c); if (d > .5) discard;
   float f = uHalo > .5 ? exp(-d*d*16.) : smoothstep(.5, .08, d); gl_FragColor = vec4(toLinear(vCol.rgb*vCol.a*f*uGain)*vHot, 1.); }`;   // additive: alpha is applied in sRGB, like the original look
-export function createWorld({ canvas, mobile, reducedMotion, onTele, onLine, onRev, onArrive = () => {} }){
+export function createWorld({ canvas, mobile, reducedMotion, onTele, onLine, onRev, onArrive = () => {}, onBuild = () => {} }){
   const W0 = () => innerWidth, H0 = () => innerHeight;
   const renderer = new THREE.WebGLRenderer({ canvas, antialias:false, alpha:false, stencil:false, powerPreference:'high-performance' });
   renderer.setClearColor(CONFIG.colors.deep || '#0A2152', 1);
@@ -125,7 +125,15 @@ export function createWorld({ canvas, mobile, reducedMotion, onTele, onLine, onR
   renderer.setPixelRatio(DPR);
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(CONFIG.camera.fov, W0()/H0(), .1, 400);
-  const post = createPost({ renderer, scene, camera, mobile });
+  // quality tier: phones get the phone tier; desktops medium unless CONFIG or ?quality= says high
+  const qp = (location.search.match(/[?&]quality=(high|medium)/) || [])[1];
+  const tier = mobile ? 'phone' : (qp || (CONFIG.quality.tier === 'high' ? 'high' : 'medium'));
+  const post = createPost({ renderer, scene, camera, mobile, tier });
+  // choreography values the GSAP timelines animate (js/config.js → choreo)
+  const cam = { intro:reducedMotion ? 0 : 1, nudge:0 };
+  const gs = window.gsap, CH = CONFIG.choreo;
+  if (gs && !reducedMotion) gs.to(cam, { intro:0, duration:CH.intro.duration, delay:CH.intro.delay, ease:CH.intro.ease });
+  else cam.intro = 0;
   const lin = h => { const c = new THREE.Color(h); return new THREE.Vector3(c.r, c.g, c.b); };   // brand hex → linear light
 
   /* ---------- the sky: the same radial gradient the page used to paint in CSS, now behind the 3D ---------- */
@@ -357,7 +365,9 @@ export function createWorld({ canvas, mobile, reducedMotion, onTele, onLine, onR
     's-ik': () => { const z = 's-ik'; setE(z, 'ck-st', 1); setE(z, 'ck-no', 0); setN(z, 'no', 3); T(z, ['No note supports that', 'Refused, nothing invented'], 'calm'); Lm(z, 'Nothing in my notes backs that, so it refuses. Nothing invented.', 'calm'); },
     's-cg': () => { const z = 's-cg'; setN(z, 'g4', 1); setE(z, 'g3-g4', 4); T(z, ['Expired login', 'Stopped at JWT with a 401'], 'alert'); Lm(z, 'Expired login. Stopped at the JWT check with a 401, before any data.', 'alert'); onRev(z, true); },
   };
-  function breakZone(zid, id){ if (!RUN[zid]) return; if (broken[zid] && zid !== 's-cover') { resetZone(zid); return; } resetZone(zid); broken[zid] = true; RUN[zid](id); syncEdges(); }
+  const prevBuild = new Float32Array(16);
+  function breakZone(zid, id){ if (!RUN[zid]) return;
+    if (window.gsap && !reducedMotion) window.gsap.fromTo(cam, { nudge:1 }, { nudge:0, duration:CONFIG.choreo.nudge.duration, ease:'power2.out' }); if (broken[zid] && zid !== 's-cover') { resetZone(zid); return; } resetZone(zid); broken[zid] = true; RUN[zid](id); syncEdges(); }
   // click any app server on the cover to take it down
   function hitServer(x, y){ const zi = zoneIndex['s-cover']; if (lifts[zi] < .8) return null;
     for (const id of ['a1','a2','b1','b2','c1','c2']){ const n = NODES[N('s-cover', id)], b = boxScreen(n, lifts[zi]); if (b && x > b.x0 - 8 && x < b.x1 + 8 && y > b.y0 - 8 && y < b.y1 + 8) return id; } return null; }
@@ -397,6 +407,9 @@ export function createWorld({ canvas, mobile, reducedMotion, onTele, onLine, onR
     const lat = prevEye.lengthSq() ? (eye.x - prevEye.x)*right.x + (eye.z - prevEye.z)*right.z : 0; prevEye.copy(eye);
     bankNow = lerp(bankNow, reducedMotion ? 0 : clamp(lat/Math.max(dt, .001)*.004*CONFIG.craft.bank, -.045, .045), .06);
     camera.up.set(0, 1, 0).multiplyScalar(Math.cos(bankNow)).addScaledVector(right, Math.sin(bankNow));
+    // the opening dolly: the camera starts further back and higher, and settles into the hero as it assembles;
+    // a break test leans it in a touch. Both are GSAP-timed values (cam.intro, cam.nudge).
+    if (cam.intro > 0 || cam.nudge > 0){ camera.position.addScaledVector(fwd, -dist*(cam.intro*CH.intro.back - cam.nudge*CH.nudge.amount)); camera.position.y += dist*cam.intro*CH.intro.rise; }
     camera.lookAt(look); camera.setViewOffset(W, H, -off[0], off[1], W, H); camera.updateMatrixWorld();
     // the drafting lamp: where the cursor meets the plane
     if (hasPtr && CONFIG.craft.lamp.on && !mobile && !reducedMotion){ const tanH = Math.tan(fovNow*Math.PI/360), nx = ((ptr[0] + .5)*W - (W/2 + off[0]))/(W/2), ny = -((ptr[1] + .5)*H - (H/2 - off[1]))/(H/2);
@@ -425,6 +438,10 @@ export function createWorld({ canvas, mobile, reducedMotion, onTele, onLine, onR
     const at = arriveT0 === null || reducedMotion ? 0 : t - arriveT0, burst = at > 0 && at < 2.6 ? Math.sin(Math.PI*Math.min(1, at/2.6))*(at < .5 ? at/.5 : 1) : 0;
     rush += dt*(burst*11 + kick*CONFIG.craft.speed.rush); mat.uniforms.uRush.value = rush; mat.uniforms.uBurst.value = burst;
     if (gpu) gpu.update(t, dt, { look, lifts, zoneBuild:built.zoneBuild, cursor:lampW, cursorOn:hasPtr && !mobile, intro, dim });
+    // the post stack follows the zone: focus on what you are looking at, per-zone bloom and vignette
+    post.setFocus(look); post.setZone(ZONES[sp.zi].id, reducedMotion ? 1 : .05);
+    // how fast systems are being built right now (the optional sound hums with it)
+    let rate = 0; built.zoneBuild.forEach((b, i) => { rate += Math.abs(b - (prevBuild[i] || 0)); prevBuild[i] = b; }); onBuild(rate/Math.max(dt, .001));
     post.render(dt);
     overlay(sp.zi);
   }
