@@ -31,6 +31,15 @@ export const CONFIG = {
   intro: { duration: 2.4 },       // the opening assembly, in seconds
   dpr: { desktop: 1.5, mobile: 1.5 },   // resolution cap (the medium tier); never above 2
   grid: { size: .5, fade: 120, opacity: .22 },
+  // the drafting floor's lacquer reflection (js/floor.js)
+  floor: {
+    reflect: .42,           // strength of the reflection (0 turns the mirror off)
+    resolution: .35,        // mirror resolution as a share of the screen's
+    blur: .0024,            // lacquer softness (grows with distance)
+    fade: 40,               // the reflection fades out by this distance from the camera
+    every: 2,               // re-render the mirror every Nth frame (1 = every frame)
+    mobileReflect: false,   // phones keep the grid without the mirror
+  },
   // the craft layer: small details that make the world feel alive
   craft: {
     halo: { on: false, size: 2.9, alpha: .11 },         // the old glow pass on amber; replaced by bloom (render.bloom), kept as a fallback switch
@@ -73,7 +82,7 @@ export const CONFIG = {
     shadow: .6,               // strength of the soft contact shadows
   },
   materials: {
-    glass: { color: '#A9C1EE', opacity: .15, roughness: .05, iridescence: .6, envMapIntensity: 1.5 },
+    glass: { color: '#A9C1EE', opacity: .15, roughness: .05, iridescence: .6, envMapIntensity: 1.1, clearcoat: .6 },
     metal: { color: '#C6CFDF', roughness: .3, anisotropy: .85, envMapIntensity: 1.1 },
     dark:  { color: '#1A2440', metalness: .85, roughness: .42 },
     led:   { color: '#BFE0FF', power: 2.2 },   // status lights: cool white, never amber

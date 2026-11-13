@@ -9,6 +9,7 @@ import { SYSTEMS, ZONES, ROAD_Z } from './zones.js';
 import { HDRLoader } from 'three/addons/loaders/HDRLoader.js';
 import { createBuilt } from './built.js';
 import { createPost } from './post.js';
+import { createFloor } from './floor.js';
 // world.js is imported dynamically by main.js, so if the CDN fails the page falls back to the static version
 
 const clamp = (v, a = 0, b = 1) => Math.max(a, Math.min(b, v));
@@ -33,6 +34,7 @@ uniform vec3 uLine, uCyan, uAmber, uCoral, uFresh;
 uniform vec4 uNB[32];   // per-node build 0..1 (js/built.js)
 uniform float uBuiltA, uAmberGain, uCoralGain;
 uniform vec3 uAmberTint;
+uniform float uMirror;   // 1 while the floor's mirror renders: dust is left out of the reflection
 uniform vec4 uSize;   // line, traffic, road, dust
 uniform vec2 uSize2;  // area, beacon
 attribute vec3 position;   // start point (or the point itself)
@@ -65,6 +67,7 @@ void main(){
   } else if (kind < 2.5){               // the thread that connects every zone
     float u = fract(aMove.x + (uT + uRush)*aMove.y); p = mix(position, aB, u); col = uAmber; size = uSize.z*(1. + uBurst*.6); a = .7 + uBurst*.3;
   } else if (kind < 3.5){               // ambient dust
+    if (uMirror > .5){ gl_Position = vec4(2., 2., 2., 1.); gl_PointSize = 0.; vCol = vec4(0.); vHot = vec3(0.); return; }
     p += vec3(sin(uT*.13 + r*40.), cos(uT*.11 + r*30.), sin(uT*.09 + r*20.))*.28; col = uCyan; size = uSize.w; a = .3;
   } else if (kind < 4.5){               // dashed zones on the plane
     p.y *= lift; col = uCyan; size = uSize2.x; a = .5;
@@ -113,30 +116,6 @@ varying vec3 vHot;
 vec3 toLinear(vec3 c){ return mix(c/12.92, pow((c + .055)/1.055, vec3(2.4)), step(.04045, c)); }
 void main(){ vec2 c = gl_PointCoord - .5; float d = length(c); if (d > .5) discard;
   float f = uHalo > .5 ? exp(-d*d*16.) : smoothstep(.5, .08, d); gl_FragColor = vec4(toLinear(vCol.rgb*vCol.a*f*uGain)*vHot, 1.); }`;   // additive: alpha is applied in sRGB, like the original look
-const GRID_VS = `
-precision highp float;
-uniform mat4 modelViewMatrix, projectionMatrix;
-attribute vec3 position;
-varying vec3 vW;
-void main(){ vW = position; gl_Position = projectionMatrix*modelViewMatrix*vec4(position, 1.); }`;
-const GRID_FS = `
-precision highp float;
-uniform vec3 uCam, uCyan, uLamp; uniform float uSizeG, uFade, uOp, uDim, uLampR, uLampS, uScanX, uScanW, uScanOn, uReveal; uniform vec2 uScanC;
-varying vec3 vW;
-float line(float v, float w){ float f = abs(fract(v) - .5); return 1. - smoothstep(.5 - w, .5, f); }
-void main(){
-  float dist = distance(vW, uCam), w = clamp(.0016*dist/uSizeG, .006, .45), w5 = clamp(.0016*dist/(uSizeG*5.), .003, .45);
-  float minor = max(line(vW.x/uSizeG, w), line(vW.z/uSizeG, w))*(1. - smoothstep(9., 34., dist));
-  float major = max(line(vW.x/(uSizeG*5.), w5), line(vW.z/(uSizeG*5.), w5));
-  float g = minor*.5 + major*.6;   // (the scan pass below only brightens the major lines)
-  float fade = 1. - smoothstep(uFade*.35, uFade, dist);
-  float reveal = 1. - smoothstep(uReveal - 4., uReveal, length(vW.xz));                 // the sheet spreads out from the hero
-  float lamp = (1. - smoothstep(0., uLampR, distance(vW.xz, uLamp.xz)))*uLampS;         // the drafting lamp under the cursor
-  float scan = uScanOn*exp(-pow((vW.x - uScanX)/uScanW, 2.))*(1. - smoothstep(3., 7., distance(vW.xz, uScanC)));   // a short scan pass near you
-  vec3 col = mix(uCyan, vec3(1.), lamp*.35);
-  gl_FragColor = vec4(col*uDim, (g*(1. + lamp*1.5) + major*scan*.9 + lamp*.012)*fade*uOp*reveal);
-}`;
-
 export function createWorld({ canvas, mobile, reducedMotion, onTele, onLine, onRev, onArrive = () => {} }){
   const W0 = () => innerWidth, H0 = () => innerHeight;
   const renderer = new THREE.WebGLRenderer({ canvas, antialias:false, alpha:false, stencil:false, powerPreference:'high-performance' });
@@ -158,7 +137,8 @@ export function createWorld({ canvas, mobile, reducedMotion, onTele, onLine, onR
         vec3 c = d < .55 ? mix(uC0, uC1, d/.55) : mix(uC1, uC2, clamp((d - .55)/.45, 0., 1.));
         gl_FragColor = vec4(toLinear(c), 1.); }` });
   const skyGeo = new THREE.BufferGeometry(); skyGeo.setAttribute('position', new THREE.BufferAttribute(new Float32Array([-1,-1,0, 3,-1,0, -1,3,0]), 3));
-  const skyMesh = new THREE.Mesh(skyGeo, skyMat); skyMesh.frustumCulled = false; skyMesh.renderOrder = -100; scene.add(skyMesh);
+  const skyMesh = new THREE.Mesh(skyGeo, skyMat); skyMesh.frustumCulled = false; skyMesh.renderOrder = -100; skyMesh.layers.set(1); scene.add(skyMesh);
+  camera.layers.enable(1);   // layer 1: things the floor's mirror must not see (the sky, contact shadows)
 
   /* ---------- light: a studio HDRI for reflections (streams in; the scene is usable before it arrives) and a cool key ---------- */
   const L = CONFIG.light;
@@ -249,18 +229,14 @@ export function createWorld({ canvas, mobile, reducedMotion, onTele, onLine, onR
   geo.setAttribute('aInfo', new THREE.BufferAttribute(info, 4)); geo.setAttribute('aMove', new THREE.BufferAttribute(mov, 2)); geo.setAttribute('aScatter', new THREE.BufferAttribute(sc, 3));
   const C = CONFIG.colors, S = CONFIG.sizes, lifts = new Float32Array(16).fill(1);
   const mat = new THREE.RawShaderMaterial({ vertexShader:VS, fragmentShader:FS, transparent:true, depthTest:true, depthWrite:false, blending:THREE.AdditiveBlending,
-    uniforms:{ uNB:{value:built.nodeBuild}, uBuiltA:{value:CONFIG.build.linesWhenBuilt}, uAmberGain:{value:CONFIG.render.amberGain}, uAmberTint:{value:new THREE.Vector3(...CONFIG.render.amberTint)}, uCoralGain:{value:CONFIG.render.coralGain}, uGain:{value:CONFIG.render.pointGain}, uT:{value:0}, uRush:{value:0}, uBurst:{value:0}, uHalo:{value:0}, uHaloS:{value:CONFIG.craft.halo.size}, uHaloA:{value:CONFIG.craft.halo.alpha}, uHover:{value:-1}, uAsm:{value:reducedMotion ? 0 : CONFIG.craft.assemble}, uMouseOn:{value:0}, uAspect:{value:1}, uNight:{value:0}, uFlowR:{value:CONFIG.craft.flow.radius}, uFlowP:{value:CONFIG.craft.flow.push}, uDis:{value:new Float32Array(16)}, uZC:{value:new Float32Array(48)}, uMouse:{value:new THREE.Vector2(9, 9)}, uRight:{value:new THREE.Vector3(1, 0, 0)}, uUp:{value:new THREE.Vector3(0, 1, 0)}, uFogN:{value:CONFIG.craft.fog.near}, uFogF:{value:CONFIG.craft.fog.far}, uPx:{value:DPR}, uK:{value:9}, uIntro:{value:reducedMotion ? 1 : 0}, uDim:{value:1}, uLift:{value:lifts}, uNode:{value:nodeState}, uEdge:{value:edgeState},
+    uniforms:{ uMirror:{value:0}, uNB:{value:built.nodeBuild}, uBuiltA:{value:CONFIG.build.linesWhenBuilt}, uAmberGain:{value:CONFIG.render.amberGain}, uAmberTint:{value:new THREE.Vector3(...CONFIG.render.amberTint)}, uCoralGain:{value:CONFIG.render.coralGain}, uGain:{value:CONFIG.render.pointGain}, uT:{value:0}, uRush:{value:0}, uBurst:{value:0}, uHalo:{value:0}, uHaloS:{value:CONFIG.craft.halo.size}, uHaloA:{value:CONFIG.craft.halo.alpha}, uHover:{value:-1}, uAsm:{value:reducedMotion ? 0 : CONFIG.craft.assemble}, uMouseOn:{value:0}, uAspect:{value:1}, uNight:{value:0}, uFlowR:{value:CONFIG.craft.flow.radius}, uFlowP:{value:CONFIG.craft.flow.push}, uDis:{value:new Float32Array(16)}, uZC:{value:new Float32Array(48)}, uMouse:{value:new THREE.Vector2(9, 9)}, uRight:{value:new THREE.Vector3(1, 0, 0)}, uUp:{value:new THREE.Vector3(0, 1, 0)}, uFogN:{value:CONFIG.craft.fog.near}, uFogF:{value:CONFIG.craft.fog.far}, uPx:{value:DPR}, uK:{value:9}, uIntro:{value:reducedMotion ? 1 : 0}, uDim:{value:1}, uLift:{value:lifts}, uNode:{value:nodeState}, uEdge:{value:edgeState},
       uLine:{value:new THREE.Vector3(...hex(C.line))}, uCyan:{value:new THREE.Vector3(...hex(C.cyan))}, uAmber:{value:new THREE.Vector3(...hex(C.amber))}, uCoral:{value:new THREE.Vector3(...hex(C.coral))}, uFresh:{value:new THREE.Vector3(...hex(C.fresh))},
       uSize:{value:new THREE.Vector4(S.line, S.traffic, S.road, S.dust)}, uSize2:{value:new THREE.Vector2(S.area, S.beacon)} } });
   ZONES.forEach((z, i) => { const c = z.sys ? (() => { const e = extents(z.sys); return [e.cx + z.at[0], .3, e.cz + z.at[1]]; })() : z.look || [z.at ? z.at[0] : 0, 0, 0]; mat.uniforms.uZC.value.set(c, i*3); });
   const points = new THREE.Points(geo, mat); points.frustumCulled = false; points.renderOrder = 1;
-  // the drafting plane, drawn by a shader so it costs two triangles
-  const gq = new Float32Array([-140,0,-160, 240,0,-160, 240,0,160, -140,0,-160, 240,0,160, -140,0,160]);
-  const ggeo = new THREE.BufferGeometry(); ggeo.setAttribute('position', new THREE.BufferAttribute(gq, 3));
-  const gmat = new THREE.RawShaderMaterial({ vertexShader:GRID_VS, fragmentShader:GRID_FS, transparent:true, depthTest:true, depthWrite:false,
-    uniforms:{ uCam:{value:new THREE.Vector3()}, uLamp:{value:new THREE.Vector3(0, -99, 0)}, uLampR:{value:CONFIG.craft.lamp.radius}, uLampS:{value:0}, uScanX:{value:0}, uScanW:{value:CONFIG.craft.scan.width}, uScanOn:{value:0}, uScanC:{value:new THREE.Vector2()}, uReveal:{value:reducedMotion ? 999 : 0}, uCyan:{value:lin(C.cyan)}, uSizeG:{value:CONFIG.grid.size}, uFade:{value:CONFIG.grid.fade}, uOp:{value:CONFIG.grid.opacity}, uDim:{value:1} } });
-  const grid = new THREE.Mesh(ggeo, gmat); grid.frustumCulled = false; grid.renderOrder = 0;
-  scene.add(grid); scene.add(points);
+  // the drafting floor: the grid plus a lacquer reflection of the world (js/floor.js)
+  const floor = createFloor({ renderer, mobile, reducedMotion, onMirror:on => { mat.uniforms.uMirror.value = on ? 1 : 0; } }), gmat = { uniforms:floor.uniforms };
+  scene.add(floor.mesh); scene.add(points);
   if (CONFIG.craft.halo.on && !mobile){ const hmat = new THREE.RawShaderMaterial({ vertexShader:VS, fragmentShader:FS, transparent:true, depthTest:false, depthWrite:false, blending:THREE.AdditiveBlending,
       uniforms:{ ...mat.uniforms, uHalo:{value:1} } }); const halo = new THREE.Points(geo, hmat); halo.frustumCulled = false; halo.renderOrder = .5; scene.add(halo); }
 
@@ -278,7 +254,7 @@ export function createWorld({ canvas, mobile, reducedMotion, onTele, onLine, onR
   }
   const shiftOff = s => s ? [s[0]*W0(), s[1]*H0()] : [0, 0];
   function refresh(){
-    const W = W0(), H = H0(); renderer.setSize(W, H, false); post.setSize(W, H); camera.aspect = W/H; ST = []; secInfo = [];
+    const W = W0(), H = H0(); renderer.setSize(W, H, false); post.setSize(W, H); floor.resize(); camera.aspect = W/H; ST = []; secInfo = [];
     ZONES.forEach((z, i) => { const sec = sections[i]; if (!sec) return; const r = sec.getBoundingClientRect(), top = r.top + scrollY, first = ST.length;
       if (z.cam === 'fit') ST.push(fitStation(z, sec));
       else if (z.track){ const off = mobile ? [0, -H*.32] : [W*.16, -H*.3], dir = [-2.6, 2.1, 5.4];
@@ -453,5 +429,7 @@ export function createWorld({ canvas, mobile, reducedMotion, onTele, onLine, onR
     for (const id of ids){ const k = N(zid, id); if (k === undefined) continue; const b = boxScreen(NODES[k], lifts[zi]); if (!b) continue;
       if (x > b.x0 - 10 && x < b.x1 + 10 && y > b.y0 - 10 && y < b.y1 + 10){ const a = (b.x1 - b.x0)*(b.y1 - b.y0); if (a < area){ area = a; best = id; } } } return best; }
   const setHover = (zid, id) => { mat.uniforms.uHover.value = zid && id ? N(zid, id) ?? -1 : -1; };
+  // ?debug in the URL exposes the render pieces for measurement (scripts in the README use it)
+  if (/[?&]debug\b/.test(location.search)) window.__debug = { floor, built, post, renderer, scene, points, CONFIG };
   return { tick, refresh, breakZone, resetZone, hitServer, hitNode, highlight, setHover, setPointer:(x, y) => { ptr = [x, y]; hasPtr = true; }, activeZone:() => stationParam().zi, zoneIndex, renderer };
 }

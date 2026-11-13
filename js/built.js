@@ -93,6 +93,19 @@ function partsFor(kind, w, d, h){
       add(at(new THREE.CylinderGeometry(.026, .03, .05, 24), ox, .025, oz), 'metal'); add(at(new THREE.SphereGeometry(.021, 24, 16), ox, .074, oz), 'metal'); }
   } else if (kind === 'ai'){
     plinth(); shell();          // the dichroic core is its own mesh so it can turn (see below)
+  } else if (kind === 'gate'){    // a request screen: a glass wall in a metal frame, a status strip along the top
+    add(at(new THREE.BoxGeometry(w*1.4, .03, d), 0, .015, 0), 'dark');
+    for (const z of [-d/2 + .025, d/2 - .025]) add(at(new THREE.BoxGeometry(w*1.2, h, .05), 0, h/2, z), 'metal');
+    add(at(new THREE.BoxGeometry(w*.45, h - .06, d - .1), 0, .03 + (h - .06)/2, 0), 'glass');
+    add(at(new THREE.BoxGeometry(w*.7, .012, d*.86), 0, h - .02, 0), 'led');
+  } else if (kind === 'card'){    // notes and messages: a short stack of sheets on a metal tray
+    add(at(RB(w, .016, d, .005), 0, .008, 0), 'metal');
+    for (let i = 0; i < 3; i++) add(at(new THREE.BoxGeometry(w*.86, .008, d*.86), (i - 1)*.006, .024 + i*.016, (1 - i)*.006), 'paper');
+  } else if (kind === 'small'){   // a small service: glass case with one status core
+    plinth(); shell();
+    add(at(new THREE.BoxGeometry(gw*.34, gw*.34, gd*.34), 0, PLINTH + (h - PLINTH)/2, 0), 'led');
+  } else if (kind === 'puck'){    // one incoming request
+    add(at(new THREE.CylinderGeometry(w*.32, w*.36, .05, 28), 0, .025, 0), 'metal'); add(at(new THREE.SphereGeometry(w*.24, 24, 16), 0, .08, 0), 'metal');
   } else if (kind === 'vec'){
     plinth(); shell();
     for (let i = 0; i < 4; i++) for (let k = 0; k < 4; k++) for (let j = 0; j < 2; j++)
@@ -120,7 +133,7 @@ function contactShadow(nodes, cx, cz, size){
   pass(9, .5, .12); pass(2, .6, .02);
   const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace;
   const m = new THREE.Mesh(new THREE.PlaneGeometry(size, size), new THREE.MeshBasicMaterial({ map:t, transparent:true, depthWrite:false, opacity:0 }));
-  m.rotation.x = -Math.PI/2; m.position.set(cx, .002, cz); m.renderOrder = -1;
+  m.rotation.x = -Math.PI/2; m.position.set(cx, .002, cz); m.renderOrder = -1; m.layers.set(1);   // the floor's mirror skips it
   return m;
 }
 
@@ -132,11 +145,12 @@ export function createBuilt({ scene, NODES, nodeState, reducedMotion }){
   const led = new THREE.Color(MC.led.color).multiplyScalar(MC.led.power);
   const M = {
     glass: buildable(new THREE.MeshPhysicalMaterial({ color:MC.glass.color, metalness:0, roughness:MC.glass.roughness, transparent:true, opacity:MC.glass.opacity, depthWrite:false,
-      clearcoat:1, clearcoatRoughness:.03, iridescence:MC.glass.iridescence, iridescenceIOR:1.32, iridescenceThicknessRange:[180, 520], specularIntensity:1, envMapIntensity:MC.glass.envMapIntensity }),
+      clearcoat:MC.glass.clearcoat ?? 1, clearcoatRoughness:.03, iridescence:MC.glass.iridescence, iridescenceIOR:1.32, iridescenceThicknessRange:[180, 520], specularIntensity:1, envMapIntensity:MC.glass.envMapIntensity }),
       U, { coralMix:MC.coralGlass }),
     metal: buildable(new THREE.MeshPhysicalMaterial({ color:MC.metal.color, metalness:1, roughness:MC.metal.roughness, anisotropy:MC.metal.anisotropy, envMapIntensity:MC.metal.envMapIntensity }), U),
     dark:  buildable(new THREE.MeshPhysicalMaterial({ color:MC.dark.color, metalness:MC.dark.metalness, roughness:MC.dark.roughness, envMapIntensity:.9 }), U),
     led:   buildable(new THREE.MeshBasicMaterial({ color:led }), U, { coralMix:1, coralCol:new THREE.Color(C.coral).multiplyScalar(2.6) }),
+    paper: buildable(new THREE.MeshPhysicalMaterial({ color:CONFIG.colors.line, metalness:0, roughness:.65, envMapIntensity:.6 }), U, { coralMix:.5 }),
     msg:   buildable(new THREE.MeshBasicMaterial({ color:new THREE.Color(C.amber).multiplyScalar(MC.msg.power) }), U, { coralMix:1, coralCol:new THREE.Color(C.coral).multiplyScalar(2) }),
     dich:  new THREE.MeshPhysicalMaterial({ color:0xffffff, metalness:1, roughness:.12, iridescence:1, iridescenceIOR:1.8, iridescenceThicknessRange:[250, 800], envMapIntensity:1.4 }),
   };
