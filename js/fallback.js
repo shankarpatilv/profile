@@ -11,7 +11,7 @@ import { SYSTEMS } from './zones.js';
 const NS = 'http://www.w3.org/2000/svg';
 // what each break switch takes down, and what the readouts say (the same lines as js/world.js)
 const BREAK = {
-  hero:  { down:['b2'], tele:['Server b2 is down', 'Rerouting to 5 servers'], healed:['Healed', '6 of 6 servers healthy'] },
+  hero:  { down:['b2'], tele:['Server b2 is down', 'Rerouting to 5 servers'], healed:['Healed', '6 of 6 servers healthy'] },   // b2 is replaced by whichever server is clicked
   git:   { down:['w2'], tele:['Worker 2 crashed', 'Partition 2 waits, nothing skipped'], healed:['Worker 2 restarted', 'Caught up, 0 events lost'] },
   cloud: { down:['a1', 'a2'], tele:['Zone A is down', 'Traffic moves to zones B and C'], healed:['Zone A is back', '0 failed requests'] },
   ik:    { down:[], off:['ck-st'], tele:['No note supports that', 'Refused, nothing invented'] },
@@ -47,17 +47,28 @@ function draw(stage, key){
 }
 
 export function drawFallback(){
+  const drawn = {};
   document.querySelectorAll('.stage[data-stage]').forEach(stage => {
     const key = stage.dataset.stage; if (!SYSTEMS[key]) return;
     const { groups, svg } = draw(stage, key), tele = stage.querySelector('.tele'), base = tele ? tele.innerHTML : '';
+    drawn[key] = { groups, svg };
+    // the cover keeps its single switch; the projects are driven by the scenario runner (js/scenario-runner.js)
+    if (key !== 'hero') return;
     const B = BREAK[key]; let timer = null;
-    const reset = () => { clearTimeout(timer); Object.values(groups).forEach(g => g.classList.remove('down')); svg.querySelectorAll('.ln').forEach(l => l.classList.toggle('off', (SYSTEMS[key].offEdges || []).includes(l.dataset.edge)));
-      if (tele){ tele.innerHTML = base; tele.classList.remove('alert', 'calm'); } };
-    const go = () => { reset(); B.down.forEach(id => groups[id] && groups[id].classList.add('down'));
-      (B.off || []).forEach(e => { const l = svg.querySelector(`[data-edge="${e}"]`); if (l) l.classList.add('off'); });
-      if (tele){ tele.innerHTML = B.tele.join('<br>'); tele.classList.add(B.down.length ? 'alert' : 'calm'); }
-      if (B.healed) timer = setTimeout(() => { Object.values(groups).forEach(g => g.classList.remove('down')); if (tele){ tele.innerHTML = B.healed.join('<br>'); tele.classList.replace('alert', 'calm'); } }, 3600); };
-    document.querySelectorAll(`[data-break="${key}"]`).forEach(b => b.addEventListener('click', go));
-    document.querySelectorAll(`[data-reset="${key}"]`).forEach(b => b.addEventListener('click', reset));
+    const reset = () => { clearTimeout(timer); Object.values(groups).forEach(g => g.classList.remove('down')); if (tele){ tele.innerHTML = base; tele.classList.remove('alert', 'calm'); } };
+    const go = (id = 'b2') => { reset(); if (groups[id]) groups[id].classList.add('down');
+      if (tele){ tele.innerHTML = [`Server ${id} is down`, B.tele[1]].join('<br>'); tele.classList.add('alert'); }
+      timer = setTimeout(() => { Object.values(groups).forEach(g => g.classList.remove('down')); if (tele){ tele.innerHTML = B.healed.join('<br>'); tele.classList.replace('alert', 'calm'); } }, 3600); };
+    // click any server in the drawing to take it down (as in the 3D version)
+    ['a1', 'a2', 'b1', 'b2', 'c1', 'c2'].forEach(id => { const g = groups[id]; if (!g) return; g.style.cursor = 'pointer'; g.style.pointerEvents = 'all'; g.addEventListener('click', () => go(id)); });
+    svg.style.pointerEvents = 'auto';
   });
+  // what the scenario runner uses when there is no WebGL: parts go coral, come back, or appear
+  const bases = {}; document.querySelectorAll('.stage[data-stage] .tele').forEach(t => { bases[t.closest('.stage').dataset.stage] = t.innerHTML; });
+  return {
+    setNode(key, id, s){ const g = drawn[key] && drawn[key].groups[id]; if (!g) return; g.classList.toggle('down', s === 'down'); if (s === 'new') g.classList.remove('ghost'); if (s === 'hidden') g.classList.add('ghost'); },
+    reset(key){ const d = drawn[key]; if (!d) return; Object.entries(d.groups).forEach(([id, g]) => { g.classList.remove('down'); g.classList.toggle('ghost', !!SYSTEMS[key].nodes[id][6]); });
+      const st = document.querySelector(`.stage[data-stage="${key}"]`), tele = st && st.querySelector('.tele'); if (tele){ tele.innerHTML = bases[key]; tele.classList.remove('alert', 'calm'); }
+      const sec = st && st.closest('section'), line = sec && sec.querySelector('[data-line]'); if (line && line.dataset.base) line.textContent = line.dataset.base; },
+  };
 }

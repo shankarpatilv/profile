@@ -25,29 +25,30 @@ const smooth = (a, b, v) => { const t = clamp((v - a)/(b - a)); return t*t*(3 - 
 /* The shader patch shared by every built material. Node lookups happen in the
    vertex shader (uniform arrays can only be indexed freely there). */
 function buildable(mat, U, opts = {}){
-  const coralMix = { value: opts.coralMix ?? 0 }, coralCol = { value: opts.coralCol || new THREE.Color(CONFIG.colors.coral) };
+  const coralMix = { value: opts.coralMix ?? 0 }, coralCol = { value: opts.coralCol || new THREE.Color(CONFIG.colors.coral) }, flashGain = { value: opts.flash ?? .35 };
   mat.onBeforeCompile = sh => {
-    Object.assign(sh.uniforms, U, { uCoralMix: coralMix, uCoralCol: coralCol });
+    Object.assign(sh.uniforms, U, { uCoralMix: coralMix, uCoralCol: coralCol, uFlashGain: flashGain });
     sh.vertexShader = sh.vertexShader
       .replace('#include <common>', `#include <common>
         attribute float aNode; attribute float aH;
-        uniform vec4 uNB[32]; uniform vec4 uNS[32];
-        varying float vLY; varying float vCut; varying float vSt; varying float vBuilding;
+        uniform vec4 uNB[32]; uniform vec4 uNS[32]; uniform vec4 uNF[32];
+        varying float vLY; varying float vCut; varying float vSt; varying float vBuilding; varying float vFlash;
         float pick4(vec4 v, float c){ return c < .5 ? v.x : c < 1.5 ? v.y : c < 2.5 ? v.z : v.w; }`)
       .replace('#include <begin_vertex>', `#include <begin_vertex>
         float b = pick4(uNB[int(floor(aNode/4.))], mod(aNode, 4.));
         vSt = pick4(uNS[int(floor(aNode/4.))], mod(aNode, 4.));
-        vCut = mix(-.03, aH + .03, b); vLY = transformed.y; vBuilding = step(b, .999);`);
+        vCut = mix(-.03, aH + .03, b); vLY = transformed.y; vBuilding = step(b, .999);
+        vFlash = pick4(uNF[int(floor(aNode/4.))], mod(aNode, 4.));`);
     sh.fragmentShader = sh.fragmentShader
       .replace('#include <common>', `#include <common>
-        uniform vec3 uAmberHot, uCoralCol; uniform float uSeam, uCoralMix;
-        varying float vLY; varying float vCut; varying float vSt; varying float vBuilding;`)
+        uniform vec3 uAmberHot, uCoralCol; uniform float uSeam, uCoralMix, uFlashGain;
+        varying float vLY; varying float vCut; varying float vSt; varying float vBuilding; varying float vFlash;`)
       .replace('#include <clipping_planes_fragment>', '#include <clipping_planes_fragment>\n if (vLY > vCut) discard;')
       .replace('#include <color_fragment>', `#include <color_fragment>
         if (vSt > .5 && vSt < 1.5) diffuseColor.rgb = mix(diffuseColor.rgb, uCoralCol, uCoralMix);`)
       .replace('#include <dithering_fragment>', `#include <dithering_fragment>
         float seam = (1. - smoothstep(0., .016, vCut - vLY))*vBuilding;
-        gl_FragColor.rgb += uAmberHot*seam*uSeam;`);
+        gl_FragColor.rgb += uAmberHot*seam*uSeam + vec3(.92, .95, 1.)*vFlash*uFlashGain;   // a part doing its job flashes white`);
   };
   mat.customProgramCacheKey = () => 'built:' + mat.type;
   return mat;
@@ -139,17 +140,17 @@ function contactShadow(nodes, cx, cz, size){
 
 export function createBuilt({ scene, NODES, nodeState, reducedMotion }){
   const C = CONFIG.colors, MC = CONFIG.materials, B = CONFIG.build;
-  const nodeBuild = new Float32Array(128);
-  const U = { uNB:{ value:nodeBuild }, uNS:{ value:nodeState }, uSeam:{ value:reducedMotion ? 0 : B.seam },
+  const nodeBuild = new Float32Array(128), nodeFlash = new Float32Array(128);   // flash: a part doing its job (scenarios), decays each frame
+  const U = { uNB:{ value:nodeBuild }, uNS:{ value:nodeState }, uNF:{ value:nodeFlash }, uSeam:{ value:reducedMotion ? 0 : B.seam },
     uAmberHot:{ value:new THREE.Color(C.amber) } };
   const led = new THREE.Color(MC.led.color).multiplyScalar(MC.led.power);
   const M = {
     glass: buildable(new THREE.MeshPhysicalMaterial({ color:MC.glass.color, metalness:0, roughness:MC.glass.roughness, transparent:true, opacity:MC.glass.opacity, depthWrite:false,
       clearcoat:MC.glass.clearcoat ?? 1, clearcoatRoughness:.03, iridescence:MC.glass.iridescence, iridescenceIOR:1.32, iridescenceThicknessRange:[180, 520], specularIntensity:1, envMapIntensity:MC.glass.envMapIntensity }),
-      U, { coralMix:MC.coralGlass }),
+      U, { coralMix:MC.coralGlass, flash:.5 }),
     metal: buildable(new THREE.MeshPhysicalMaterial({ color:MC.metal.color, metalness:1, roughness:MC.metal.roughness, anisotropy:MC.metal.anisotropy, envMapIntensity:MC.metal.envMapIntensity }), U),
     dark:  buildable(new THREE.MeshPhysicalMaterial({ color:MC.dark.color, metalness:MC.dark.metalness, roughness:MC.dark.roughness, envMapIntensity:.9 }), U),
-    led:   buildable(new THREE.MeshBasicMaterial({ color:led }), U, { coralMix:1, coralCol:new THREE.Color(C.coral).multiplyScalar(2.6) }),
+    led:   buildable(new THREE.MeshBasicMaterial({ color:led }), U, { coralMix:1, coralCol:new THREE.Color(C.coral).multiplyScalar(2.6), flash:2.4 }),
     paper: buildable(new THREE.MeshPhysicalMaterial({ color:CONFIG.colors.line, metalness:0, roughness:.65, envMapIntensity:.6 }), U, { coralMix:.5 }),
     msg:   buildable(new THREE.MeshBasicMaterial({ color:new THREE.Color(C.amber).multiplyScalar(MC.msg.power) }), U, { coralMix:1, coralCol:new THREE.Color(C.coral).multiplyScalar(2) }),
     dich:  new THREE.MeshPhysicalMaterial({ color:0xffffff, metalness:1, roughness:.12, iridescence:1, iridescenceIOR:1.8, iridescenceThicknessRange:[250, 800], envMapIntensity:1.4 }),
@@ -180,7 +181,10 @@ export function createBuilt({ scene, NODES, nodeState, reducedMotion }){
   const zoneBuild = new Float32Array(16);   // how built each zone is (the GPU particles fade as a zone completes)
   const prev = new Float32Array(128).fill(-1),  // node state last frame
          rebuildT = new Float32Array(128).fill(-1);
+  let curT = 0;
   function update(t, lifts, introBuild){
+    const dt = Math.min(.05, t - curT || .016); curT = t;
+    for (let i = 0; i < 128; i++) if (nodeFlash[i] > .001) nodeFlash[i] *= Math.exp(-dt*2.6); else nodeFlash[i] = 0;
     spinners.forEach(s => { if (!reducedMotion){ s.rotation.y = t*.4; s.rotation.x = t*.23; }
       const k = smooth(.55, .9, nodeBuild[s.userData.node]); s.scale.setScalar(Math.max(.001, k)); s.visible = k > .001; });
     zones.forEach(Z => {
@@ -198,5 +202,7 @@ export function createBuilt({ scene, NODES, nodeState, reducedMotion }){
       });
     });
   }
-  return { update, nodeBuild, zoneBuild, materials:M };
+  return { update, nodeBuild, nodeFlash, zoneBuild, materials:M,
+    flash:(i, v = 1) => { nodeFlash[i] = Math.max(nodeFlash[i], v); },
+    rebuild:i => { if (!reducedMotion) rebuildT[i] = curT; } };
 }

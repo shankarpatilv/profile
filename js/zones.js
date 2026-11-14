@@ -51,7 +51,7 @@ export const SYSTEMS = {
    `dim` fades the world behind text-heavy sections so the words stay easy to read. */
 export const ROAD_Z = 2.7;
 export const ZONES = [
-  { id:'s-cover',   sys:'hero',  at:[0,0],   cam:'fit', dim:1 },
+  { id:'s-cover',   sys:'hero',  at:[0,0],   cam:'fit', dim:1, zoom:1.18, mzoom:1.08 },   // zoom: the hero is framed a little larger
   { id:'s-path',    track:true,  at:[7,0],   dim:.55,
     markers:[7,9,11,13,15,17] },                       // one marker per step on the thread, the last is "your team"
   { id:'s-bom',     sys:'bom',   at:[23,0],  tour:['l1','b1','f1','d1','c1','ai','sec'], shift:[.31,-.06], mshift:[0,.22], dim:1 },

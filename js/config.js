@@ -90,7 +90,10 @@ export const CONFIG = {
     intro: { back: .34, rise: .22, duration: 3.2, delay: .1, ease: 'power3.out' },   // the opening dolly into the hero
     nav: { duration: 1.6 },                  // header links: a quartic ease-out, precise rather than springy
     nudge: { amount: .045, duration: .9 },   // the camera leans in a touch when a break test fires
+    focus: { pull: .32, push: .1, duration: .9 },   // scenarios lean the camera toward a part: how far the view turns to it, how much it moves in
   },
+  // scenarios (js/scenarios.js): the highlighted request (a bright amber bead with a short trail)
+  scenarios: { beadSize: 7, beadGlow: 6, trail: .022 },
   // sound (js/sound.js): on by default; browsers only allow audio after a click, tap or key, so it starts then. Muted from the header.
   sound: { on: true, volume: .5, hum: 55, humGain: 4 },
   // rendering: how the 3D frame is finished (pmndrs/postprocessing)

@@ -34,6 +34,8 @@ uniform vec4 uNode[32];
 uniform vec4 uEdge[32];
 uniform vec3 uLine, uCyan, uAmber, uCoral, uFresh;
 uniform vec4 uNB[32];   // per-node build 0..1 (js/built.js)
+uniform vec4 uNF[32];   // per-node flash 0..1 (a part doing its job, scenarios)
+uniform float uTrT, uTrDim;   // traffic clock (scenarios can speed it up) and strength (they dim it)
 uniform float uBuiltA, uAmberGain, uCoralGain;
 uniform vec3 uAmberTint;
 uniform float uMirror;   // 1 while the floor's mirror renders: dust is left out of the reflection
@@ -48,6 +50,7 @@ varying vec4 vCol;
 varying vec3 vHot;    // HDR gain: amber and coral go above white so bloom picks out only them
 float pick(vec4 v, float c){ return c < .5 ? v.x : c < 1.5 ? v.y : c < 2.5 ? v.z : v.w; }
 float nodeSt(float i){ if (i < 0.) return 0.; return pick(uNode[int(floor(i/4.))], mod(i, 4.)); }
+float nodeF(float i){ if (i < 0.) return 0.; return pick(uNF[int(floor(i/4.))], mod(i, 4.)); }
 float nodeB(float i){ if (i < 0.) return 0.; return pick(uNB[int(floor(i/4.))], mod(i, 4.)); }
 float edgeSt(float i){ if (i < 0.) return 0.; return pick(uEdge[int(floor(i/4.))], mod(i, 4.)); }
 void main(){
@@ -60,12 +63,13 @@ void main(){
     else if (st > 3.5){ col = uAmber; size *= 1.3; a = 1.; }
     else if (st > 2.5){ col = uFresh; a = 1.; }
     if (st < .5) a *= mix(1., uBuiltA, nodeB(aInfo.z));          // once built, the drawing steps back
+    float fl = nodeF(aInfo.z); if (fl > .01 && size > 0.){ col = mix(col, vec3(1.), fl); size *= 1. + fl*.5; a = max(a, fl); }   // a part doing its job flashes white
   } else if (kind < 1.5){               // traffic inside a system
-    float es = edgeSt(aInfo.z), u = fract(aMove.x + uT*aMove.y);
+    float es = edgeSt(aInfo.z), u = fract(aMove.x + uTrT*aMove.y);
     if (es > .5 && es < 1.5) size = 0.;
     else if (es > 1.5 && es < 2.5) u = .04 + aMove.x*.24;       // stuck, waiting at the start
     else if (es > 3.5) u = .7 + aMove.x*.26;                    // stuck, waiting at the end
-    p = mix(position, aB, u); p.y *= lift; col = uAmber; size = uSize.y; a = .92;
+    p = mix(position, aB, u); p.y *= lift; col = uAmber; size = uSize.y; a = .92*uTrDim;
   } else if (kind < 2.5){               // the thread that connects every zone
     float u = fract(aMove.x + (uT + uRush)*aMove.y); p = mix(position, aB, u); col = uAmber; size = uSize.z*(1. + uBurst*.6); a = .7 + uBurst*.3;
   } else if (kind < 3.5){               // ambient dust
@@ -131,7 +135,7 @@ export function createWorld({ canvas, mobile, reducedMotion, onTele, onLine, onR
   const tier = mobile ? 'phone' : (fixed === 'high' ? 'high' : 'medium');
   const post = createPost({ renderer, scene, camera, mobile, tier, reducedMotion });
   // choreography values the GSAP timelines animate (js/config.js → choreo)
-  const cam = { intro:reducedMotion ? 0 : 1, nudge:0 };
+  const cam = { intro:reducedMotion ? 0 : 1, nudge:0, focus:0 }, focusP = new THREE.Vector3();
   const gs = window.gsap, CH = CONFIG.choreo;
   if (gs && !reducedMotion) gs.to(cam, { intro:0, duration:CH.intro.duration, delay:CH.intro.delay, ease:CH.intro.ease });
   else cam.intro = 0;
@@ -240,7 +244,7 @@ export function createWorld({ canvas, mobile, reducedMotion, onTele, onLine, onR
   geo.setAttribute('aInfo', new THREE.BufferAttribute(info, 4)); geo.setAttribute('aMove', new THREE.BufferAttribute(mov, 2)); geo.setAttribute('aScatter', new THREE.BufferAttribute(sc, 3));
   const C = CONFIG.colors, S = CONFIG.sizes, lifts = new Float32Array(16).fill(1);
   const mat = new THREE.RawShaderMaterial({ vertexShader:VS, fragmentShader:FS, transparent:true, depthTest:true, depthWrite:false, blending:THREE.AdditiveBlending,
-    uniforms:{ uMirror:{value:0}, uNB:{value:built.nodeBuild}, uBuiltA:{value:CONFIG.build.linesWhenBuilt}, uAmberGain:{value:CONFIG.render.amberGain}, uAmberTint:{value:new THREE.Vector3(...CONFIG.render.amberTint)}, uCoralGain:{value:CONFIG.render.coralGain}, uGain:{value:CONFIG.render.pointGain}, uT:{value:0}, uRush:{value:0}, uBurst:{value:0}, uHalo:{value:0}, uHaloS:{value:CONFIG.craft.halo.size}, uHaloA:{value:CONFIG.craft.halo.alpha}, uHover:{value:-1}, uAsm:{value:reducedMotion ? 0 : CONFIG.craft.assemble}, uMouseOn:{value:0}, uAspect:{value:1}, uNight:{value:0}, uFlowR:{value:CONFIG.craft.flow.radius}, uFlowP:{value:CONFIG.craft.flow.push}, uDis:{value:new Float32Array(16)}, uZC:{value:new Float32Array(48)}, uMouse:{value:new THREE.Vector2(9, 9)}, uRight:{value:new THREE.Vector3(1, 0, 0)}, uUp:{value:new THREE.Vector3(0, 1, 0)}, uFogN:{value:CONFIG.craft.fog.near}, uFogF:{value:CONFIG.craft.fog.far}, uPx:{value:DPR}, uK:{value:9}, uIntro:{value:reducedMotion ? 1 : 0}, uDim:{value:1}, uLift:{value:lifts}, uNode:{value:nodeState}, uEdge:{value:edgeState},
+    uniforms:{ uMirror:{value:0}, uNB:{value:built.nodeBuild}, uNF:{value:built.nodeFlash}, uTrT:{value:0}, uTrDim:{value:1}, uBuiltA:{value:CONFIG.build.linesWhenBuilt}, uAmberGain:{value:CONFIG.render.amberGain}, uAmberTint:{value:new THREE.Vector3(...CONFIG.render.amberTint)}, uCoralGain:{value:CONFIG.render.coralGain}, uGain:{value:CONFIG.render.pointGain}, uT:{value:0}, uRush:{value:0}, uBurst:{value:0}, uHalo:{value:0}, uHaloS:{value:CONFIG.craft.halo.size}, uHaloA:{value:CONFIG.craft.halo.alpha}, uHover:{value:-1}, uAsm:{value:reducedMotion ? 0 : CONFIG.craft.assemble}, uMouseOn:{value:0}, uAspect:{value:1}, uNight:{value:0}, uFlowR:{value:CONFIG.craft.flow.radius}, uFlowP:{value:CONFIG.craft.flow.push}, uDis:{value:new Float32Array(16)}, uZC:{value:new Float32Array(48)}, uMouse:{value:new THREE.Vector2(9, 9)}, uRight:{value:new THREE.Vector3(1, 0, 0)}, uUp:{value:new THREE.Vector3(0, 1, 0)}, uFogN:{value:CONFIG.craft.fog.near}, uFogF:{value:CONFIG.craft.fog.far}, uPx:{value:DPR}, uK:{value:9}, uIntro:{value:reducedMotion ? 1 : 0}, uDim:{value:1}, uLift:{value:lifts}, uNode:{value:nodeState}, uEdge:{value:edgeState},
       uLine:{value:new THREE.Vector3(...hex(C.line))}, uCyan:{value:new THREE.Vector3(...hex(C.cyan))}, uAmber:{value:new THREE.Vector3(...hex(C.amber))}, uCoral:{value:new THREE.Vector3(...hex(C.coral))}, uFresh:{value:new THREE.Vector3(...hex(C.fresh))},
       uSize:{value:new THREE.Vector4(S.line, S.traffic, S.road, S.dust)}, uSize2:{value:new THREE.Vector2(S.area, S.beacon)} } });
   ZONES.forEach((z, i) => { const c = z.sys ? (() => { const e = extents(z.sys); return [e.cx + z.at[0], .3, e.cz + z.at[1]]; })() : z.look || [z.at ? z.at[0] : 0, 0, 0]; mat.uniforms.uZC.value.set(c, i*3); });
@@ -276,7 +280,7 @@ export function createWorld({ canvas, mobile, reducedMotion, onTele, onLine, onR
     const e = extents(z.sys), W = W0(), H = H0(), st = sec.querySelector('.stage'), sr = st.getBoundingClientRect(), r0 = sec.getBoundingClientRect();
     const box = { x:sr.left, y:sr.top - r0.top, w:sr.width, h:sr.height };          // the stage, measured from the top of its section
     const tanH = Math.tan(CONFIG.camera.fov*Math.PI/360), R = Math.hypot(e.hx, e.hz*.85)*1.02, Rv = e.hz*.7 + e.h*.8 + .2;
-    const d = Math.max(R*H/(.5*box.w*tanH), Rv*H/(.5*box.h*tanH))*.46 + .3;
+    const d = (Math.max(R*H/(.5*box.w*tanH), Rv*H/(.5*box.h*tanH))*.46 + .3)/(W < 900 ? (z.mzoom || 1) : W < 1200 ? 1 : (z.zoom || 1));   // zoom: a zone can be framed larger (wide screens only; mzoom on phones)
     const look = [e.cx + z.at[0], e.h*.35, e.cz + z.at[1]], dir = dirOf(CONFIG.camera.yaw, CONFIG.camera.elevation);
     return { eye:look.map((v, i) => v + dir[i]*d), look, off:[box.x + box.w/2 - W/2, -(box.y + box.h/2 - H/2)] };
   }
@@ -317,10 +321,12 @@ export function createWorld({ canvas, mobile, reducedMotion, onTele, onLine, onR
 
   /* ---------- labels and the drawing overlay (dimension lines, revision clouds) ---------- */
   const labelRoot = document.getElementById('labels'), ov = document.getElementById('ov'), NS = 'http://www.w3.org/2000/svg';
-  const labelled = NODES.map((n, i) => ({ i, n })).filter(o => o.n.label && o.n.label !== 'new');
+  const labelled = NODES.map((n, i) => ({ i, n, base:n.label === 'new' ? '' : n.label, over:null })).filter(o => !o.n.shape);
   const BLOCK = '.pj-copy,.cv-copy,.tele,.tb,.detail,.card,.rail,.row,.edits,.bomt,.offs,.note,.big,.mail';   // page text labels must never cover
   let blockers = [];
-  labelled.forEach(o => { const el = document.createElement('span'); el.textContent = o.n.label; labelRoot.appendChild(el); o.el = el; });
+  labelled.forEach(o => { const el = document.createElement('span'); el.textContent = o.base; labelRoot.appendChild(el); o.el = el; o.txt = o.base; });
+  // the text a label should show now: a scenario's override, "new" for a starting server, or its own label
+  const labelText = o => o.over ?? (nodeState[o.i] === 3 ? 'new' : o.base);
   const tmp = new THREE.Vector3();
   const toScreen = (x, y, z) => { tmp.set(x, y, z).project(camera); if (tmp.z > 1 || tmp.z < -1) return null; return [(tmp.x*.5 + .5)*W0(), (-tmp.y*.5 + .5)*H0()]; };
   const dimG = document.createElementNS(NS, 'g'), dimL = [0, 1, 2, 3, 4].map(() => { const l = document.createElementNS(NS, 'line'); l.setAttribute('class', 'dim'); dimG.appendChild(l); return l; });
@@ -333,9 +339,9 @@ export function createWorld({ canvas, mobile, reducedMotion, onTele, onLine, onR
     // labels: drawn in priority order, and never on top of words, readouts or each other
     // reads first (blocker boxes, cached label sizes), writes after, so the browser lays out once per frame
     const blk = (blockers[zi] || []).filter(e => !e.classList.contains('card') || e.classList.contains('on')).map(e => e.getBoundingClientRect()).filter(r => r.width);
-    labelled.forEach(o => { if (!o.w){ o.w = o.el.offsetWidth; o.h = o.el.offsetHeight; } });
+    labelled.forEach(o => { const t = labelText(o); if (t !== o.txt){ o.el.textContent = o.txt = t; o.w = 0; } if (!o.w && t){ o.w = o.el.offsetWidth; o.h = o.el.offsetHeight; } });
     const placed = [];
-    labelled.forEach(o => { const n = o.n, L = lifts[n.zone], near = n.zone === zi && L > .55 && nodeState[o.i] !== 2;
+    [...labelled.filter(o => o.over), ...labelled.filter(o => !o.over)].forEach(o => { const n = o.n, L = lifts[n.zone], near = o.txt && n.zone === zi && L > .55 && nodeState[o.i] !== 2;
       const p = near ? toScreen(n.x, n.n[4]*L + .07, n.z) : null; if (!p){ o.el.style.opacity = 0; return; }
       o.el.style.transform = `translate(${p[0]}px,${p[1]}px) translate(-50%,-100%)`;
       const w = o.w, h = o.h, b = { x0:p[0] - w/2, x1:p[0] + w/2, y0:p[1] - h, y1:p[1] };
@@ -404,12 +410,13 @@ export function createWorld({ canvas, mobile, reducedMotion, onTele, onLine, onR
 
   /* ---------- the loop ---------- */
   const eye = new THREE.Vector3(), look = new THREE.Vector3(), tE = new THREE.Vector3(), tL = new THREE.Vector3(), off = [0, 0];
+  let clockT = 0;   // the render clock, for scenario beads
   let ptr = [0, 0], pp = [0, 0], intro0 = null, started = false, last = 0, arriveT0 = null, rush = 0, lastY = scrollY, vs = 0, fovNow = CONFIG.camera.fov, bankNow = 0, hasPtr = false;
   const prevEye = new THREE.Vector3(), lampW = new THREE.Vector3(0, -99, 0);
   function tick(t){
     if (!eyeCurve || lost) return; const W = W0(), H = H0();
     if (++frameN === 4) startLate();
-    const dt = Math.min(.05, last ? t - last : .016); last = t;
+    const dt = Math.min(.05, last ? t - last : .016); last = t; clockT = t;
     if (intro0 === null) intro0 = t;
     const intro = reducedMotion ? 1 : easeIO(clamp((t - intro0)/CONFIG.intro.duration));
     // camera target from the scroll position
@@ -432,7 +439,9 @@ export function createWorld({ canvas, mobile, reducedMotion, onTele, onLine, onR
     // the opening dolly: the camera starts further back and higher, and settles into the hero as it assembles;
     // a break test leans it in a touch. Both are GSAP-timed values (cam.intro, cam.nudge).
     if (cam.intro > 0 || cam.nudge > 0){ camera.position.addScaledVector(fwd, -dist*(cam.intro*CH.intro.back - cam.nudge*CH.nudge.amount)); camera.position.y += dist*cam.intro*CH.intro.rise; }
-    camera.lookAt(look); camera.setViewOffset(W, H, -off[0], off[1], W, H); camera.updateMatrixWorld();
+    let lookAt = look;
+    if (cam.focus > 0){ lookAt = look.clone().lerp(focusP, cam.focus*CH.focus.pull); camera.position.addScaledVector(fwd, dist*cam.focus*CH.focus.push); }
+    camera.lookAt(lookAt); camera.setViewOffset(W, H, -off[0], off[1], W, H); camera.updateMatrixWorld();
     // the drafting lamp: where the cursor meets the plane
     if (hasPtr && CONFIG.craft.lamp.on && !mobile && !reducedMotion){ const tanH = Math.tan(fovNow*Math.PI/360), nx = ((ptr[0] + .5)*W - (W/2 + off[0]))/(W/2), ny = -((ptr[1] + .5)*H - (H/2 - off[1]))/(H/2);
       const dir = fwd.clone().addScaledVector(right, nx*tanH*(W/H)).addScaledVector(upv, ny*tanH);
@@ -446,6 +455,8 @@ export function createWorld({ canvas, mobile, reducedMotion, onTele, onLine, onR
       lifts[i] = reducedMotion ? 1 : 1 - smooth(CONFIG.lift.near, CONFIG.lift.far, d); dis[i] = reducedMotion ? 0 : smooth(CONFIG.craft.stardust.near, CONFIG.craft.stardust.far, d); });
     const B = CONFIG.build, introBuild = zi => reducedMotion || zi !== heroZone ? 1 : easeIO(clamp((t - intro0 - B.introDelay)/B.introDuration));
     built.update(t, lifts, introBuild);
+    trT += reducedMotion ? 0 : dt*CONFIG.speeds.dust*trSpeed; mat.uniforms.uTrT.value = trT; mat.uniforms.uTrDim.value += (trDim - mat.uniforms.uTrDim.value)*.08;
+    beadsTick(t);
     mat.uniforms.uMouse.value.set((ptr[0] + .5)*2 - 1, -((ptr[1] + .5)*2 - 1)); mat.uniforms.uAspect.value = W/H;
     mat.uniforms.uMouseOn.value = lerp(mat.uniforms.uMouseOn.value, hasPtr && !mobile && !reducedMotion ? 1 : 0, .05);
     mat.uniforms.uRight.value.copy(right); mat.uniforms.uUp.value.copy(upv);
@@ -469,12 +480,56 @@ export function createWorld({ canvas, mobile, reducedMotion, onTele, onLine, onR
     overlay(sp.zi);
   }
   // light up one part of a system (the stack tiles use this), or none
+  /* ---------- scenarios (js/scenarios.js, played by js/scenario-runner.js): the parts they can move ---------- */
+  let trT = 0, trSpeed = 1, trDim = 1;
+  const BEADS = 6, TRAIL = 18, beadGeo = new THREE.BufferGeometry(), beadPos = new Float32Array(BEADS*TRAIL*3), beadSz = new Float32Array(BEADS*TRAIL);
+  beadGeo.setAttribute('position', new THREE.BufferAttribute(beadPos, 3)); beadGeo.setAttribute('aSize', new THREE.BufferAttribute(beadSz, 1));
+  const beadMat = new THREE.ShaderMaterial({ transparent:true, depthTest:false, depthWrite:false, blending:THREE.AdditiveBlending,
+    uniforms:{ uCol:{ value:new THREE.Color(CONFIG.colors.amber).multiplyScalar(CONFIG.scenarios.beadGlow) }, uPx:{ value:DPR } },
+    vertexShader:'attribute float aSize; varying float vA; uniform float uPx; void main(){ vec4 mv = modelViewMatrix*vec4(position, 1.); gl_Position = projectionMatrix*mv; gl_PointSize = aSize*uPx*clamp(9./max(-mv.z, .1), .5, 2.2); vA = step(.01, aSize); }',
+    fragmentShader:'uniform vec3 uCol; varying float vA; void main(){ vec2 c = gl_PointCoord - .5; float d = length(c); if (d > .5 || vA < .5) discard; gl_FragColor = vec4(uCol*smoothstep(.5, 0., d), 1.); }' });
+  const beadMesh = new THREE.Points(beadGeo, beadMat); beadMesh.frustumCulled = false; beadMesh.renderOrder = 5; scene.add(beadMesh);
+  let beads = [];
+  const nodePos = (k, out = new THREE.Vector3()) => out.set(NODES[k].x, Math.min(.12, NODES[k].n[4]*.4) + .04, NODES[k].z);
+  function beadsTick(t){
+    beadSz.fill(0);
+    beads = beads.filter(b => t < b.t0 + b.dur + .5);
+    beads.forEach((b, bi) => { if (bi >= BEADS) return;
+      const u = Math.min(1, Math.max(0, (t - b.t0)/b.dur)), fade = 1 - Math.max(0, (t - b.t0 - b.dur)/.5);
+      // visit: a node pulses as the bead reaches it
+      b.at.forEach((f, k) => { if (!b.hit[k] && u >= f){ b.hit[k] = true; built.flash(b.nodes[k], .9); } });
+      for (let j = 0; j < TRAIL; j++){ const uu = u - j*CONFIG.scenarios.trail; if (uu < 0) break;
+        b.curve.getPointAt(Math.min(1, uu), tmpV); beadPos.set([tmpV.x, tmpV.y, tmpV.z], (bi*TRAIL + j)*3);
+        beadSz[bi*TRAIL + j] = (j ? CONFIG.scenarios.beadSize*.55*(1 - j/TRAIL) : CONFIG.scenarios.beadSize)*fade; } });
+    beadGeo.attributes.position.needsUpdate = beadGeo.attributes.aSize.needsUpdate = true;
+  }
+  const tmpV = new THREE.Vector3();
+  const scn = {
+    setNode(zid, id, s){ const k = N(zid, id); if (k === undefined) return;
+      if (s === 'rebuild') built.rebuild(k); else nodeState[k] = { down:1, ok:0, new:3, hidden:2 }[s] ?? nodeState[k]; syncEdges(); },
+    setEdge(zid, key, s){ const e = E(zid, key); if (!e) return; e.over = { hold:2, end:4, off:1, on:0, normal:null }[s] ?? null; syncEdges(); },
+    flash(zid, id){ const k = N(zid, id); if (k !== undefined) built.flash(k, 1); },
+    label(zid, id, text){ const o = labelled.find(l => l.i === N(zid, id)); if (o) o.over = text ?? null; },
+    traffic({ speed, dim } = {}){ if (speed !== undefined) trSpeed = speed; if (dim !== undefined) trDim = dim; },
+    focus(zid, id){ if (reducedMotion || !window.gsap) return; if (id){ const k = N(zid, id); if (k === undefined) return; nodePos(k, focusP).y = NODES[k].n[4]*.5; }
+      window.gsap.to(cam, { focus:id ? 1 : 0, duration:CONFIG.choreo.focus.duration, ease:'power2.inOut', overwrite:true }); },
+    bead(zid, path, dur){ if (reducedMotion) return; const ks = path.map(id => N(zid, id)).filter(k => k !== undefined); if (ks.length < 2) return;
+      const pts = ks.map(k => nodePos(k)), curve = new THREE.CurvePath(); for (let i = 0; i < pts.length - 1; i++) curve.add(new THREE.LineCurve3(pts[i], pts[i + 1]));
+      const lens = curve.getCurveLengths(), total = lens[lens.length - 1];
+      beads.push({ curve, nodes:ks, at:[0, ...lens.map(l => l/total)], hit:[], t0:clockT, dur:Math.max(.2, dur) }); },
+    reset(zid){ resetZone(zid); beads = []; trSpeed = 1; trDim = 1; labelled.forEach(o => { if (o.n.zid === zid) o.over = null; }); if (window.gsap) window.gsap.to(cam, { focus:0, duration:.6, overwrite:true }); else cam.focus = 0; },
+  };
   const highlight = (zid, id) => NODES.forEach((n, i) => { if (n.zid === zid && !n.hidden) nodeState[i] = n.id === id ? 4 : 0; });
   function hitNode(zid, ids, x, y){ const zi = zoneIndex[zid]; if (lifts[zi] < .6) return null; let best = null, area = 1e12;
     for (const id of ids){ const k = N(zid, id); if (k === undefined) continue; const b = boxScreen(NODES[k], lifts[zi]); if (!b) continue;
       if (x > b.x0 - 10 && x < b.x1 + 10 && y > b.y0 - 10 && y < b.y1 + 10){ const a = (b.x1 - b.x0)*(b.y1 - b.y0); if (a < area){ area = a; best = id; } } } return best; }
   const setHover = (zid, id) => { mat.uniforms.uHover.value = zid && id ? N(zid, id) ?? -1 : -1; };
   // ?debug in the URL exposes the render pieces for measurement (scripts in the README use it)
-  if (/[?&]debug\b/.test(location.search)) window.__debug = { floor, built, post, get gpu(){ return gpu; }, get governor(){ return governor; }, renderer, scene, points, CONFIG };
-  return { tick, refresh, breakZone, resetZone, hitServer, hitNode, highlight, setHover, setPointer:(x, y) => { ptr = [x, y]; hasPtr = true; }, activeZone:() => stationParam().zi, zoneIndex, renderer };
+  if (/[?&]debug\b/.test(location.search)) window.__debug = {
+    // where a zone's parts land on screen (for checking framing): min/max of every box corner
+    bounds:zid => { let x0 = 1e9, x1 = -1e9, y0 = 1e9, y1 = -1e9; NODES.forEach(n => { if (n.zid !== zid || n.hidden || n.shape) return;
+      for (const dx of [-.5, .5]) for (const dz of [-.5, .5]) for (const y of [0, n.n[4]]){ const p = toScreen(n.x + dx*n.n[2], y, n.z + dz*n.n[3]); if (!p) continue; x0 = Math.min(x0, p[0]); x1 = Math.max(x1, p[0]); y0 = Math.min(y0, p[1]); y1 = Math.max(y1, p[1]); } });
+      return { x0:Math.round(x0), x1:Math.round(x1), y0:Math.round(y0), y1:Math.round(y1) }; },
+    floor, built, post, get gpu(){ return gpu; }, get governor(){ return governor; }, renderer, scene, points, CONFIG };
+  return { scn, tick, refresh, breakZone, resetZone, hitServer, hitNode, highlight, setHover, setPointer:(x, y) => { ptr = [x, y]; hasPtr = true; }, activeZone:() => stationParam().zi, zoneIndex, renderer };
 }

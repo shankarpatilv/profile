@@ -6,12 +6,13 @@
    ===================================================================== */
 
 import { CONFIG } from './config.js';
+import { createScenarioRunner } from './scenario-runner.js';
 
 const $ = (s, r = document) => r.querySelector(s), $$ = (s, r = document) => [...r.querySelectorAll(s)];
 const KEY = { 'hero':'s-cover', 'git':'s-git', 'cloud':'s-cloud', 'ik':'s-ik', 'cg':'s-cg' };
 const TELE = { 's-cover':'tele-hero', 's-git':'tele-git', 's-cloud':'tele-cloud', 's-ik':'tele-ik', 's-cg':'tele-cg' };
 
-export function createUI({ world, mobile, reducedMotion, sound = null }){
+export function createUI({ world, mobile, reducedMotion, sound = null, fallback = null }){
   const gsap = window.gsap, ST = window.ScrollTrigger, LenisC = window.Lenis, touch = matchMedia('(hover: none)').matches;
   const libs = !!(gsap && ST);
   const root = document.documentElement;
@@ -21,11 +22,14 @@ export function createUI({ world, mobile, reducedMotion, sound = null }){
   Object.entries(TELE).forEach(([zid, id]) => { const el = document.getElementById(id); if (el) teleDefault[zid] = el.innerHTML; });
   $$('[data-line]').forEach(el => { lineDefault[el.closest('section').id] = el.textContent; });
   const api = {
-    onTele(zid, lines, tone){ if (sound){ if (tone === 'alert' && lines && /down|crashed|expired/i.test(lines[0])) sound.fail(); else if (tone === 'calm') sound.heal(); }
+    onTele(zid, lines, tone, quiet){ if (sound && !quiet){ if (tone === 'alert' && lines && /down|crashed|expired/i.test(lines[0])) sound.fail(); else if (tone === 'calm') sound.heal(); }
       const el = document.getElementById(TELE[zid]); if (!el) return; el.innerHTML = lines ? lines.join('<br>') : teleDefault[zid]; el.classList.toggle('alert', tone === 'alert'); el.classList.toggle('calm', tone === 'calm'); },
     onLine(zid, text, tone){ const el = $(`#${zid} [data-line]`); if (!el) return; el.textContent = text || lineDefault[zid]; el.classList.toggle('alert', tone === 'alert'); el.classList.toggle('calm', tone === 'calm'); },
     onRev(zid, isBroken){ const el = $(`#${zid} [data-rev]`); if (!el) return; el.textContent = isBroken ? 'C' : 'B'; el.style.color = isBroken ? 'var(--coral)' : ''; },
   };
+
+  /* ---------- the scenarios (js/scenarios.js): every project's row of buttons ---------- */
+  createScenarioRunner({ world, api, reducedMotion, sound, fallback, scrollTo:y => goTo(y) });
 
   /* ---------- the break switches ---------- */
   function wire(w){

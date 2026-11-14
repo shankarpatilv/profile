@@ -41,9 +41,9 @@
   <div class="stage" data-stage="hero"><p class="tele" id="tele-hero" aria-live="polite">6 of 6 servers healthy<br>0 failed requests</p></div>
   <div class="cv-copy">
     <p class="status"><span class="pulse" aria-hidden="true"></span>Open to software engineering roles in the US</p>
-    <h1 id="h-cover"><span class="ln"><span>I build systems</span></span><span class="ln"><span>that hold up.</span></span></h1>
-    <p class="lede">Vivek Shankar Patil, backend, distributed, full stack and AI engineer. Previously at Amazon and Collabera Digital.</p>
-    <div class="acts"><a class="btn amber" href="mailto:patilshankarvivek@gmail.com">Email me about a role</a><button class="btn ghost" type="button" data-break="hero">Take a server down</button></div>
+    <h1 id="h-cover" aria-label="I build systems that hold up. Most recently, at Amazon."><span class="ln"><span>I build systems</span></span><span class="ln"><span>that hold up.</span></span><span class="ln am"><span>Most recently, at Amazon.</span></span></h1>
+    <p class="lede">Vivek Shankar Patil, backend, distributed, full stack and AI engineer.</p>
+    <div class="acts"><a class="btn amber" href="mailto:patilshankarvivek@gmail.com">Email me about a role</a></div>
     <p class="hint hand">or click any server in the drawing, it heals itself</p>
   </div>
 </section>
@@ -71,10 +71,10 @@
   <div class="stage" data-stage="git"><p class="tele" id="tele-git" aria-live="polite">3 workers running<br>Committed in order</p></div>
   <div class="pj-copy">
     <h2 id="h-git" class="sh-t">GitStream</h2>
-    <p class="one" data-line>Live events in, fast answers out, nothing lost.</p>
+    <p class="one" data-line aria-live="polite">Live events in, fast answers out, nothing lost.</p>
     <ol class="calls"><li class="call"><i></i><p>Kafka feeds events to Go workers running side by side.</p></li><li class="call"><i></i><p>Failures retry, and repeat offenders are set aside.</p></li><li class="call"><i></i><p>Progress moves only once every earlier event is done.</p></li><li class="call"><i></i><p>PostgreSQL answers lookups, ClickHouse answers totals.</p></li></ol>
     <div class="stats"><p><b>0</b>events lost</p><p><b>10–100×</b>faster analytics</p></div>
-    <div class="acts"><button class="btn ghost" type="button" data-break="git">Crash a worker</button><button class="btn text" type="button" data-reset="git">Reset</button></div>
+    <div class="acts scn-row" role="group" aria-label="Scenarios"><button class="btn ghost chip" type="button" data-scn="git:crash" aria-pressed="false">Crash worker 2</button><button class="btn ghost chip ok" type="button" data-scn="git:spike" aria-pressed="false">Spike traffic</button><button class="btn ghost chip ok" type="button" data-scn="git:lookup" aria-pressed="false">Look up one event</button><button class="btn ghost chip ok" type="button" data-scn="git:sum" aria-pressed="false">Add up the last hour</button><button class="btn text" type="button" data-scn-next="git" hidden>Next step</button><button class="btn text" type="button" data-scn-reset="git">Reset</button></div>
   </div>
   <div class="detail" aria-hidden="true"><svg viewBox="0 0 220 220"><circle cx="110" cy="110" r="106" class="pd"/><g class="evs"><circle cx="38" cy="104" r="8"/><circle cx="64" cy="104" r="8"/><circle cx="90" cy="104" r="8"/><circle cx="116" cy="104" r="8" class="gap"/><circle cx="142" cy="104" r="8"/><circle cx="168" cy="104" r="8"/></g><path d="M103,70 V138" class="pd ink"/></svg><p class="dl">Detail A, in-order commits</p><p class="hand dn">the commit waits at the gap</p></div>
   <div class="tb"><div class="w3"><small>Title</small><b>GitStream, real-time analytics pipeline</b></div><div><small>Sheet</small><b>03 of 11</b></div><div><small>Scale</small><b>10K events a second</b></div><div><small>Rev</small><b data-rev>B</b></div><div class="w4"><small>Materials</small><b>Go, Kafka, PostgreSQL, ClickHouse, Prometheus, Docker</b></div></div>
@@ -83,10 +83,10 @@
   <div class="stage" data-stage="cloud"><p class="tele" id="tele-cloud" aria-live="polite">All zones healthy<br>0 failed requests</p></div>
   <div class="pj-copy">
     <h2 id="h-cloud" class="sh-t">Cloud Native</h2>
-    <p class="one" data-line>A web app on AWS that stays up through outages and deploys.</p>
+    <p class="one" data-line aria-live="polite">A web app on AWS that stays up through outages and deploys.</p>
     <ol class="calls"><li class="call"><i></i><p>Three zones behind a load balancer, all defined in Terraform.</p></li><li class="call"><i></i><p>Servers add and remove themselves as traffic changes.</p></li><li class="call"><i></i><p>Data lives in a separate, encrypted PostgreSQL database.</p></li><li class="call"><i></i><p>Emails send through SNS and Lambda, off the main path.</p></li></ol>
     <div class="stats"><p><b>0</b>failed requests</p><p><b>35%</b>faster responses</p></div>
-    <div class="acts"><button class="btn ghost" type="button" data-break="cloud">Take zone A down</button><button class="btn text" type="button" data-reset="cloud">Reset</button></div>
+    <div class="acts scn-row" role="group" aria-label="Scenarios"><button class="btn ghost chip" type="button" data-scn="cloud:a" aria-pressed="false">Take zone A down</button><button class="btn ghost chip" type="button" data-scn="cloud:b" aria-pressed="false">Take zone B down</button><button class="btn ghost chip ok" type="button" data-scn="cloud:deploy" aria-pressed="false">Deploy version 2</button><button class="btn text" type="button" data-scn-next="cloud" hidden>Next step</button><button class="btn text" type="button" data-scn-reset="cloud">Reset</button></div>
   </div>
   
   <div class="tb"><div class="w3"><small>Title</small><b>Cloud Native, highly available web app</b></div><div><small>Sheet</small><b>04 of 11</b></div><div><small>Scale</small><b>3 zones, 6 servers</b></div><div><small>Rev</small><b data-rev>B</b></div><div class="w4"><small>Materials</small><b>Java, Spring Boot, AWS, Azure, PostgreSQL, Terraform, Packer, Docker, GitHub Actions</b></div></div>
@@ -95,10 +95,10 @@
   <div class="stage" data-stage="ik"><p class="tele" id="tele-ik" aria-live="polite">Answer drafted<br>3 notes cited</p></div>
   <div class="pj-copy">
     <h2 id="h-ik" class="sh-t">InterviewKit</h2>
-    <p class="one" data-line>Interview answers built only from your own notes.</p>
+    <p class="one" data-line aria-live="polite">Interview answers built only from your own notes.</p>
     <ol class="calls"><li class="call"><i></i><p>Notes are split, embedded and stored in pgvector.</p></li><li class="call"><i></i><p>A LangGraph flow drafts STAR answers that cite their notes.</p></li><li class="call"><i></i><p>No supporting note? It says so instead of inventing one.</p></li><li class="call"><i></i><p>Works with OpenAI or Claude, and plugs into Claude Code.</p></li></ol>
     <div class="stats"><p><b>0</b>invented stories</p><p><b>MCP</b>callable from Claude Code</p></div>
-    <div class="acts"><button class="btn ghost" type="button" data-break="ik">Ask what my notes can’t back</button><button class="btn text" type="button" data-reset="ik">Reset</button></div>
+    <div class="acts scn-row" role="group" aria-label="Scenarios"><button class="btn ghost chip ok" type="button" data-scn="ik:q1" aria-pressed="false">Tell me about a hard production issue</button><button class="btn ghost chip ok" type="button" data-scn="ik:q2" aria-pressed="false">Tell me about improving performance</button><button class="btn ghost chip ok" type="button" data-scn="ik:q3" aria-pressed="false">Tell me about something you owned end to end</button><button class="btn ghost chip" type="button" data-scn="ik:q4" aria-pressed="false">Tell me about a time you disobeyed an order</button><button class="btn text" type="button" data-scn-next="ik" hidden>Next step</button><button class="btn text" type="button" data-scn-reset="ik">Reset</button></div>
   </div>
   
   <div class="tb"><div class="w3"><small>Title</small><b>InterviewKit, rag interview assistant</b></div><div><small>Sheet</small><b>05 of 11</b></div><div><small>Scale</small><b>your notes only</b></div><div><small>Rev</small><b data-rev>B</b></div><div class="w4"><small>Materials</small><b>Python, LangChain, LangGraph, OpenAI, PostgreSQL, pgvector, Pydantic, Docker</b></div></div>
@@ -107,10 +107,10 @@
   <div class="stage" data-stage="cg"><p class="tele" id="tele-cg" aria-live="polite">Every check passed<br>200 OK</p></div>
   <div class="pj-copy">
     <h2 id="h-cg" class="sh-t">ChildGuard</h2>
-    <p class="one" data-line>A child welfare platform that keeps sensitive data safe.</p>
+    <p class="one" data-line aria-live="polite">A child welfare platform that keeps sensitive data safe.</p>
     <ol class="calls"><li class="call"><i></i><p>A React and Redux dashboard that loads only what it needs.</p></li><li class="call"><i></i><p>Every request is screened for origin, headers and bad input.</p></li><li class="call"><i></i><p>Auth0 logins, and each role sees only its own data.</p></li><li class="call"><i></i><p>A Node and Express API on MongoDB, with indexed queries.</p></li></ol>
     <div class="stats"><p><b>6</b>checks per request</p><p><b>403</b>for the wrong role</p></div>
-    <div class="acts"><button class="btn ghost" type="button" data-break="cg">Send an expired login</button><button class="btn text" type="button" data-reset="cg">Reset</button></div>
+    <div class="acts scn-row" role="group" aria-label="Scenarios"><button class="btn ghost chip ok" type="button" data-scn="cg:ok" aria-pressed="false">Volunteer views their sign ups</button><button class="btn ghost chip" type="button" data-scn="cg:role" aria-pressed="false">Volunteer opens safety reports</button><button class="btn ghost chip" type="button" data-scn="cg:login" aria-pressed="false">Expired login</button><button class="btn ghost chip" type="button" data-scn="cg:origin" aria-pressed="false">Request from an unknown site</button><button class="btn ghost chip" type="button" data-scn="cg:script" aria-pressed="false">Script in a form field</button><button class="btn text" type="button" data-scn-next="cg" hidden>Next step</button><button class="btn text" type="button" data-scn-reset="cg">Reset</button></div>
   </div>
   
   <div class="tb"><div class="w3"><small>Title</small><b>ChildGuard, secure full stack platform</b></div><div><small>Sheet</small><b>06 of 11</b></div><div><small>Scale</small><b>6 checks a request</b></div><div><small>Rev</small><b data-rev>B</b></div><div class="w4"><small>Materials</small><b>React, Redux, TypeScript, Node.js, Express, MongoDB, Auth0, JWT</b></div></div>

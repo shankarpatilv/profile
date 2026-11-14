@@ -274,3 +274,27 @@ html.webgl body::after{display:none}
 .gl-lost #gl,.gl-lost #labels{opacity:0}
 /* the fallback drawing leaves room for the readouts, so they show (and the break switches update them) */
 .no-webgl .stage.fb .tele{display:block}
+/* Scenario rows (js/scenario-runner.js): compact chips; coral dot = something fails, amber dot = a normal flow */
+.scn-row{gap:8px 8px}
+.btn.chip{font-size:13.5px;font-weight:600;padding:8px 14px;gap:8px}
+.btn.chip::before{width:7px;height:7px}
+.btn.chip.ok::before{background:var(--amber);box-shadow:0 0 8px var(--amber)}
+.btn.chip.running{box-shadow:inset 0 0 0 1.5px var(--amber);color:var(--line)}
+.btn.chip.running::before{animation:scnPulse 1s ease-in-out infinite}
+@keyframes scnPulse{50%{transform:scale(1.6);opacity:.55}}
+.scn-row .btn.text{padding:8px 6px;font-size:13.5px}
+/* phones: one horizontally scrollable row of chips */
+@media (max-width:700px){
+  .scn-row{flex-wrap:nowrap;overflow-x:auto;scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch;padding-bottom:6px;margin-right:-22px;padding-right:22px;scrollbar-width:none}
+  .scn-row::-webkit-scrollbar{display:none}
+  .scn-row .btn{flex:0 0 auto;scroll-snap-align:start}
+}
+@media (prefers-reduced-motion:reduce){.btn.chip.running::before{animation:none}}
+.scn-row [hidden]{display:none}
+/* Hero: "Most recently, at Amazon." under the headline, 48% of its size, amber with a soft glow.
+   Its reveal mask gets extra padding (cancelled by negative margins) so the glow is not clipped. */
+.cover h1 .ln.am{font-size:.48em;letter-spacing:-.045em;line-height:1.05;color:var(--amber);padding:.32em .5em .42em;margin:-.14em -.5em -.36em;overflow-wrap:normal;word-break:normal;hyphens:none}
+.cover h1 .ln.am>span{text-shadow:0 0 22px rgba(255,181,71,.45)}
+.ready .ln:nth-child(3)>span{transition-delay:.18s}
+/* Hero text: centred vertically in the space below the header (desktops and tablets; phones keep the stacked layout) */
+@media (min-width:901px){.cv-copy{bottom:auto;top:calc(50% + 30px);transform:translateY(-50%)}}

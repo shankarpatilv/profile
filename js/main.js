@@ -12,7 +12,7 @@ const mobile = innerWidth < 900;
 const hooks = { onTele(){}, onLine(){}, onRev(){} };
 const sound = createSound();   // silent until the visitor turns it on
 
-let world = null;
+let world = null, fallback = null;
 try {
   const probe = document.createElement('canvas');
   if (!(probe.getContext('webgl2') || probe.getContext('webgl'))) throw new Error('WebGL is not available');
@@ -23,7 +23,7 @@ try {
 } catch (err){
   console.warn('Static fallback:', err);
   root.classList.add('no-webgl');
-  import('./fallback.js').then(m => m.drawFallback()).catch(() => {});   // a drawing of each system, in plain SVG
+  fallback = import('./fallback.js').then(m => m.drawFallback()).catch(() => null);   // a drawing of each system, in plain SVG
 }
-Object.assign(hooks, createUI({ world, mobile, reducedMotion, sound }));
+Object.assign(hooks, createUI({ world, mobile, reducedMotion, sound, fallback }));
 root.classList.add('app');
